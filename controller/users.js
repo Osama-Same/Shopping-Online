@@ -2,7 +2,7 @@ const connection = require("../connection/connection");
 const cloudinary = require("../Connection/cloudinary");
 const { validationResult } = require("express-validator");
 const bcrypt = require("bcrypt");
-
+const jwt = require("jsonwebtoken");
 const _get = (req, res) => {
   let sql = `select * from users`;
   connection.query(sql, (err, result) => {
@@ -116,4 +116,41 @@ const _delete = (req, res) => {
   });
 };
 
-module.exports = { _get, _save, _put, _delete };
+const login = (req, res) => {
+  const error = validationResult(req);
+  if (!error.isEmpty()) {
+    return res.json({ error: error.array()[0].msg });
+  }
+  const email = req.body.email;
+  const sql = `select * from users where email ='${email}' `;
+
+  connection.query(sql, async (err, result) => {
+    if (err) {
+      res.json({ err: "You have entered invalid  email " });
+    }
+
+    if (result) {
+      const findUser = result.find((u) => u.id);
+      if (findUser) {
+        const id = findUser.id;
+        console.log(result);
+        if (await bcrypt.compare(req.body.password, findUser.password)) {
+          const token = jwt.sign({ id }, "jwtSecret", {
+            expiresIn: process.env.TOKEN_EXPIRATION,
+          });
+          res.json({
+            result: result,
+            token: token,
+            findUser: findUser,
+          });
+        } else {
+          res.json({ err: "You have entered invalid  Password Or Email" });
+        }
+      } else {
+        res.json({ err: "You have entered invalid  Email " });
+      }
+    }
+  });
+};
+
+module.exports = { _get, _save, _put, _delete ,login };

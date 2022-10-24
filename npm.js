@@ -59,3 +59,5 @@
 //git add .
 //git commit -am "my first commit"
 //git push heroku master
+
+// npx create-react-app my-app --template typescript

@@ -7,7 +7,7 @@ const bodyParser = require('body-parser')
 require("./connection/connection");
 const sslRedirect = require('heroku-ssl-redirect').default
 require("dotenv").config();
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.PORT || 5000;
 const corsOptions = {
   origin: "*",
   optionsSuccessStatus: 200,

@@ -4,6 +4,8 @@ const { _getC, _saveC } = require("../controller/contact");
 const { _getN, _saveN } = require("../controller/news");
 const { _getCO, _saveCO } = require("../controller/comment");
 const { _getP, _saveP, _putP, _deleteP } = require("../controller/post");
+const { _getL, _saveL, _putL } = require("../controller/like");
+const { _getOR, _saveOR, _putOR, _deleteLOR } = require("../controller/orders");
 const {
   _getCA,
   _saveCA,
@@ -93,4 +95,17 @@ router.delete("/post/:id", _deleteP);
 
 router.get("/comment", _getCO);
 router.post("/comment", _saveCO);
+
+// Like
+
+router.get("/like", _getL);
+router.post("/like", _saveL);
+router.put("/like/:id", _putL);
+
+// orders
+
+router.get("/orders", _getOR);
+router.post("/orders", _saveOR);
+router.put("/orders/:id", _putOR);
+router.delete("/orders/:id", _putOR);
 module.exports = router;

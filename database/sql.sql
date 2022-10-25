@@ -64,3 +64,23 @@ CREATE TABLE
         FOREIGN KEY (iduser) REFERENCES users (id),
         PRIMARY KEY (id)
     );
+CREATE TABLE
+    likee (
+        id INT AUTO_INCREMENT NOT NULL,
+        iduser INT,
+        idpost INT,
+        likee VARCHAR(100) NOT NULL,
+        FOREIGN KEY (idpost) REFERENCES post (id),
+        FOREIGN KEY (iduser) REFERENCES users (id),
+        PRIMARY KEY (id)
+    );
+CREATE TABLE
+    orders (
+        id INT AUTO_INCREMENT NOT NULL,
+        iduser INT,
+        idpost INT,
+        quantity INT,
+        FOREIGN KEY (idpost) REFERENCES post (id),
+        FOREIGN KEY (iduser) REFERENCES users (id),
+        PRIMARY KEY (id)
+    );

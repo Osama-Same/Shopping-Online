@@ -58,8 +58,8 @@ router.get("/news", _getN);
 router.post("/news", _saveN);
 
 // Categories
-router.get("/categories", _getN);
-router.post("/categories", upload.single("logo"), _saveN);
+router.get("/categories", _getCA);
+router.post("/categories", upload.single("logo"), _saveCA);
 router.put("/categories", upload.single("logo"), _putCA);
 router.delete("/categories/:id", _deleteCA);
 

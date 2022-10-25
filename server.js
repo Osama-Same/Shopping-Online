@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const path = require("path")
 const app = express();
 const router = require("./Router/router");
 require("./connection/connection");
@@ -18,7 +19,7 @@ app.use(sslRedirect());
 app.get('/', function(req, res){
   res.send('hello world');
 });
-
+app.use(express.static(path.resolve(__dirname, "client/build")));
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`http://localhost:${PORT}`);

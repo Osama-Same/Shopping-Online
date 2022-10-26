@@ -3,6 +3,9 @@ const cloudinary = require("../connection/cloudinary");
 const { validationResult } = require("express-validator");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+
+
+
 const _get = (req, res) => {
   let sql = `select * from users`;
   connection.query(sql, (err, result) => {

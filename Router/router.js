@@ -1,4 +1,5 @@
 const express = require("express");
+require("dotenv").config();
 const { _get, _save, _put, _delete, login } = require("../controller/users");
 const { _getC, _saveC } = require("../controller/contact");
 const { _getN, _saveN } = require("../controller/news");

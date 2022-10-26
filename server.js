@@ -12,6 +12,9 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(router)
+app.all("/",(req,res)=>{
+  res.send("osama")
+})
 app.use(express.static(path.resolve(__dirname, "client/build")));
 /* const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

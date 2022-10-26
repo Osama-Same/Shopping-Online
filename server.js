@@ -6,7 +6,8 @@ const router = require("./Router/router");
 const bodyParser = require("body-parser");
 require("./connection/connection");
 require("dotenv").config();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5000
+;
 const corsOptions = {
   origin: "*",
   optionsSuccessStatus: 200,

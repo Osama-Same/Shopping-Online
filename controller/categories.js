@@ -1,5 +1,5 @@
 const connection = require("../connection/connection");
-const cloudinary = require("../Connection/cloudinary");
+const cloudinary = require("../connection/cloudinary");
 
 // get  Category
 

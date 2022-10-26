@@ -1,5 +1,5 @@
 const connection = require("../connection/connection");
-const cloudinary = require("../Connection/cloudinary");
+const cloudinary = require("../connection/cloudinary");
 const { validationResult } = require("express-validator");
 
 const _getP = (req, res) => {

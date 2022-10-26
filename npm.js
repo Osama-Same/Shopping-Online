@@ -5,7 +5,7 @@
 // npm i express
 // npm i bcrypt
 // npm i cors
-// npm 
+// npm i dotenv
 // npm i is-empty
 // npm i jsonwebtoken
 // npm i mongodb
@@ -59,5 +59,3 @@
 //git add .
 //git commit -am "my first commit"
 //git push heroku master
-
-// npx create-react-app my-app --template typescript

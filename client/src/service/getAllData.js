@@ -37,7 +37,7 @@ export async function _getAllCategories() {
   }
 }
 export async function _getAllPost() {
-  const res = await axios.get(url + "post");
+  const res = await axios.get(url + "products");
   if (res.data) {
     return res.data;
   } else {

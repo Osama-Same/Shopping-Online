@@ -1,8 +1,15 @@
 const express = require("express");
 const { check } = require("express-validator");
+const { upload } = require("../connection/upload");
 const { _getUsers } = require("../controller/users");
 const { _getProducts } = require("../controller/products");
-const { _getCategories } = require("../controller/categories");
+
+const {
+  _getCategories,
+  _saveCategory,
+  _putCategory,
+  _deleteCategory,
+} = require("../controller/categories");
 const {
   _getContact,
   _saveContact,
@@ -37,7 +44,6 @@ const {
 const router = express.Router();
 router.get("/users", _getUsers);
 router.get("/products", _getProducts);
-router.get("/categories", _getCategories);
 
 //--------------------------------------------------------------------------
 
@@ -119,4 +125,13 @@ router.put(
 );
 router.delete("/comment/:id", _deleteComment);
 //-----------------------------------------------------------------------------
+
+// categories
+
+router.get("/categories", _getCategories);
+router.post("/categories", upload.single("logo"), _saveCategory);
+router.put("/categories/:id", upload.single("logo"), _putCategory);
+router.delete("/categories/:id", upload.single("logo"), _deleteCategory);
+
+//------------------------------------------------------------------
 module.exports = router;

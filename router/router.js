@@ -2,7 +2,12 @@ const express = require("express");
 const { check } = require("express-validator");
 const { upload } = require("../connection/upload");
 const { _getUsers } = require("../controller/users");
-const { _getProducts } = require("../controller/products");
+const {
+  _getProducts,
+  _saveProduct,
+  _putProduct,
+  _deleteProduct,
+} = require("../controller/products");
 
 const {
   _getCategories,
@@ -43,7 +48,7 @@ const {
 
 const router = express.Router();
 router.get("/users", _getUsers);
-router.get("/products", _getProducts);
+
 
 //--------------------------------------------------------------------------
 
@@ -134,4 +139,37 @@ router.put("/categories/:id", upload.single("logo"), _putCategory);
 router.delete("/categories/:id", upload.single("logo"), _deleteCategory);
 
 //------------------------------------------------------------------
+// Products
+
+router.get("/products", _getProducts);
+
+router.post(
+  "/products",
+  upload.single("images"),
+  [
+    check("name", "name field is required").isLength({ min: 3 }),
+    check("country", "country field is required").isLength({ min: 3 }),
+    check("price", "price field is required").isLength({ min: 3 }),
+    check("date", "date field is required").isLength({ min: 3 }),
+    check("description", "description field is required").isLength({ min: 3 }),
+  ],
+  _saveProduct
+);
+
+router.put(
+  "/products/:id",
+  upload.single("images"),
+  [
+    check("name", "name field is required").isLength({ min: 3 }),
+    check("country", "country field is required").isLength({ min: 3 }),
+    check("price", "price field is required").isLength({ min: 3 }),
+    check("date", "date field is required").isLength({ min: 3 }),
+    check("description", "description field is required").isLength({ min: 3 }),
+  ],
+  _putProduct
+);
+
+router.delete("/products/:id", _deleteProduct);
+
+//-------------------------------------------------------------------
 module.exports = router;

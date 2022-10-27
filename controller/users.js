@@ -1,7 +1,7 @@
 const connection = require("../connection/connection");
 const cloudinary = require("../connection/cloudinary");
 const { validationResult } = require("express-validator");
-//const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 
 
 const _getUsers = (req, res) => {
@@ -31,7 +31,7 @@ const _saveUser = async (req, res) => {
   }
   let image = img?.secure_url;
   let cloudinary_id = img?.public_id;
-  //password = bcrypt.hashSync(password, Number("salt"));
+  password = bcrypt.hashSync(password, Number("salt"));
   const sql = `INSERT INTO users (name, email, password,phone,image ,cloudinary_id , authorization)
     VALUES ('${name}', '${email}', '${password}','${phone}','${image}','${cloudinary_id}' , 'user')`;
 

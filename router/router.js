@@ -1,7 +1,7 @@
 const express = require("express");
 const { check } = require("express-validator");
 const { upload } = require("../connection/upload");
-const { _getUsers, _saveUser } = require("../controller/users");
+const { _getUsers, _saveUser,_putUser, _deleteUser } = require("../controller/users");
 const {
   _getProducts,
   _saveProduct,
@@ -47,7 +47,6 @@ const {
 } = require("../controller/orders");
 
 const router = express.Router();
-
 
 //--------------------------------------------------------------------------
 
@@ -187,6 +186,20 @@ router.post(
   ],
   _saveUser
 );
+
+router.put(
+  "/users/:id",
+  upload.single("image"),
+  [
+    check("name", "name field is required").isLength({ min: 3 }),
+    check("email", "Email field is required").isEmail(),
+    check("password", "Passowrd field is required").isLength({ min: 4 }),
+    check("phone", "Phone field is required").isLength({ min: 10 }),
+  ],
+   _putUser
+);
+
+router.delete("/users/:id", _deleteUser);
 
 //----------------------------------------------------------------
 module.exports = router;

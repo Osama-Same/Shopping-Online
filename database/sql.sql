@@ -84,3 +84,13 @@ CREATE TABLE
         FOREIGN KEY (iduser) REFERENCES users (id),
         PRIMARY KEY (id)
     );
+CREATE TABLE
+    save (
+        id INT AUTO_INCREMENT NOT NULL,
+        iduser INT,
+        idpost INT,
+        save INT,
+        FOREIGN KEY (idpost) REFERENCES post (id),
+        FOREIGN KEY (iduser) REFERENCES users (id),
+        PRIMARY KEY (id)
+    );

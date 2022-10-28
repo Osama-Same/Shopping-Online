@@ -3,13 +3,13 @@ import Typography from "@mui/material/Typography";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
-import { Button, CardActionArea, CardActions } from "@mui/material";
+import { CardActionArea } from "@mui/material";
 interface CategoryPageProps {
   mainState: MainStateType;
   setMainState: (m: MainStateType) => void;
 }
 export function CategoryPage({ mainState, setMainState }: CategoryPageProps) {
-  const { allCategories } = mainState;
+  const { allCategories, allProducts } = mainState;
   if (!allCategories) return <div>No Products</div>;
   return (
     <div className="container" style={{ marginTop: "60px" }}>
@@ -26,17 +26,12 @@ export function CategoryPage({ mainState, setMainState }: CategoryPageProps) {
               <Card>
                 <CardActionArea
                   onClick={() => {
-                    /*
                     const findProduct: any = allProducts.filter(
-                      (p) => p.idcategory === e.id
+                      (p: any) => p.idcategory === e.id
                     );
                     mainState.render = "products";
                     mainState.allProducts = findProduct;
                     setMainState({ ...mainState });
-                     mainState.render = "userProductCard";
-                mainState.userProfile = use;
-                mainState.selectedUser = use;
-                setMainState({ ...mainState }); */
                   }}
                 >
                   <CardMedia

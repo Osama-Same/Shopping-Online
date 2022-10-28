@@ -28,15 +28,14 @@ export async function updateUserState(
     mainState.allUsers = _allUsers;
     mainState.allCategories = _getCategories;
     mainState.allComment = _allComment;
-    mainState.allproduct = _allPost;
+    mainState.allProducts = _allPost;
     mainState.allContact = _allContact;
     mainState.allNews = _allNews;
   }
   if (user?.authorization === "user") {
-    mainState.allUsers = _allUsers.find((u: any) => u.id === user?.id);
     mainState.allCategories = _getCategories;
     mainState.allComment = _allComment;
-    mainState.allproduct = _allPost;
+    mainState.allProducts = _allPost;
     mainState.allContact = _allContact;
     mainState.allLike = _allLike;
     mainState.allNews = _allNews;

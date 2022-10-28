@@ -89,7 +89,7 @@ const _putUser = async (req, res) => {
             res.json({ err: " You have entered invalid  Email" });
           }
           if (result) {
-            res.json({ result: "User Update sucessfully" });
+            res.json(result);
           }
         });
       }
@@ -144,7 +144,6 @@ const login = (req, res) => {
           res.json({
             result: result,
             token: token,
-            findUser: findUser,
           });
         } else {
           res.json({ err: "You have entered invalid  Password Or Email" });

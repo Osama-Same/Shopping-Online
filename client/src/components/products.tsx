@@ -18,8 +18,8 @@ interface ProductsPageProps {
 }
 
 export function ProductsPage({ mainState, setMainState }: ProductsPageProps) {
-  const { allproduct } = mainState;
-  if (!allproduct) return <div>No Products</div>;
+  const { allProducts } = mainState;
+  if (!allProducts) return <div>No Products</div>;
   return (
     <div className="container" style={{ marginTop: "60px" }}>
       <h3 className="text-center pt-3 pb-3">Products</h3>
@@ -29,7 +29,7 @@ export function ProductsPage({ mainState, setMainState }: ProductsPageProps) {
         interest to us.
       </p>
       <div className="row">
-        {allproduct.map((e) => {
+        {allProducts.map((e) => {
           return (
             <div className="col-md-4 pt-3 pb-3">
               <Card>

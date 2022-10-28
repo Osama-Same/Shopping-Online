@@ -15,7 +15,7 @@ const App = () => {
     allLike: [],
     allOrders: [],
     allNews: [],
-    allproduct: [],
+    allProducts: [],
     render: "",
     user: null,
   });

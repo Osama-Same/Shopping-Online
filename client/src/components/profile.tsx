@@ -143,8 +143,6 @@ export function ProfileForm({
   mainState,
   setMainState,
 }: ProfileFormProps) {
-  console.log("user", profile);
-
   const [id, setid] = useState(profile.id);
   const [name, setName] = useState(profile.name);
   const [email, setEmail] = useState(profile.email);
@@ -172,10 +170,6 @@ export function ProfileForm({
         <DialogContentText sx={{ marginBottom: "5%", textAlign: "center" }}>
           Profile Form
         </DialogContentText>
-        <Avatar sx={{ m: 1, width: 120, height: 140 }} src={image}>
-          <input hidden accept="image/*" type="file" />
-          <PhotoCamera />
-        </Avatar>
         <Box
           sx={{
             width: 500,
@@ -247,19 +241,22 @@ export function ProfileForm({
         <Button
           onClick={async () => {
             setLoading(true);
+
+            profile.id = id;
+            profile.name = name;
+            profile.email = email;
+            profile.password = password;
+            profile.phone = phone;
+            profile.authorization = "user";
             const fromData: any = new FormData();
-            fromData.append("id", id);
-            fromData.append("name", name);
-            fromData.append("email", email);
-            fromData.append("password", password);
-            fromData.append("phone", phone);
             if (image) {
               fromData.append("image", image, image.name);
+              profile.image = image;
             }
-            const res: any = await _putUser(id, fromData);
-
-            mainState.allUsers = [res, ...mainState.allUsers];
-            console.log("res", res);
+            await _putUser(id, profile);
+            mainState.user = profile;
+            mainState.allUsers = [profile, ...mainState.allUsers];
+            console.log("profile", profile);
             setMainState({ ...mainState });
             setLoading(false);
             setOpen(false);

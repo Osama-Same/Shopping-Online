@@ -62,7 +62,6 @@ const _putUser = async (req, res) => {
         }
         let name = req.body.name || user.name;
         let email = req.body.email || user.email;
-        let password = req.body.password || user.password;
         let phone = req.body.phone || user.phone;
         let img;
 
@@ -74,11 +73,9 @@ const _putUser = async (req, res) => {
         }
         let image = img?.secure_url || user.image;
         let cloudinary_id = img?.public_id || user.cloudinary_id;
-        password = bcrypt.hashSync(password, Number("salt"));
         let sql = `update users set 
       name = '${name}',
       email = '${email}',
-      password = '${password}',
       phone = '${phone}',
       image = '${image}',
       cloudinary_id = '${cloudinary_id}',

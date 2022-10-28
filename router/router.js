@@ -203,7 +203,6 @@ router.put(
   [
     check("name", "name field is required").isLength({ min: 3 }),
     check("email", "Email field is required").isEmail(),
-    check("password", "Passowrd field is required").isLength({ min: 4 }),
     check("phone", "Phone field is required").isLength({ min: 10 }),
   ],
   _putUser

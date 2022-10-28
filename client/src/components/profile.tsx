@@ -251,7 +251,7 @@ export function ProfileForm({
             const fromData: any = new FormData();
             if (image) {
               fromData.append("image", image, image.name);
-              profile.image = image;
+              profile.image = image.name;
             }
             await _putUser(id, profile);
             mainState.user = profile;

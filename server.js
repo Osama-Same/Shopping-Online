@@ -5,12 +5,17 @@ const app = express();
 const bodyParser = require("body-parser");
 const sqlserver = require("./connection/connection");
 const router = require("./router/router");
+const cloudinary = require("./connection/cloudinary");
+const {upload} = require("./connection/upload");
 require("dotenv").config();
 
 const corsOptions = {
   origin: "*",
   optionsSuccessStatus: 200,
 };
+
+
+
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(bodyParser.json());

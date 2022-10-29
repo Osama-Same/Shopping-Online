@@ -33,6 +33,7 @@ export async function updateUserState(
     mainState.allNews = _allNews;
   }
   if (user?.authorization === "user") {
+    mainState.allUsers = _allUsers;
     mainState.allCategories = _getCategories;
     mainState.allComment = _allComment;
     mainState.allProducts = _allPost;

@@ -15,12 +15,15 @@ import DialogContentText from "@mui/material/DialogContentText";
 import CircularProgress from "@mui/material/CircularProgress";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
+import { Cloudinary } from "@cloudinary/url-gen";
 import Avatar from "@mui/material/Avatar";
 import axios from "axios";
 import { toast } from "react-toastify";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import Container from "@mui/material/Container";
+import { AdvancedImage } from "@cloudinary/react";
 import { _putUser } from "../service/putAllData";
+import { _getAllUser } from "../service/getAllData";
 import { AnyAaaaRecord } from "dns";
 interface ProfilePageProps {
   mainState: MainStateType;
@@ -56,7 +59,6 @@ export function ProfilePage({ mainState, setMainState }: ProfilePageProps) {
                   variant="contained"
                   color="primary"
                   onClick={() => {
-                    setSelectedUser(user);
                     setOpen(true);
                   }}
                 >
@@ -115,13 +117,18 @@ export function ProfilePage({ mainState, setMainState }: ProfilePageProps) {
           </div>
         </div>
       )}
-      {selectedUser && (
+
+      {user && (
         <ProfileForm
           open={open}
           setOpen={setOpen}
-          profile={selectedUser}
+          user={user}
           mainState={mainState}
           setMainState={setMainState}
+          onUpdate={async () => {
+            const _users = await _getAllUser();
+            mainState.allUsers = _users;
+          }}
         />
       )}
     </Container>
@@ -131,34 +138,37 @@ export function ProfilePage({ mainState, setMainState }: ProfilePageProps) {
 interface ProfileFormProps {
   open: boolean;
   setOpen: (b: boolean) => void;
-  profile: UserType;
+  user: UserType;
   mainState: MainStateType;
   setMainState: (m: MainStateType) => void;
+  onUpdate: any ;
 }
 
 export function ProfileForm({
   open,
   setOpen,
-  profile,
+  user,
   mainState,
   setMainState,
+  onUpdate,
 }: ProfileFormProps) {
-  const [id, setid] = useState(profile.id);
-  const [name, setName] = useState(profile.name);
-  const [email, setEmail] = useState(profile.email);
-  const [password, setPassword] = useState(profile.password);
-  const [phone, setPhone] = useState(profile.phone);
-  const [image, setImage] = useState<any>(profile.image);
+  const [id, setID] = useState<any>(user ? user.id : 0);
+  const [name, setName] = useState(user ? user.name : "");
+  const [email, setEmail] = useState(user ? user.email : "");
+  const [password, setPassword] = useState(user ? user.password : "");
+  const [phone, setPhone] = useState(user ? user.phone : "");
+  const [image, setImage] = useState<any>(user ? user.image : null);
   const [loading, setLoading] = useState(false);
+
   useEffect(() => {
-    if (!profile) return;
-    setid(profile.id);
-    setName(profile.name);
-    setEmail(profile.email);
-    setPassword(profile.password);
-    setPhone(profile.phone);
-    setImage(profile.image);
-  }, [profile]);
+    if (!user) return;
+    setName(user.name);
+    setEmail(user.email);
+    setPassword(user.password);
+    setPhone(user.phone);
+    setImage(user.image);
+    setID(user.id);
+  }, [user]);
   return (
     <Dialog
       open={open}
@@ -170,6 +180,7 @@ export function ProfileForm({
         <DialogContentText sx={{ marginBottom: "5%", textAlign: "center" }}>
           Profile Form
         </DialogContentText>
+
         <Box
           sx={{
             width: 500,
@@ -180,6 +191,16 @@ export function ProfileForm({
             flexDirection: "column",
           }}
         >
+          <TextField
+            fullWidth
+            disabled
+            margin="normal"
+            label="Name"
+            type={"number"}
+            name="id"
+            onChange={(e) => setName(e.target.value)}
+            value={name}
+          />
           <TextField
             fullWidth
             margin="normal"
@@ -226,6 +247,7 @@ export function ProfileForm({
             name="image"
             onChange={(e: any) => {
               setImage(e.target.files[0]);
+              console.log(e.target.files[0]);
             }}
           />
         </Box>
@@ -242,21 +264,28 @@ export function ProfileForm({
           onClick={async () => {
             setLoading(true);
 
-            profile.id = id;
+            /*          profile.id = id;
             profile.name = name;
             profile.email = email;
             profile.password = password;
             profile.phone = phone;
-            profile.authorization = "user";
-            const fromData: any = new FormData();
-            if (image) {
+            profile.authorization = "user"; */
+            user.id = id;
+            const fromData = new FormData();
+            fromData.append("id", id);
+            fromData.append("name", name);
+            fromData.append("email", email);
+            fromData.append("phone", phone);
+            if (image !== "") {
+              user.image = image;
+              fromData.append("image", user.image);
+            } else {
               fromData.append("image", image, image.name);
-              profile.image = image.name;
             }
-            await _putUser(id, profile);
-            mainState.user = profile;
-            mainState.allUsers = [profile, ...mainState.allUsers];
-            console.log("profile", profile);
+
+            await _putUser(id, fromData);
+            onUpdate();
+            console.log("profile", user);
             setMainState({ ...mainState });
             setLoading(false);
             setOpen(false);

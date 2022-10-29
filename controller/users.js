@@ -10,6 +10,8 @@ const _getUsers = (req, res) => {
       res.json(err);
     } else {
       res.json(result);
+      cloudinary.uploader
+      .then(result=>console.log(result));
     }
   });
 };
@@ -19,7 +21,6 @@ const _saveUser = async (req, res) => {
     return res.json({ error: error.array()[0].msg });
   }
   let name = req.body.name;
-
   let email = req.body.email;
   let password = req.body.password;
   let phone = req.body.phone;

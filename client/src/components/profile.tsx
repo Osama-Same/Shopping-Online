@@ -29,9 +29,7 @@ export function ProfilePage({ mainState, setMainState }: ProfilePageProps) {
   const [open, setOpen] = useState(false);
   const [users, setUsers] = useState([]);
   const [openConfirmDelDlg, setopenConfirmDelDlg] = useState(false);
-  const findUser = allUsers.find((u) => u.id === user?.id);
 
-  console.log("findUser", findUser);
   return (
     <Container component="main" maxWidth="lg" sx={{ mt: 15, mb: 5 }}>
       {user && (
@@ -135,7 +133,7 @@ export function ProfilePage({ mainState, setMainState }: ProfilePageProps) {
 interface ProfileFormProps {
   open: boolean;
   setOpen: (b: boolean) => void;
-  user: UserType;
+  user: UserType | any;
   mainState: MainStateType;
   setMainState: (m: MainStateType) => void;
   onUpdate: any;
@@ -156,7 +154,7 @@ export function ProfileForm({
   const [phone, setPhone] = useState(user ? user.phone : "");
   const [image, setImage] = useState<any>(user ? user.image : null);
   const [loading, setLoading] = useState(false);
-
+  const { allUsers } = mainState;
   useEffect(() => {
     if (!user) return;
     setName(user.name);
@@ -278,11 +276,12 @@ export function ProfileForm({
             }
 
             user.image = image;
-            await _putUser(id, user);
-            // onUpdate();
-            console.log("profile", user);
-            mainState.user = user;
-            mainState.allUsers = [user, ...mainState.allUsers];
+            const res: any = await _putUser(id, user);
+            setLoading(true);
+            const findUser :any = user.find((u:any) => u.id === res?.id);
+            console.log("findUser", findUser);
+            mainState.user = findUser;
+            mainState.allUsers = [findUser, ...mainState.allUsers];
             setMainState({ ...mainState });
             setLoading(false);
             setOpen(false);

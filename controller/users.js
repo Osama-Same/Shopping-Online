@@ -83,10 +83,8 @@ const _putUser = async (req, res) => {
         connection.query(sql, (err, result) => {
           if (err) {
             res.json({ err: " You have entered invalid  Email" });
-          }
-          if (result) {
-            console.log(user);
-            res.json(user);
+          } else {
+            res.json(result);
           }
         });
       }

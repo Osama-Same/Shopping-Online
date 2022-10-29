@@ -73,19 +73,20 @@ const _putUser = async (req, res) => {
         let image = img?.secure_url || user.image;
         let cloudinary_id = img?.public_id || user.cloudinary_id;
         let sql = `update users set 
-      name = '${name}',
-      email = '${email}',
-      phone = '${phone}',
-      image = '${image}',
-      cloudinary_id = '${cloudinary_id}',
-      authorization = "user"
-      where id = '${id}'`;
+           name = '${name}',
+           email = '${email}',
+           phone = '${phone}',
+           image = '${image}',
+           cloudinary_id = '${cloudinary_id}',
+           authorization = "user"
+           where id = '${id}'`;
         connection.query(sql, (err, result) => {
           if (err) {
             res.json({ err: " You have entered invalid  Email" });
           }
           if (result) {
-            res.json(result);
+            console.log(user);
+            res.json(user);
           }
         });
       }

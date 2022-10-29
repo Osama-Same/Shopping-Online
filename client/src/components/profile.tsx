@@ -15,26 +15,23 @@ import DialogContentText from "@mui/material/DialogContentText";
 import CircularProgress from "@mui/material/CircularProgress";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
-import { Cloudinary } from "@cloudinary/url-gen";
-import Avatar from "@mui/material/Avatar";
-import axios from "axios";
-import { toast } from "react-toastify";
-import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import Container from "@mui/material/Container";
-import { AdvancedImage } from "@cloudinary/react";
 import { _putUser } from "../service/putAllData";
 import { _getAllUser } from "../service/getAllData";
-import { AnyAaaaRecord } from "dns";
+
 interface ProfilePageProps {
   mainState: MainStateType;
   setMainState: (m: MainStateType) => void;
 }
 
 export function ProfilePage({ mainState, setMainState }: ProfilePageProps) {
-  const { user } = mainState;
+  const { user, allUsers } = mainState;
   const [open, setOpen] = useState(false);
-  const [selectedUser, setSelectedUser] = useState<UserType | null>(null);
+  const [users, setUsers] = useState([]);
   const [openConfirmDelDlg, setopenConfirmDelDlg] = useState(false);
+  const findUser = allUsers.find((u) => u.id === user?.id);
+
+  console.log("findUser", findUser);
   return (
     <Container component="main" maxWidth="lg" sx={{ mt: 15, mb: 5 }}>
       {user && (
@@ -141,7 +138,7 @@ interface ProfileFormProps {
   user: UserType;
   mainState: MainStateType;
   setMainState: (m: MainStateType) => void;
-  onUpdate: any ;
+  onUpdate: any;
 }
 
 export function ProfileForm({
@@ -199,7 +196,7 @@ export function ProfileForm({
             type={"number"}
             name="id"
             onChange={(e) => setName(e.target.value)}
-            value={name}
+            value={id}
           />
           <TextField
             fullWidth
@@ -264,28 +261,28 @@ export function ProfileForm({
           onClick={async () => {
             setLoading(true);
 
-            /*          profile.id = id;
-            profile.name = name;
-            profile.email = email;
-            profile.password = password;
-            profile.phone = phone;
-            profile.authorization = "user"; */
+            user.id = id;
+            user.name = name;
+            user.email = email;
+            user.password = password;
+            user.phone = phone;
+            user.authorization = "user";
             user.id = id;
             const fromData = new FormData();
-            fromData.append("id", id);
-            fromData.append("name", name);
-            fromData.append("email", email);
-            fromData.append("phone", phone);
+
             if (image !== "") {
               user.image = image;
               fromData.append("image", user.image);
             } else {
-              fromData.append("image", image, image.name);
+              setImage(fromData.append("image", image, image.name));
             }
 
-            await _putUser(id, fromData);
-            onUpdate();
+            user.image = image;
+            await _putUser(id, user);
+            // onUpdate();
             console.log("profile", user);
+            mainState.user = user;
+            mainState.allUsers = [user, ...mainState.allUsers];
             setMainState({ ...mainState });
             setLoading(false);
             setOpen(false);

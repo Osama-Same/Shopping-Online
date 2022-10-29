@@ -11,6 +11,14 @@ export async function _getAllUser() {
     toast.error(`Error server`);
   }
 }
+
+export function logOut() {
+  localStorage.removeItem("token");
+}
+export function getToken() {
+  return localStorage.getItem("token");
+}
+
 export async function _getAllContact() {
   const res = await axios.get(url + "contact");
   if (res.data) {
@@ -18,7 +26,6 @@ export async function _getAllContact() {
   } else {
     toast.error(`Error server`);
   }
-
 }
 export async function _getAllNews() {
   const res = await axios.get(url + "news");

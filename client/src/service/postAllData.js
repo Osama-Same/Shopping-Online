@@ -24,7 +24,10 @@ export async function _loginUser(user) {
 
   if (res.data.result) {
     toast(`User Login sucessfully`);
-    localStorage.getItem("result", res.data.result[0]);
+    const token = res.data.token;
+    const result = res.data.result;
+    localStorage.setItem("token", token);
+    localStorage.getItem("result", result);
     return res.data.result[0];
   } else if (res.data.error) {
     toast.error(`${res.data.error}`);

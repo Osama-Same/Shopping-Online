@@ -8,7 +8,8 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Logout from "@mui/icons-material/Logout";
 import ListItemIcon from "@mui/material/ListItemIcon";
-import AccountBoxIcon from '@mui/icons-material/AccountBox';
+import AccountBoxIcon from "@mui/icons-material/AccountBox";
+import { logOut } from "../service/getAllData";
 interface NavigationPageProps {
   mainState: MainStateType;
   setMainState: (m: MainStateType) => void;
@@ -231,13 +232,15 @@ export function Navigation({ mainState, setMainState }: NavigationPageProps) {
                     }}
                   >
                     <ListItemIcon>
-                    <AccountBoxIcon fontSize="small" />
+                      <AccountBoxIcon fontSize="small" />
                     </ListItemIcon>
                     Profile
                   </MenuItem>
                   <MenuItem
                     onClick={() => {
-                      console.log("osama");
+                      logOut();
+                      window.location.href = "/";
+                      setMainState({ ...mainState });
                     }}
                   >
                     <ListItemIcon>

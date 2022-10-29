@@ -8,7 +8,6 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import CircularProgress from "@mui/material/CircularProgress";
 import { _loginUser } from "../service/postAllData";
-import { updateUserState } from "./users";
 import Link from "@mui/material/Link";
 import { MainStateType } from "./mainState";
 interface LoginPageProps {
@@ -62,7 +61,7 @@ export function LoginPage({ mainState, setMainState }: LoginPageProps) {
           onClick={async () => {
             setLoading(true);
             const user = { email: email, password: password };
-            const res: any = await _loginUser(user);           
+            const res: any = await _loginUser(user);
             mainState.user = res;
             setMainState({ ...mainState });
             setLoading(false);

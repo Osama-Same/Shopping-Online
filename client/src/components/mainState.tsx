@@ -9,6 +9,7 @@ export type MainStateType = {
   allOrders: OrderType[];
   user: UserType | null ;
   render: string;
+  selectProduct: productType | null | any;
 };
 
 export type UserType = {

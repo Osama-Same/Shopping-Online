@@ -18,9 +18,10 @@ const App = () => {
     allProducts: [],
     render: "",
     user: null,
+    selectProduct: null,
   });
   useEffect(() => {
-    updateUserState(mainState,setMainState);
+    updateUserState(mainState, setMainState);
   }, [mainState]);
   console.log("mainState", mainState);
 

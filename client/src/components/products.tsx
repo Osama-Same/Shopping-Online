@@ -90,14 +90,14 @@ export function ProductsPage({ mainState, setMainState }: ProductsPageProps) {
                     startIcon={<ReadMoreIcon />}
                     size="small"
                     onClick={() => {
-                     /*  const findProduct: any = allProducts.find(
+                      const findProduct: any = allProducts.find(
                         (p) => p.id === e.id
                       );
 
                       console.log("findProduct", findProduct);
                       mainState.selectProduct = findProduct;
                       mainState.render = "viewProductPage";
-                      setMainState({ ...mainState }); */
+                      setMainState({ ...mainState }); 
                     }}
                   >
                     See Details

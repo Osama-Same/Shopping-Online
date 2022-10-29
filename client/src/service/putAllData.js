@@ -5,7 +5,7 @@ const url = "https://shopping1234567.herokuapp.com/";
 
 export async function _putUser(id, user) {
   const res = await axios.put(url + `users/${id}`, user);
-  if (res.data.result) {
+  if (res.data) {
     toast(`User Update sucessfully`);
     console.log(res.data);
     return res.data;

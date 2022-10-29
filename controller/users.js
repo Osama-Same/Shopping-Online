@@ -10,8 +10,6 @@ const _getUsers = (req, res) => {
       res.json(err);
     } else {
       res.json(result);
-      cloudinary.uploader
-      .then(result=>console.log(result));
     }
   });
 };

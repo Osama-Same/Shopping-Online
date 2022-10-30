@@ -4,6 +4,7 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import { CardActionArea } from "@mui/material";
+import Container from "@mui/material/Container";
 interface CategoryPageProps {
   mainState: MainStateType;
   setMainState: (m: MainStateType) => void;
@@ -12,13 +13,13 @@ export function CategoryPage({ mainState, setMainState }: CategoryPageProps) {
   const { allCategories, allProducts } = mainState;
   if (!allCategories) return <div>No Products</div>;
   return (
-    <div className="container" style={{ marginTop: "60px" }}>
-      <h3 className="text-center pt-3 pb-3">Categories</h3>
-      <p style={{ paddingBottom: "50px" }}>
+    <Container maxWidth="lg" sx={{ mt: 10, mb: 5 }}>
+      <Typography variant="h4">Categories</Typography>
+      <Typography variant="body2" sx={{ mt: 5, mb: 5 }}>
         Your messages are the secret of our development, so do not hesitate at
         all in any note or suggestion that will reach us and be of great
         interest to us.
-      </p>
+      </Typography>
       <div className="row">
         {allCategories.map((e) => {
           return (
@@ -51,6 +52,6 @@ export function CategoryPage({ mainState, setMainState }: CategoryPageProps) {
           );
         })}
       </div>
-    </div>
+    </Container>
   );
 }

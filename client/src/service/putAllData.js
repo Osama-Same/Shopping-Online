@@ -1,6 +1,5 @@
 import axios from "axios";
 import { toast } from "react-toastify";
-//const url = "http://localhost:5000/";
 const url = "https://shopping1234567.herokuapp.com/";
 
 export async function _putUser(id, user) {

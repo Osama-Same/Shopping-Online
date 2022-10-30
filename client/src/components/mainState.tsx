@@ -3,13 +3,14 @@ export type MainStateType = {
   allCategories: categoryType[];
   allComment: commentType[];
   allContact: ContactType[];
-  allProducts : productType[]
+  allProducts: productType[];
   allLike: LikeType[];
   allNews: NewsType[];
   allOrders: OrderType[];
-  user: UserType | null ;
+  user: UserType | null;
   render: string;
   selectProduct: productType | null | any;
+  dark: string;
 };
 
 export type UserType = {
@@ -18,7 +19,7 @@ export type UserType = {
   email: string;
   password: string;
   phone: string;
-  image: string ;
+  image: string;
   authorization?: string;
 };
 export type ContactType = {

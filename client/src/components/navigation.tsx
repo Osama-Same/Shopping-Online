@@ -10,6 +10,8 @@ import Logout from "@mui/icons-material/Logout";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import { logOut } from "../service/getAllData";
+import Switch from "@mui/material/Switch";
+import FormControlLabel from "@mui/material/FormControlLabel";
 interface NavigationPageProps {
   mainState: MainStateType;
   setMainState: (m: MainStateType) => void;
@@ -98,6 +100,23 @@ export function Navigation({ mainState, setMainState }: NavigationPageProps) {
               </li>
             </ul>
             <div className="d-flex">
+            <FormControlLabel
+              style={{ color: "white" }}
+              value="start"
+              control={
+                <Switch
+                  onClick={() => {
+                    mainState.dark =
+                      mainState.dark === "light" ? "dark" : "light";
+                    setMainState({ ...mainState });
+                  }}
+                />
+              }
+              label={
+                (mainState.dark = mainState.dark === "light" ? "dark" : "light")
+              }
+              labelPlacement="start"
+            />
               <Button
                 style={{ color: "white" }}
                 onClick={() => {

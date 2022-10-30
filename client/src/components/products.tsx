@@ -12,6 +12,11 @@ import FlagIcon from "@mui/icons-material/Flag";
 import ReadMoreIcon from "@mui/icons-material/ReadMore";
 import SaveIcon from "@mui/icons-material/Save";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
+import Container from "@mui/material/Container";
+import TextField from "@mui/material/TextField";
+import SearchIcon from "@mui/icons-material/Search";
+import { useState } from "react";
+import CircularProgress from "@mui/material/CircularProgress";
 interface ProductsPageProps {
   mainState: MainStateType;
   setMainState: (m: MainStateType) => void;
@@ -19,15 +24,28 @@ interface ProductsPageProps {
 
 export function ProductsPage({ mainState, setMainState }: ProductsPageProps) {
   const { allProducts } = mainState;
-  if (!allProducts) return <div>No Products</div>;
+  const [loading, setLoading] = useState(false);
+  if (!allProducts) return <div>{loading && <CircularProgress />}</div>;
   return (
-    <div className="container" style={{ marginTop: "60px" }}>
-      <h3 className="text-center pt-3 pb-3">Products</h3>
-      <p style={{ paddingBottom: "50px" }}>
-        Your messages are the secret of our development, so do not hesitate at
-        all in any note or suggestion that will reach us and be of great
-        interest to us.
-      </p>
+    <Container maxWidth="lg" sx={{ mt: 10, mb: 5 }}>
+      <Typography variant="h4">Products</Typography>
+      <Typography variant="body2" sx={{ mt: 5, mb: 5 }}>
+        <Stack
+          direction="row"
+          justifyContent="center"
+          sx={{ mt: 5, mb: 7, pt: 2 }}
+        >
+          <SearchIcon />
+          <TextField
+            fullWidth
+            type={"search"}
+            label="Search"
+            placeholder="Search "
+            InputProps={<Button>osama</Button>}
+          />
+        </Stack>
+      </Typography>
+
       <div className="row">
         {allProducts.map((e) => {
           return (
@@ -97,7 +115,7 @@ export function ProductsPage({ mainState, setMainState }: ProductsPageProps) {
                       console.log("findProduct", findProduct);
                       mainState.selectProduct = findProduct;
                       mainState.render = "viewProductPage";
-                      setMainState({ ...mainState }); 
+                      setMainState({ ...mainState });
                     }}
                   >
                     See Details
@@ -111,6 +129,6 @@ export function ProductsPage({ mainState, setMainState }: ProductsPageProps) {
           );
         })}
       </div>
-    </div>
+    </Container>
   );
 }

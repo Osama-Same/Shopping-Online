@@ -20,9 +20,9 @@ const _saveContact = (req, res) => {
   const sql = `INSERT INTO contact ( email , massage) VALUES ('${email}', '${massage}')`;
   connection.query(sql, (err, result) => {
     if (err) {
-      res.json({ err: "Error" });
-      console.log({ err: "Error" });
-    } else {
+      res.json({ err: "Error Email" });
+    }
+    if (result) {
       res.json(result);
     }
   });

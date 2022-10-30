@@ -2,6 +2,7 @@ import { MainStateType } from "./mainState";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Carousel from "react-bootstrap/Carousel";
+import Container from "@mui/material/Container";
 
 interface HomePageProps {
   mainState: MainStateType;
@@ -9,16 +10,13 @@ interface HomePageProps {
 }
 export function HomePage({ mainState, setMainState }: HomePageProps) {
   return (
-    <div
-      className="container  pt-3 pb-3"
-      style={{ marginTop: "60px", marginBottom: "8%" }}
-    >
-      <h2 className="text-center pt-3 pb-3">Shopping Online</h2>
-      <p className="pt-3 pb-3">
+    <Container maxWidth="lg" sx={{ mt: 10, mb: 5 }}>
+      <Typography variant="h4">Shopping Online</Typography>
+      <Typography variant="body2" sx={{mt: 5 , mb: 5 }}>
         Marketing is one of the most important steps of commerce, and
         e-marketing or digital marketing is one of the most important modern
         marketing methods.
-      </p>
+      </Typography>
       <Button sx={{ marginBottom: "60px" }} variant="outlined">
         Visit Us to Know More
       </Button>
@@ -67,7 +65,7 @@ export function HomePage({ mainState, setMainState }: HomePageProps) {
           <Typography>Maximum productivity at the best price.</Typography>
         </div>
       </div>
-    </div>
+    </Container>
   );
 }
 

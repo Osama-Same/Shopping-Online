@@ -40,10 +40,17 @@ export async function _loginUser(user) {
   }
 }
 
-export async function _getAllContact() {
-  const res = await axios.get(url + "contact");
+export async function _insetContact(contact) {
+  const res = await axios.post(url + "contact", contact);
   if (res.data) {
-    return res.data;
+    toast("Contact sucessfully");
+    return res.data.result;
+  } else if (res.data.err) {
+    toast.error(`Error server`);
+    return res.data.err;
+  } else if (res.data.error) {
+    toast.error(`${res.data.error}`);
+    return res.data.error;
   } else {
     toast.error(`Error server`);
   }

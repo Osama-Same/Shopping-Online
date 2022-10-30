@@ -27,7 +27,7 @@ interface ProfilePageProps {
 export function ProfilePage({ mainState, setMainState }: ProfilePageProps) {
   const { user, allUsers } = mainState;
   const [open, setOpen] = useState(false);
-  const [selectedUser, setSelectedUSer] = useState<UserType | null>(null);
+  const [selectedUser, setSelectedUser] = useState<UserType | null>(null);
   const [openConfirmDelDlg, setopenConfirmDelDlg] = useState(false);
   const findUser: any = allUsers.find((u) => u.id === user?.id);
   return (
@@ -54,8 +54,10 @@ export function ProfilePage({ mainState, setMainState }: ProfilePageProps) {
                   variant="contained"
                   color="primary"
                   onClick={() => {
-                    setSelectedUSer(user);
                     setOpen(true);
+                    setSelectedUser(user);
+                    mainState.allUsers = [findUser, ...mainState.allUsers];
+                    setMainState({ ...mainState });
                   }}
                 >
                   Edit Profile
@@ -64,7 +66,7 @@ export function ProfilePage({ mainState, setMainState }: ProfilePageProps) {
                   variant="contained"
                   color="error"
                   onClick={() => {
-                    setSelectedUSer(user);
+                    setSelectedUser(user);
                     setopenConfirmDelDlg(true);
                   }}
                 >
@@ -185,7 +187,7 @@ export function ProfileForm({
     setImage(user.image);
     console.log(user.image);
     setID(user.id);
-  }, [user,findUser]);
+  }, [user, findUser]);
 
   const handleImage = (e: any) => {
     if (image === "") {
@@ -212,7 +214,6 @@ export function ProfileForm({
     await _putUser(id, fromData);
     mainState.allUsers = [fromData, ...mainState.allUsers];
     setMainState({ ...mainState });
-    mainState.user = findUser;
     setLoading(false);
   };
   return (

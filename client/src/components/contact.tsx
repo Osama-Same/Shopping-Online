@@ -8,10 +8,11 @@ import BottomNavigationAction from "@mui/material/BottomNavigationAction";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import EmailIcon from "@mui/icons-material/Email";
 import Stack from "@mui/material/Stack";
-import Box from "@mui/material/Box";
+import { _insetContact } from "../service/postAllData";
 import CircularProgress from "@mui/material/CircularProgress";
 import ContactPhoneIcon from "@mui/icons-material/ContactPhone";
 import Container from "@mui/material/Container";
+
 export type locationtype = {
   longitude: string;
   latitude: string;
@@ -30,15 +31,20 @@ export function ContactPage({ mainState, setMainState }: ContactPageProps) {
   const [loading, setLoading] = useState(false);
 
   return (
-    <div className="container" style={{ marginTop: "60px" }}>
+    <Container maxWidth="lg" sx={{ mt: 10, mb: 5 }}>
       <h2 className="text-center pt-3 pb-3">Contact Us</h2>
-      <p style={{ textAlign: "center", paddingBottom: "50px" }}>
+      <Typography variant="body2" sx={{ mt: 5, mb: 5 }}>
         Your messages are the secret of our development, so do not hesitate at
         all in any note or suggestion that will reach us and be of great
         interest to us.
-      </p>
-      <Stack sx={{ pt: 2 }} direction="row" spacing={2} justifyContent="center">
-        <BottomNavigation showLabels sx={{ width: 700 }}>
+      </Typography>
+      <Stack
+        direction="row"
+        spacing={2}
+        justifyContent="center"
+        sx={{ mt: 5, mb: 7, pt: 2 }}
+      >
+        <BottomNavigation showLabels sx={{ width: 900 }}>
           <BottomNavigationAction
             label="(+962)799895632"
             icon={<ContactPhoneIcon />}
@@ -50,17 +56,8 @@ export function ContactPage({ mainState, setMainState }: ContactPageProps) {
           <BottomNavigationAction label="Nearby" icon={<LocationOnIcon />} />
         </BottomNavigation>
       </Stack>
-
-      <Container component="main" maxWidth="md" color="text.secondary">
-        <Box
-          sx={{
-            marginTop: 15,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            marginBottom: 15,
-          }}
-        >
+      <div className="row">
+        <div className="col-md-6 pt-3 pb-3">
           <Typography>
             Use the form below to share your questions, ideas, comments and
             feedback
@@ -86,18 +83,26 @@ export function ContactPage({ mainState, setMainState }: ContactPageProps) {
             fullWidth
             variant="contained"
             onClick={async () => {
-              const data = { email: email, massage: massage };
+              const data: any = { email: email, massage: massage };
               setLoading(true);
-             // await serviceContact._save(data);
+              await _insetContact(data);
               mainState.render = "contact";
+              mainState.allContact = [data, ...mainState.allContact];
               setMainState({ ...mainState });
               setLoading(false);
             }}
           >
             {loading ? <CircularProgress /> : "Save"}
           </Button>
-        </Box>
-      </Container>
-    </div>
+        </div>
+        <div className="col">
+          <img
+            src="https://worldlivestories.com/wp-content/uploads/2021/03/Buy-Online.jpg"
+            width={500}
+            alt=""
+          />
+        </div>
+      </div>
+    </Container>
   );
 }

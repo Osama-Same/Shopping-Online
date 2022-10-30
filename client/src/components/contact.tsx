@@ -12,7 +12,11 @@ import { _insetContact } from "../service/postAllData";
 import CircularProgress from "@mui/material/CircularProgress";
 import ContactPhoneIcon from "@mui/icons-material/ContactPhone";
 import Container from "@mui/material/Container";
-
+import FacebookRoundedIcon from "@mui/icons-material/FacebookRounded";
+import TwitterIcon from '@mui/icons-material/Twitter';
+import InstagramIcon from '@mui/icons-material/Instagram';
+import WhatsAppIcon from '@mui/icons-material/WhatsApp';
+import LinkedInIcon from '@mui/icons-material/LinkedIn';
 export type locationtype = {
   longitude: string;
   latitude: string;
@@ -32,7 +36,7 @@ export function ContactPage({ mainState, setMainState }: ContactPageProps) {
 
   return (
     <Container maxWidth="lg" sx={{ mt: 10, mb: 5 }}>
-      <h2 className="text-center pt-3 pb-3">Contact Us</h2>
+      <Typography variant="h4">Contact Us</Typography>
       <Typography variant="body2" sx={{ mt: 5, mb: 5 }}>
         Your messages are the secret of our development, so do not hesitate at
         all in any note or suggestion that will reach us and be of great
@@ -58,10 +62,19 @@ export function ContactPage({ mainState, setMainState }: ContactPageProps) {
       </Stack>
       <div className="row">
         <div className="col-md-6 pt-3 pb-3">
-          <Typography>
-            Use the form below to share your questions, ideas, comments and
-            feedback
-          </Typography>
+          <Stack
+            direction="row"
+            spacing={5}
+            justifyContent="center"
+            sx={{ mt: 1, mb: 6}}
+          >
+            <FacebookRoundedIcon color="primary" sx={{ fontSize: 40 }}/>
+            <TwitterIcon color="primary" sx={{ fontSize: 40 }}/>
+            <InstagramIcon color="secondary" sx={{ fontSize: 40 }}/>
+            <WhatsAppIcon color="success" sx={{ fontSize: 40 }}/>
+            <LinkedInIcon color="primary" sx={{ fontSize: 40 }}/>
+          </Stack>
+
           <TextField
             margin="normal"
             fullWidth

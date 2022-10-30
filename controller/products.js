@@ -39,7 +39,6 @@ const _saveProduct = async (req, res) => {
   connection.query(sql, (err, result) => {
     if (err) {
       res.json(err);
-      console.log(err);
     } else {
       res.json(result);
     }

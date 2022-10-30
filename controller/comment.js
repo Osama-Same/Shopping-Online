@@ -46,7 +46,7 @@ const _putComment = (req, res) => {
   WHERE id = '${id}'`;
   connection.query(sql, (err, result) => {
     if (err) {
-      res.json(err);
+      res.json({err :  "Error comment"});
     } else {
       res.json(result);
     }

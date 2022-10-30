@@ -19,8 +19,7 @@ const _saveNews = (req, res) => {
   const sql = `INSERT INTO news ( email ) VALUES ('${email}')`;
   connection.query(sql, (err, result) => {
     if (err) {
-      res.json({ err: "Error" });
-      console.log({ err: "Error" });
+      res.json({ err: "Error Email" });
     } else {
       res.json(result);
     }

@@ -12,7 +12,7 @@ export function HomePage({ mainState, setMainState }: HomePageProps) {
   return (
     <Container maxWidth="lg" sx={{ mt: 10, mb: 5 }}>
       <Typography variant="h4">Shopping Online</Typography>
-      <Typography variant="body2" sx={{mt: 5 , mb: 5 }}>
+      <Typography variant="body2" sx={{ mt: 5, mb: 5 }}>
         Marketing is one of the most important steps of commerce, and
         e-marketing or digital marketing is one of the most important modern
         marketing methods.

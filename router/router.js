@@ -140,7 +140,12 @@ router.delete("/comment/:id", _deleteComment);
 // categories
 
 router.get("/categories", _getCategories);
-router.post("/categories", upload.single("logo"), _saveCategory);
+router.post(
+  "/categories",
+  [check("name", "name field is required").isLength({ min: 3 })],
+  upload.single("logo"),
+  _saveCategory
+);
 router.put("/categories/:id", upload.single("logo"), _putCategory);
 router.delete("/categories/:id", upload.single("logo"), _deleteCategory);
 

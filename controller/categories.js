@@ -1,6 +1,6 @@
 const connection = require("../connection/connection");
 const cloudinary = require("../connection/cloudinary");
-
+const { validationResult } = require("express-validator");
 const _getCategories = (req, res) => {
   let sql = `select * from category`;
   connection.query(sql, (err, result) => {
@@ -13,6 +13,10 @@ const _getCategories = (req, res) => {
 };
 
 const _saveCategory = async (req, res) => {
+  const error = validationResult(req);
+  if (!error.isEmpty()) {
+    return res.json({ error: error.array()[0].msg });
+  }
   let name = req.body.name;
   let parentid = req.body.parentid;
   let categorytype = req.body.categorytype;
@@ -32,7 +36,7 @@ const _saveCategory = async (req, res) => {
       res.json({ err: " You have entered invalid  Email" });
     }
     if (result) {
-      res.json({ result: "User Register sucessfully" });
+      res.json({ result: "Categories sucessfully" });
     }
   });
 };

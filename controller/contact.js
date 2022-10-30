@@ -40,7 +40,7 @@ const _putContact = (req, res) => {
   WHERE id = '${id}'`;
   connection.query(sql, (err, result) => {
     if (err) {
-      res.json(err);
+      res.json({err : "Error Update Contact"});
     } else {
       res.json(result);
     }

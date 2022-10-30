@@ -62,7 +62,7 @@ const _putUser = async (req, res) => {
         let name = req.body.name || user.name;
         let email = req.body.email || user.email;
         let phone = req.body.phone || user.phone;
-        let img= null;
+        let img = null;
 
         if (req.file) {
           await cloudinary.uploader.destroy(user.cloudinary_id);
@@ -107,7 +107,7 @@ const _deleteUser = (req, res) => {
         if (err) {
           res.json(err);
         } else {
-          res.json("Delete Account");
+          res.json(result);
         }
       });
     }

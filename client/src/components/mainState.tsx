@@ -23,7 +23,7 @@ export type UserType = {
   authorization?: string;
 };
 export type ContactType = {
-  id: number;
+  id?: number;
   email: string;
   massage: string;
 };
@@ -50,6 +50,7 @@ export type productType = {
   date: string;
   description: string;
   cloudinary_id: string;
+  save: string;
   userProduct: UserType;
   categoryProduct: categoryType;
   CommentProduct: commentType;

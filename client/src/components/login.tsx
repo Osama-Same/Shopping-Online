@@ -64,23 +64,26 @@ export function LoginPage({ mainState, setMainState }: LoginPageProps) {
             const res: any = await _loginUser(user);
             mainState.user = res;
             setMainState({ ...mainState });
-            setLoading(false);
+            if (res.authorization === "user") {
+              mainState.render = "products";
+              setMainState({ ...mainState });
+              setLoading(false);
+            }
           }}
         >
           {loading ? <CircularProgress color="inherit" /> : "Login"}
         </Button>
-        <Typography component="body" variant="body2">
+        <Typography variant="body2">
           Already have an account ?{" "}
-          <Link
+          <Button
             component="button"
-            variant="body2"
             onClick={() => {
               mainState.render = "register";
               setMainState({ ...mainState });
             }}
           >
             Register
-          </Link>
+          </Button>
         </Typography>
       </Box>
     </Container>

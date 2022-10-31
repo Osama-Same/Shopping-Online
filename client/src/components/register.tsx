@@ -103,26 +103,29 @@ export function RegisterPage({ mainState, setMainState }: RegisterPageProps) {
               fromData.append("image", image, image.name);
             }
             console.log(fromData);
-            await _insertUser(fromData);
-            setLoading(false);
+            const res: any = await _insertUser(fromData);
             setMainState({ ...mainState });
+            if (res === "User Register sucessfully") {
+              mainState.render = "login";
+              setMainState({ ...mainState });
+              setLoading(false);
+            }
           }}
         >
           {loading ? <CircularProgress color="inherit" /> : "Register"}
         </Button>
 
-        <Typography component="body" variant="body2">
-          Already have an account ?{" "}
-          <Link
+        <Typography variant="body2">
+          Already have an account ?
+          <Button
             component="button"
-            variant="body2"
             onClick={() => {
               mainState.render = "login";
               setMainState({ ...mainState });
             }}
           >
             Login
-          </Link>
+          </Button>
         </Typography>
       </Box>
     </Container>

@@ -54,6 +54,8 @@ const {
   _deleteOrders,
 } = require("../controller/orders");
 
+const { _getSave } = require("../controller/save");
+
 const router = express.Router();
 
 //--------------------------------------------------------------------------
@@ -142,7 +144,7 @@ router.delete("/comment/:id", _deleteComment);
 router.get("/categories", _getCategories);
 router.post(
   "/categories",
-  [check("name", "name field is required").isLength({ min: 3 })],
+  [check("name", "name field is required").isLength({ min: 2 })],
   upload.single("logo"),
   _saveCategory
 );
@@ -223,6 +225,15 @@ router.post(
   ],
   login
 );
+
+//-------------------------------------------------------------------
+
+// Save
+
+router.get("/save", _getSave);
+router.post("/save", _getSave);
+router.put("/save/:id", _getSave);
+router.delete("/save/:id", _getSave);
 
 //-------------------------------------------------------------------
 

@@ -96,7 +96,7 @@ export function ContactPage({ mainState, setMainState }: ContactPageProps) {
             fullWidth
             variant="contained"
             onClick={async () => {
-              const data: any = { email: email, massage: massage };
+              const data  = { email: email, massage: massage };
               setLoading(true);
               await _insetContact(data);
               mainState.render = "contact";

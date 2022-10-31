@@ -37,6 +37,7 @@ interface ViewProductPageProps {
   mainState: MainStateType;
   setMainState: (m: MainStateType) => void;
 }
+
 export function ViewProductPage({
   mainState,
   setMainState,

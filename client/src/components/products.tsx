@@ -17,6 +17,7 @@ import TextField from "@mui/material/TextField";
 import SearchIcon from "@mui/icons-material/Search";
 import { useState } from "react";
 import CircularProgress from "@mui/material/CircularProgress";
+import { _putProductSave } from "../service/putAllData";
 interface ProductsPageProps {
   mainState: MainStateType;
   setMainState: (m: MainStateType) => void;
@@ -41,7 +42,6 @@ export function ProductsPage({ mainState, setMainState }: ProductsPageProps) {
             type={"search"}
             label="Search"
             placeholder="Search "
-            InputProps={<Button>osama</Button>}
           />
         </Stack>
       </Typography>
@@ -120,8 +120,19 @@ export function ProductsPage({ mainState, setMainState }: ProductsPageProps) {
                   >
                     See Details
                   </Button>
-                  <Button startIcon={<SaveIcon />} size="small">
-                    Save
+                  <Button
+                    startIcon={<SaveIcon />}
+                    size="small"
+                    onClick={async () => {
+                      setLoading(false);
+                      console.log(e.save);
+                      if (e.save === "save") {
+                        await _putProductSave(e.save);
+                      }
+                      // await _putProductSave(e.save)
+                    }}
+                  >
+                    {loading ? <CircularProgress /> : e.save}
                   </Button>
                 </Stack>
               </Card>

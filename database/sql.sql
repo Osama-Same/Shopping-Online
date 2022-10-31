@@ -26,7 +26,7 @@ CREATE TABLE
         PRIMARY KEY(id)
     )
 CREATE TABLE
-    category (
+    categories (
         id INT AUTO_INCREMENT NOT NULL,
         parentid INT,
         name VARCHAR (100),
@@ -35,12 +35,40 @@ CREATE TABLE
         categorytype INT,
         PRIMARY KEY (id)
     );
-
 CREATE TABLE
-    post (
+    save (
+        id INT AUTO_INCREMENT NOT NULL,
+        iduser INT,
+        save VARCHAR (100),
+        FOREIGN KEY (iduser) REFERENCES users (id),
+        PRIMARY KEY (id)
+    );
+    CREATE TABLE
+    likee (
+        id INT AUTO_INCREMENT NOT NULL,
+        iduser INT,
+        likee VARCHAR(100) NOT NULL,
+        likeNum VARCHAR(100) NOT NULL,
+        FOREIGN KEY (iduser) REFERENCES users (id),
+        PRIMARY KEY (id)
+    );
+    CREATE TABLE
+    comment (
+        id INT AUTO_INCREMENT NOT NULL,
+        iduser INT,
+        comment VARCHAR(100) NOT NULL,
+        date VARCHAR (100) NOT NULL,
+        FOREIGN KEY (iduser) REFERENCES users (id),
+        PRIMARY KEY (id)
+    );
+CREATE TABLE
+    products (
         id INT AUTO_INCREMENT NOT NULL,
         iduser INT,
         idcategory INT,
+        idseve INT,
+        idlike INT,
+        idcomment INT,
         name VARCHAR(100) NOT NULL,
         country VARCHAR (100) NOT NULL,
         images VARCHAR(255) NOT NULL,
@@ -48,49 +76,23 @@ CREATE TABLE
         date VARCHAR (100) NOT NULL,
         description VARCHAR(255) NOT NULL,
         cloudinary_id VARCHAR(255) NOT NULL,
-        FOREIGN KEY (idcategory) REFERENCES category (id),
+        FOREIGN KEY (idcategory) REFERENCES categories (id),
         FOREIGN KEY (iduser) REFERENCES users (id),
-        PRIMARY KEY (id),
+        FOREIGN KEY (idseve) REFERENCES save (id),
+        FOREIGN KEY (idlike) REFERENCES likee (id),
+        FOREIGN KEY (idcomment) REFERENCES comment (id),
+        PRIMARY KEY (id)
     );
 
-CREATE TABLE
-    comment (
-        id INT AUTO_INCREMENT NOT NULL,
-        iduser INT,
-        idpost INT,
-        comment VARCHAR(100) NOT NULL,
-        date VARCHAR (100) NOT NULL,
-        FOREIGN KEY (idpost) REFERENCES post (id),
-        FOREIGN KEY (iduser) REFERENCES users (id),
-        PRIMARY KEY (id)
-    );
-CREATE TABLE
-    likee (
-        id INT AUTO_INCREMENT NOT NULL,
-        iduser INT,
-        idpost INT,
-        likee VARCHAR(100) NOT NULL,
-        FOREIGN KEY (idpost) REFERENCES post (id),
-        FOREIGN KEY (iduser) REFERENCES users (id),
-        PRIMARY KEY (id)
-    );
+
+
 CREATE TABLE
     orders (
         id INT AUTO_INCREMENT NOT NULL,
         iduser INT,
         idpost INT,
         quantity INT,
-        FOREIGN KEY (idpost) REFERENCES post (id),
-        FOREIGN KEY (iduser) REFERENCES users (id),
-        PRIMARY KEY (id)
-    );
-CREATE TABLE
-    save (
-        id INT AUTO_INCREMENT NOT NULL,
-        iduser INT,
-        idpost INT,
-        save INT,
-        FOREIGN KEY (idpost) REFERENCES post (id),
+        FOREIGN KEY (idpost) REFERENCES products (id),
         FOREIGN KEY (iduser) REFERENCES users (id),
         PRIMARY KEY (id)
     );

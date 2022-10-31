@@ -25,7 +25,7 @@ const App = () => {
     render: "",
     user: null,
     selectProduct: null,
-    dark: "light",
+    dark: "dark",
   });
   useEffect(() => {
     updateUserState(mainState, setMainState);
@@ -33,11 +33,11 @@ const App = () => {
   console.log("mainState", mainState);
   const theme = createTheme({
     palette: {
-      mode: mainState.dark === "light" ? "dark" : "light",
+      mode: mainState.dark === "dark" ? "light" : "light",
     },
   });
   const Item = styled(Paper)(({ theme }) => ({
-    backgroundColor: theme.palette.mode === "dark" ? "#121212" : "#fff",
+    backgroundColor: mainState.dark === "dark" ? "#121212" : "#fff",
     ...theme.typography.body2,
     padding: theme.spacing(1),
     textAlign: "center",
@@ -45,9 +45,10 @@ const App = () => {
   }));
   return (
     <div className="App">
+      <ToastContainer />
       <ThemeProvider theme={theme}>
-        <ToastContainer />
         <Navigation mainState={mainState} setMainState={setMainState} />
+
         <Stack>
           <Item>
             <MainPage mainState={mainState} setMainState={setMainState} />

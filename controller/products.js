@@ -3,7 +3,7 @@ const cloudinary = require("../connection/cloudinary");
 const { validationResult } = require("express-validator");
 
 const _getProducts = (req, res) => {
-  let sql = `select * from post`;
+  let sql = `select * from products`;
   connection.query(sql, (err, result) => {
     if (err) {
       res.json(err);
@@ -34,8 +34,8 @@ const _saveProduct = async (req, res) => {
   let images = img?.secure_url;
   let cloudinary_id = img?.public_id;
 
-  const sql = `INSERT INTO post (iduser, idcategory , name,country,images,price ,date,description, cloudinary_id ,save )
-  VALUES ('${iduser}', '${idcategory}', '${name}','${country}','${images}','${price}','${date}','${description}','${cloudinary_id}' ,'save')`;
+  const sql = `INSERT INTO products (iduser, idcategory , name,country,images,price ,date,description, cloudinary_id )
+  VALUES ('${iduser}', '${idcategory}', '${name}','${country}','${images}','${price}','${date}','${description}','${cloudinary_id}' )`;
   connection.query(sql, (err, result) => {
     if (err) {
       res.json(err);
@@ -102,18 +102,7 @@ const _putProduct = async (req, res) => {
     }
   });
 };
-const _putSave = (req, res) => {
-  let id = req.body.id;
-  let save = req.body.save;
-  let sql = `update post set  save = '${save}' where id = '${id}'`;
-  connection.query(sql, (err, result) => {
-    if (err) {
-      res.json(err);
-    } else {
-      res.json(result);
-    }
-  });
-};
+
 const _deleteProduct = (req, res) => {
   const id = req.params.id;
   let sql = `select * from post where id='${id}'`;
@@ -140,5 +129,4 @@ module.exports = {
   _saveProduct,
   _putProduct,
   _deleteProduct,
-  _putSave,
 };

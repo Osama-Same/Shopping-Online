@@ -14,7 +14,6 @@ const {
   _saveProduct,
   _putProduct,
   _deleteProduct,
-  _putSave,
 } = require("../controller/products");
 
 const {
@@ -184,7 +183,7 @@ router.put(
 
 router.delete("/products/:id", _deleteProduct);
 
-router.put("/productsave", _putSave);
+
 
 //-------------------------------------------------------------------
 

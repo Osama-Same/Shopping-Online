@@ -42,7 +42,6 @@ const _putCategory = async (req, res) => {
   let id = req.params.id;
   let sql = `select * from categories where id = '${id}'`;
   connection.query(sql, async (err, result) => {
-    
     if (err) {
       res.json(err);
     }
@@ -62,13 +61,13 @@ const _putCategory = async (req, res) => {
         }
         let logo = img?.secure_url || category.logo;
         let cloudinary_id = img?.public_id || category.cloudinary_id;
-        let sql = `update category set 
-      parentid = '${parentid}',
-      name = '${name}',
-      logo = '${logo}',
-      cloudinary_id = '${cloudinary_id}',
-      categorytype = '${categorytype}'
-      where id = '${id}'`;
+        let sql = `update categories set 
+                   parentid = '${parentid}',
+                   name = '${name}',
+                   logo = '${logo}',
+                   cloudinary_id = '${cloudinary_id}',
+                   categorytype = '${categorytype}'
+                   where id = '${id}'`;
         connection.query(sql, (err, result) => {
           if (err) {
             res.json(err);

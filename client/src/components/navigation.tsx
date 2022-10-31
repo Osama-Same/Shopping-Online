@@ -100,23 +100,21 @@ export function Navigation({ mainState, setMainState }: NavigationPageProps) {
               </li>
             </ul>
             <div className="d-flex">
-            <FormControlLabel
-              style={{ color: "white" }}
-              value="start"
-              control={
-                <Switch
-                  onClick={() => {
-                    mainState.dark =
-                      mainState.dark === "light" ? "dark" : "light";
-                    setMainState({ ...mainState });
-                  }}
-                />
-              }
-              label={
-                (mainState.dark = mainState.dark === "light" ? "dark" : "light")
-              }
-              labelPlacement="start"
-            />
+              <FormControlLabel
+                style={{ color: "white" }}
+                value="start"
+                control={
+                  <Switch
+                    onClick={() => {
+                      mainState.dark =
+                        mainState.dark === "dark" ? "light" : "dark";
+                      setMainState({ ...mainState });
+                    }}
+                  />
+                }
+                label={mainState.dark === "dark" ? "light" : "dark"}
+                labelPlacement="start"
+              />
               <Button
                 style={{ color: "white" }}
                 onClick={() => {

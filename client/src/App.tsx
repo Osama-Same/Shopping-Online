@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Navigation } from "./components/navigation";
 import { MainPage } from "./components/mainPage";
 import { MainStateType } from "./components/mainState";
@@ -11,6 +11,7 @@ import {
 } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import "./App.css";
 const App = () => {
   const [mainState, setMainState] = useState<MainStateType>({
@@ -25,19 +26,24 @@ const App = () => {
     render: "",
     user: null,
     selectProduct: null,
-    dark: "dark",
+    dark: "light",
   });
   useEffect(() => {
     updateUserState(mainState, setMainState);
   }, [mainState]);
   console.log("mainState", mainState);
-  const theme = createTheme({
-    palette: {
-      mode: mainState.dark === "dark" ? "light" : "light",
-    },
-  });
+
+  const theme = useMemo(
+    () =>
+      createTheme({
+        palette: {
+          mode: mainState.dark === "dark" ? "light" : "dark",
+        },
+      }),
+    [mainState.dark]
+  );
   const Item = styled(Paper)(({ theme }) => ({
-    backgroundColor: mainState.dark === "dark" ? "#121212" : "#fff",
+    backgroundColor: theme.palette.mode === "dark" ? "#121212" : "#fff",
     ...theme.typography.body2,
     padding: theme.spacing(1),
     textAlign: "center",
@@ -45,10 +51,9 @@ const App = () => {
   }));
   return (
     <div className="App">
-      <ToastContainer />
       <ThemeProvider theme={theme}>
+        <ToastContainer />
         <Navigation mainState={mainState} setMainState={setMainState} />
-
         <Stack>
           <Item>
             <MainPage mainState={mainState} setMainState={setMainState} />

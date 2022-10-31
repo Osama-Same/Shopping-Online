@@ -5,8 +5,6 @@ const app = express();
 const bodyParser = require("body-parser");
 const sqlserver = require("./connection/connection");
 const router = require("./router/router");
-const cloudinary = require("./connection/cloudinary");
-const {upload} = require("./connection/upload");
 require("dotenv").config();
 
 const corsOptions = {

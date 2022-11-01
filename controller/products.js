@@ -47,7 +47,7 @@ const _saveProduct = async (req, res) => {
 
 const _putProduct = async (req, res) => {
   let id = req.params.id;
-  let sql = `select * from post where id = ${id}`;
+  let sql = `select * from products where id = ${id}`;
   connection.query(sql, async (err, result) => {
     if (err) {
       res.json(err);
@@ -79,7 +79,7 @@ const _putProduct = async (req, res) => {
         let images = img?.secure_url || post.images;
         let cloudinary_id = img?.public_id || post.cloudinary_id;
 
-        let sql = `update post set 
+        let sql = `update products set 
         iduser = '${iduser}',
         idcategory = '${idcategory}',
         name = '${name}',
@@ -88,8 +88,7 @@ const _putProduct = async (req, res) => {
         price = '${price}',
         date = '${date}',
         description = '${description}',
-        cloudinary_id = '${cloudinary_id}',
-        save = 'save'
+        cloudinary_id = '${cloudinary_id}'
         where id = '${id}'`;
         connection.query(sql, (err, result) => {
           if (err) {
@@ -105,7 +104,7 @@ const _putProduct = async (req, res) => {
 
 const _deleteProduct = (req, res) => {
   const id = req.params.id;
-  let sql = `select * from post where id='${id}'`;
+  let sql = `select * from products where id='${id}'`;
   connection.query(sql, async (err, result) => {
     if (err) {
       res.json(err);
@@ -113,7 +112,7 @@ const _deleteProduct = (req, res) => {
     if (result) {
       const post = result.find((e) => e.id);
       await cloudinary.uploader.destroy(post.cloudinary_id);
-      let sql = `delete from post where id='${id}'`;
+      let sql = `delete from products where id='${id}'`;
       connection.query(sql, (err, result) => {
         if (err) {
           res.json(err);

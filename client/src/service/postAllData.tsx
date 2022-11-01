@@ -86,17 +86,15 @@ export async function _insetProduct(products: any) {
 
 export async function _insetNews(news: any) {
   const res = await axios.post(url + "news", news);
-  if (res.data.result) {
-    toast(`${res.data.result}`);
-    return res.data.result;
-  } else if (res.data.err) {
+  if (res.data.err) {
     toast.error(`${res.data.err}`);
     return res.data.err;
   } else if (res.data.error) {
     toast.error(`${res.data.error}`);
     return res.data.error;
   } else {
-    toast.error(`Error server`);
+    toast(`News sucessfully`);
+    return res.data.result;
   }
 }
 

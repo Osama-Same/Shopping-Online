@@ -3,7 +3,6 @@ import { useState } from "react";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import InputAdornment from "@mui/material/InputAdornment";
-import AccountCircle from "@mui/icons-material/AccountCircle";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
@@ -32,7 +31,7 @@ import FlagIcon from "@mui/icons-material/Flag";
 import ReadMoreIcon from "@mui/icons-material/ReadMore";
 import SaveIcon from "@mui/icons-material/Save";
 import { ProductsPage } from "./products";
-//import commentService from "../service/commentService";
+import { _insetComment } from "../service/postAllData";
 interface ViewProductPageProps {
   mainState: MainStateType;
   setMainState: (m: MainStateType) => void;
@@ -204,13 +203,13 @@ export function ViewProductPage({
                               selectProduct.CommentProduct.comment = comment;
                               selectProduct.CommentProduct.date =
                                 new Date().toString();
-                              /*   const res: any = await commentService._save(
-                              selectProduct.CommentProduct
-                            ); */
+                              const res: any = await _insetComment(
+                                selectProduct.CommentProduct
+                              );
                               if (selectProduct.CommentProduct.id) {
-                                /*  selectProduct.CommentProduct.id = parseInt(
-                                res.insertId
-                              ); */
+                                selectProduct.CommentProduct.id = parseInt(
+                                  res.insertId
+                                );
                                 mainState.selectProduct.CommentProduct = [
                                   selectProduct.CommentProduct,
                                   ...mainState.selectProduct.CommentProduct,
@@ -307,7 +306,6 @@ export function ViewProductPage({
                       />
                     </Stack>
                   </CardActionArea>
-             
                 </Card>
               </div>
             );

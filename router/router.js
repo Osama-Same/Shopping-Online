@@ -53,7 +53,7 @@ const {
   _deleteOrders,
 } = require("../controller/orders");
 
-const { _getSave } = require("../controller/save");
+const { _getSave ,_InsertSave ,_putSave , _deleteSave } = require("../controller/save");
 
 const router = express.Router();
 
@@ -230,7 +230,7 @@ router.post(
 // Save
 
 router.get("/save", _getSave);
-router.post("/save", _getSave);
+router.post("/save", _InsertSave);
 router.put("/save/:id", _getSave);
 router.delete("/save/:id", _getSave);
 

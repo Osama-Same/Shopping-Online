@@ -28,7 +28,7 @@ export function ProductsPage({ mainState, setMainState }: ProductsPageProps) {
   const [loading, setLoading] = useState(false);
   if (!allProducts) return <div>{loading && <CircularProgress />}</div>;
   return (
-    <Container maxWidth="lg" sx={{ mt: 10, mb: 5 }}>
+    <Container maxWidth="xl" sx={{ mt: 10, mb: 5 }}>
       <Typography variant="h4">Products</Typography>
       <Typography variant="body2" sx={{ mt: 5, mb: 5 }}>
         <Stack
@@ -125,14 +125,12 @@ export function ProductsPage({ mainState, setMainState }: ProductsPageProps) {
                     size="small"
                     onClick={async () => {
                       setLoading(false);
-                      console.log(e.save);
-                      if (e.save === "save") {
-                        await _putProductSave(e.save);
-                      }
+                     
+                      
                       // await _putProductSave(e.save)
                     }}
                   >
-                    {loading ? <CircularProgress /> : e.save}
+                    {loading ? <CircularProgress /> : "save"}
                   </Button>
                 </Stack>
               </Card>

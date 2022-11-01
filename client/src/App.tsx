@@ -4,6 +4,7 @@ import { MainPage } from "./components/mainPage";
 import { MainStateType } from "./components/mainState";
 import { ToastContainer } from "react-toastify";
 import { updateUserState } from "./components/users";
+import { FooterPage } from "./components/footer";
 import {
   createTheme,
   ThemeProvider,
@@ -11,7 +12,6 @@ import {
 } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
-import useMediaQuery from "@mui/material/useMediaQuery";
 import "./App.css";
 const App = () => {
   const [mainState, setMainState] = useState<MainStateType>({
@@ -23,6 +23,7 @@ const App = () => {
     allOrders: [],
     allNews: [],
     allProducts: [],
+    allSave: [],
     render: "",
     user: null,
     selectProduct: null,
@@ -45,7 +46,7 @@ const App = () => {
   const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === "dark" ? "#121212" : "#fff",
     ...theme.typography.body2,
-    padding: theme.spacing(2),
+    padding: theme.spacing(0),
     textAlign: "center",
     color: theme.palette.text.primary,
   }));
@@ -59,6 +60,12 @@ const App = () => {
             <MainPage mainState={mainState} setMainState={setMainState} />
           </Item>
         </Stack>
+        <FooterPage mainState={mainState} setMainState={setMainState} />
+        {/* <Stack>
+          <Item>
+            <MainPage mainState={mainState} setMainState={setMainState} />
+          </Item>
+        </Stack> */}
       </ThemeProvider>
     </div>
   );

@@ -7,10 +7,11 @@ export type MainStateType = {
   allLike: LikeType[];
   allNews: NewsType[];
   allOrders: OrderType[];
+  allSave: SaveType[];
   user: UserType | null;
   render: string;
-  selectProduct: productType | null | any;
   dark: string;
+  selectProduct: productType | null | any;
 };
 
 export type UserType = {
@@ -50,27 +51,33 @@ export type productType = {
   date: string;
   description: string;
   cloudinary_id: string;
-  save: string;
-  userProduct: UserType;
-  categoryProduct: categoryType;
-  CommentProduct: commentType;
+  userProduct: UserType[];
+  categoryProduct: categoryType[];
+  CommentProduct: commentType[];
+  saveProduct: SaveType[];
 };
 export type LikeType = {
   id: number;
   iduser: number;
-  idpost: number;
+  idproduct: number;
   likee: string;
 };
 export type commentType = {
   id: number;
   iduser: number;
-  idpost: number;
+  idproduct: number;
   comment: string;
   date: string;
 };
 export type OrderType = {
   id: number;
   iduser: number;
-  idpost: number;
+  idproduct: number;
   quantity: number;
+};
+export type SaveType = {
+  id: number;
+  iduser: number;
+  idproduct: number;
+  save: number;
 };

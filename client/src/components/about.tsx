@@ -7,7 +7,7 @@ interface AboutPageProps {
 }
 export function AboutPage({ mainState, setMainState }: AboutPageProps) {
   return (
-    <Container maxWidth="lg" sx={{ mt: 10, mb: 5 }}>
+    <Container maxWidth="xl" sx={{ mt: 10, mb: 5 }}>
       <Typography variant="h4">About Us</Typography>
       <Typography variant="body2" sx={{ mt: 5, mb: 3 }}>
         A site specialized in buying and selling that provides you with many

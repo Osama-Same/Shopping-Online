@@ -35,7 +35,7 @@ export function ContactPage({ mainState, setMainState }: ContactPageProps) {
   const [loading, setLoading] = useState(false);
 
   return (
-    <Container maxWidth="lg" sx={{ mt: 10, mb: 5 }}>
+    <Container maxWidth="xl" sx={{ mt: 10, mb: 5 }}>
       <Typography variant="h4">Contact Us</Typography>
       <Typography variant="body2" sx={{ mt: 5, mb: 5 }}>
         Your messages are the secret of our development, so do not hesitate at
@@ -48,7 +48,7 @@ export function ContactPage({ mainState, setMainState }: ContactPageProps) {
         justifyContent="center"
         sx={{ mt: 5, mb: 7, pt: 2 }}
       >
-        <BottomNavigation showLabels sx={{ width: 900 }}>
+        <BottomNavigation showLabels sx={{ width: 1000 }}>
           <BottomNavigationAction
             label="(+962)799895632"
             icon={<ContactPhoneIcon />}
@@ -111,7 +111,8 @@ export function ContactPage({ mainState, setMainState }: ContactPageProps) {
         <div className="col">
           <img
             src="https://worldlivestories.com/wp-content/uploads/2021/03/Buy-Online.jpg"
-            width={500}
+            width="100%"
+            height="340px"
             alt=""
           />
         </div>

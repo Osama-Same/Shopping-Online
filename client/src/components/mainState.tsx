@@ -57,17 +57,20 @@ export type productType = {
   saveProduct: SaveType[];
 };
 export type LikeType = {
-  id: number;
+  id?: number;
   iduser: number;
   idproduct: number;
   likee: string;
+  likeNum: number;
+  likeUser?: UserType;
 };
 export type commentType = {
-  id: number;
+  id?: number;
   iduser: number;
   idproduct: number;
   comment: string;
   date: string;
+  commentUser?: UserType;
 };
 export type OrderType = {
   id: number;

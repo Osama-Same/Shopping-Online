@@ -1,4 +1,4 @@
-import { MainStateType } from "./mainState";
+import { MainStateType, commentType, LikeType } from "./mainState";
 import { useState } from "react";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -28,9 +28,6 @@ import ListItemAvatar from "@mui/material/ListItemAvatar";
 import Chip from "@mui/material/Chip";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import FlagIcon from "@mui/icons-material/Flag";
-import ReadMoreIcon from "@mui/icons-material/ReadMore";
-import SaveIcon from "@mui/icons-material/Save";
-import { ProductsPage } from "./products";
 import { _insetComment } from "../service/postAllData";
 interface ViewProductPageProps {
   mainState: MainStateType;
@@ -41,12 +38,14 @@ export function ViewProductPage({
   mainState,
   setMainState,
 }: ViewProductPageProps) {
-  const { selectProduct, user, allProducts } = mainState;
+  const { selectProduct, user, allProducts, allComment } = mainState;
   const [open, setOpen] = useState(false);
   const [comment, setComment] = useState("");
 
   const [loading, setLoading] = useState(false);
+
   if (!selectProduct) return <div>No Prodcts</div>;
+  console.log("selectProduct", selectProduct);
 
   return (
     <div>
@@ -64,7 +63,7 @@ export function ViewProductPage({
         <div className="row">
           <div className="col-md-8">
             <div className="row pt-3 pb-3">
-              <div className="col-md-5">
+              <div className="col-md-7">
                 <Card>
                   <CardActionArea
                     onClick={() => {
@@ -134,29 +133,42 @@ export function ViewProductPage({
                   </ListItem>
                 </List>
               </div>
-              <Stack
-                mb={2}
-                mt={2}
-                spacing={2}
-                direction="row"
-              >
-                <Button startIcon={<AddShoppingCartIcon />}>Add to Cart</Button>
-                <Button
-                  startIcon={<CommentIcon />}
-                  onClick={() => {
-                    if (open === false) {
-                      setOpen(true);
-                    } else {
-                      setOpen(false);
-                    }
-                  }}
-                >
-                  Comment
-                </Button>
-                <Button startIcon={<ThumbUpIcon />}>Like</Button>
-              </Stack>
               {user && (
-                <div className="row pt-3 pb-3">
+                <Stack mb={2} mt={2} spacing={2} direction="row">
+                  <Button startIcon={<AddShoppingCartIcon />}>
+                    Add to Cart
+                  </Button>
+                  <Button
+                    startIcon={<CommentIcon />}
+                    onClick={() => {
+                      if (open === false) {
+                        setOpen(true);
+                      } else {
+                        setOpen(false);
+                      }
+                    }}
+                  >
+                    Comment
+                  </Button>
+                  <Button
+                    startIcon={<ThumbUpIcon />}
+                    onClick={async () => {
+                      setLoading(true);
+                      const newLikee: LikeType = {
+                        idproduct: selectProduct.id,
+                        iduser: user?.id,
+                        likee: "like",
+                        likeNum: 1,
+                        likeUser: user,
+                      };
+                    }}
+                  >
+                    Like
+                  </Button>
+                </Stack>
+              )}
+              <div className="row pt-3 pb-3">
+                {user && (
                   <Box
                     sx={{
                       display: "flex",
@@ -185,38 +197,24 @@ export function ViewProductPage({
                             <Button
                               onClick={async () => {
                                 setLoading(true);
+                                const newComment: commentType = {
+                                  iduser: user.id,
+                                  idproduct: selectProduct.id,
+                                  comment: comment,
+                                  date: new Date().toString(),
+                                  commentUser: user,
+                                };
 
-                                selectProduct.CommentProduct.iduser = user.id;
-                                selectProduct.CommentProduct.idpost =
-                                  selectProduct.id;
-                                selectProduct.CommentProduct.comment = comment;
-                                selectProduct.CommentProduct.date =
-                                  new Date().toString();
-                                const res: any = await _insetComment(
-                                  selectProduct.CommentProduct
-                                );
-                                if (selectProduct.CommentProduct.id) {
-                                  selectProduct.CommentProduct.id = parseInt(
-                                    res.insertId
-                                  );
-                                  mainState.selectProduct.CommentProduct = [
-                                    selectProduct.CommentProduct,
-                                    ...mainState.selectProduct.CommentProduct,
-                                  ];
-                                  console.log(
-                                    "mainState.selectProduct.CommentProduct",
-                                    mainState.selectProduct.CommentProduct
-                                  );
-                                  setMainState({ ...mainState });
-                                }
+                                await _insetComment(newComment);
+
+                                mainState.allComment = [
+                                  newComment,
+                                  ...mainState.allComment,
+                                ];
                                 mainState.selectProduct.CommentProduct = [
-                                  selectProduct.CommentProduct,
+                                  newComment,
                                   ...mainState.selectProduct.CommentProduct,
                                 ];
-                                console.log(
-                                  "mainState.selectProduct.CommentProduct",
-                                  mainState.selectProduct.CommentProduct
-                                );
                                 setMainState({ ...mainState });
                                 setLoading(false);
                               }}
@@ -229,28 +227,26 @@ export function ViewProductPage({
                       variant="standard"
                     />
                   </Box>
-                  {selectProduct.CommentProduct.map((e: any) => {
-                    return (
-                      <List>
-                        <ListItem>
-                          <ListItemAvatar>
-                            <Avatar>
-                              <Avatar src={user.image} alt="Remy Sharp" />
-                            </Avatar>
-                          </ListItemAvatar>
-                          <ListItemText
-                            primary={e.comment}
-                            secondary={e.date}
-                          />
-                        </ListItem>
-                        <Divider variant="inset" component="li" />
-                      </List>
-                    );
-                  })}
-                </div>
-              )}
-              {!user && 
-              <div></div>}
+                )}
+                {selectProduct.CommentProduct.map((e: any) => {
+                  return (
+                    <List>
+                      <ListItem>
+                        <ListItemAvatar>
+                          <Avatar>
+                            <Avatar
+                              src={e.commentUser?.image}
+                              alt="Remy Sharp"
+                            />
+                          </Avatar>
+                        </ListItemAvatar>
+                        <ListItemText primary={e.comment} secondary={e.date} />
+                      </ListItem>
+                      <Divider variant="inset" component="li" />
+                    </List>
+                  );
+                })}
+              </div>
             </div>
           </div>
           <div className="col">

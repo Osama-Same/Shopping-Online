@@ -13,9 +13,10 @@ const _getLike = (req, res) => {
 
 const _saveLike = (req, res) => {
   let iduser = req.body.iduser;
-  let idpost = req.body.idpost;
+  let idproduct = req.body.idproduct;
   let likee = req.body.likee;
-  const sql = `INSERT INTO likee ( iduser , idpost , likee ) VALUES ('${iduser}' ,'${idpost}' , '${likee}')`;
+  let likeNum = req.body.likeNum;
+  const sql = `INSERT INTO likee ( iduser , idproduct , likee ,likeNum) VALUES ('${iduser}' ,'${idproduct}' , '${likee}' ,'${likeNum}')`;
   connection.query(sql, (err, result) => {
     if (err) {
       res.json(err);
@@ -58,5 +59,5 @@ module.exports = {
   _getLike,
   _saveLike,
   _putLike,
-  _deleteLike
+  _deleteLike,
 };

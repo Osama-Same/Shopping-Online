@@ -34,8 +34,16 @@ export async function updateUserState(
   _allProducts.forEach((p: any) => {
     p.userProduct = _allUsers.find((u: any) => u.id === p.iduser);
     p.categoryProduct = _getCategories.find((c: any) => c.id === p.idcategory);
-    p.CommentProduct = _allComment.filter((c: any) => c.idpost === p.id);
+    p.CommentProduct = _allComment.filter((c: any) => c.idproduct === p.id);
   });
+
+  _allComment.forEach((comment:any)=>{
+     comment.commentUser = _allUsers.find((u:any)=>u.id === comment.iduser )
+  })
+
+  _allLike.forEach((likee:any)=>{
+     likee.likeUser = _allUsers.find((u:any)=> u.id === likee.iduser)
+  })
 
   if (!user) {
     mainState.allUsers = _allUsers;

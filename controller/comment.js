@@ -16,10 +16,10 @@ const _saveComment = (req, res) => {
     return res.json({ error: error.array()[0].msg });
   }
   let iduser = req.body.iduser;
-  let idpost = req.body.idpost;
+  let idproduct = req.body.idproduct;
   let comment = req.body.comment;
   let date = req.body.date;
-  let sql = `insert into comment (iduser,idpost,comment,date)VALUES('${iduser}','${idpost}','${comment}','${date}')`;
+  let sql = `insert into comment (iduser,idproduct,comment,date)VALUES('${iduser}','${idproduct}','${comment}','${date}')`;
   connection.query(sql, (err, result) => {
     if (err) {
       res.json(err);
@@ -35,12 +35,12 @@ const _putComment = (req, res) => {
   }
   let id = req.params.id;
   let iduser = req.body.iduser;
-  let idpost = req.body.idpost;
+  let idproduct = req.body.idproduct;
   let comment = req.body.comment;
   let date = req.body.date;
   const sql = `UPDATE comment
   SET iduser = '${iduser}',
-  idpost = '${idpost}',
+  idproduct = '${idproduct}',
   comment = '${comment}',
   date = '${date}'
   WHERE id = '${id}'`;

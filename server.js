@@ -13,7 +13,6 @@ const corsOptions = {
 };
 
 
-
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(bodyParser.json());
@@ -23,6 +22,10 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`http://localhost:${PORT}`);
 });
+
+
+
+
 
 
 

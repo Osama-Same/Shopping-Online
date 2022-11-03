@@ -1,6 +1,7 @@
 const connection = require("../connection/connection");
 const cloudinary = require("../connection/cloudinary");
-const { validationResult } = require("express-validator");
+
+
 const _getCategories = (req, res) => {
   let sql = `select * from categories`;
   connection.query(sql, (err, result) => {
@@ -36,6 +37,7 @@ const _saveCategory = async (req, res) => {
     }
   });
 };
+
 
 // update category
 const _putCategory = async (req, res) => {

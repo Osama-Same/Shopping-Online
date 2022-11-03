@@ -3,7 +3,7 @@ export type MainStateType = {
   allCategories: categoryType[];
   allComment: commentType[];
   allContact: ContactType[];
-  allProducts: productType[];
+  allProducts: productType[] ;
   allLike: LikeType[];
   allNews: NewsType[];
   allOrders: OrderType[];
@@ -55,6 +55,7 @@ export type productType = {
   categoryProduct: categoryType[];
   CommentProduct: commentType[];
   saveProduct: SaveType[];
+  likeeProduct: LikeType[];
 };
 export type LikeType = {
   id?: number;

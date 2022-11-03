@@ -28,7 +28,8 @@ import ListItemAvatar from "@mui/material/ListItemAvatar";
 import Chip from "@mui/material/Chip";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import FlagIcon from "@mui/icons-material/Flag";
-import { _insetComment } from "../service/postAllData";
+import { _insetComment, _insetLike } from "../service/postAllData";
+import { _deleteLike } from "../service/deleteAllData";
 interface ViewProductPageProps {
   mainState: MainStateType;
   setMainState: (m: MainStateType) => void;
@@ -38,15 +39,13 @@ export function ViewProductPage({
   mainState,
   setMainState,
 }: ViewProductPageProps) {
-  const { selectProduct, user, allProducts, allComment } = mainState;
+  const { selectProduct, user, allProducts } = mainState;
   const [open, setOpen] = useState(false);
   const [comment, setComment] = useState("");
 
   const [loading, setLoading] = useState(false);
 
   if (!selectProduct) return <div>No Prodcts</div>;
-  console.log("selectProduct", selectProduct);
-
   return (
     <div>
       <Container component="main" maxWidth="lg" sx={{ mt: 10, mb: 5 }}>
@@ -155,15 +154,34 @@ export function ViewProductPage({
                     onClick={async () => {
                       setLoading(true);
                       const newLikee: LikeType = {
+                        id :0,
                         idproduct: selectProduct.id,
                         iduser: user?.id,
                         likee: "like",
                         likeNum: 1,
                         likeUser: user,
                       };
+                      const find = selectProduct.likeeProduct.find(
+                        (u: any) => u.iduser
+                      );
+                      if (find) {
+                        console.log(find)
+                        await _deleteLike(find.id);
+                        mainState.allLike = [find, ...mainState.allLike];
+                        mainState.selectProduct.likeeProduct = mainState.allLike
+                      }
+                      if (!find) {
+                        await _insetLike(newLikee);
+                        mainState.allLike = [newLikee, ...mainState.allLike];
+                        mainState.selectProduct.likeeProduct = [
+                          newLikee,
+                          ...mainState.selectProduct.likeeProduct,
+                        ];
+                        setMainState({ ...mainState });
+                      }
                     }}
                   >
-                    Like
+                    Like {[mainState.selectProduct.likeeProduct.length]}
                   </Button>
                 </Stack>
               )}

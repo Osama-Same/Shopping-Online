@@ -130,16 +130,11 @@ export async function _insetComment(comment: any) {
 
 export async function _insetLike(like: any) {
   const res: any = await axios.post(url + "like", like);
-  if (res.data.result) {
-    toast(`${res.data.result}`);
-    return res.data.result;
-  } else if (res.data.err) {
+if (res.data.err) {
     toast.error(`${res.data.err}`);
     return res.data.err;
-  } else if (res.data.error) {
-    toast.error(`${res.data.error}`);
-    return res.data.error;
-  } else {
-    toast.error(`Error server`);
+  }else {
+    toast(`Like sucessfully`);
+    return res.data.result;
   }
 }

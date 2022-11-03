@@ -47,30 +47,21 @@ CREATE TABLE
         price DOUBLE(6, 2) NOT NULL,
         date VARCHAR (100) NOT NULL,
         description VARCHAR(255) NOT NULL,
+        save VARCHAR(255) not Null,
         cloudinary_id VARCHAR(255) NOT NULL,
         FOREIGN KEY (idcategory) REFERENCES categories (id),
         FOREIGN KEY (iduser) REFERENCES users (id),
         PRIMARY KEY (id)
     );
 
-CREATE TABLE
-    save (
-        id INT AUTO_INCREMENT NOT NULL,
-        iduser INT,
-        idproduct INT,
-        save VARCHAR (100),
-        FOREIGN KEY (idproduct) REFERENCES products (id),
-        FOREIGN KEY (iduser) REFERENCES users (id),
-        PRIMARY KEY (id)
-    );
+
 
 CREATE TABLE
     likee (
         id INT AUTO_INCREMENT NOT NULL,
-        iduser INT,
+        iduser INT UNIQUE,
         idproduct INT,
         likee VARCHAR(100) NOT NULL,
-        likeNum VARCHAR(100) NOT NULL,
         FOREIGN KEY (idproduct) REFERENCES products (id),
         FOREIGN KEY (iduser) REFERENCES users (id),
         PRIMARY KEY (id)

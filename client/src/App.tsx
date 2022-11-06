@@ -28,12 +28,13 @@ const App = () => {
     user: null,
     selectProduct: null,
     dark: "light",
+    saveUser: null,
   });
   useEffect(() => {
     updateUserState(mainState, setMainState);
   }, [mainState]);
-  console.log("mainState", mainState);
 
+  console.log(mainState);
   const theme = useMemo(
     () =>
       createTheme({

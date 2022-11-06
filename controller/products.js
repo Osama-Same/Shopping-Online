@@ -33,9 +33,10 @@ const _saveProduct = async (req, res) => {
   }
   let images = img?.secure_url;
   let cloudinary_id = img?.public_id;
-
+ 
   const sql = `INSERT INTO products (iduser, idcategory , name,country,images,price ,date,description, cloudinary_id )
-  VALUES ('${iduser}', '${idcategory}', '${name}','${country}','${images}','${price}','${date}','${description}','${cloudinary_id}' )`;
+  VALUES ('${iduser}', '${idcategory}', '${name}','${country}','${images}','${price}','${date}','${description}', '${cloudinary_id}'  )`;
+
   connection.query(sql, (err, result) => {
     if (err) {
       res.json(err);
@@ -56,10 +57,6 @@ const _putProduct = async (req, res) => {
     if (result) {
       const findPost = result.find((e) => e.id);
       if (findPost) {
-        const error = validationResult(req);
-        if (!error.isEmpty()) {
-          return res.json({ error: error.array()[0].msg });
-        }
         const post = result.find((e) => e.id);
         let iduser = req.body.iduser || post.iduser;
         let idcategory = req.body.idcategory || post.idcategory;
@@ -102,6 +99,7 @@ const _putProduct = async (req, res) => {
   });
 };
 
+
 const _deleteProduct = (req, res) => {
   const id = req.params.id;
   let sql = `select * from products where id='${id}'`;
@@ -128,4 +126,5 @@ module.exports = {
   _saveProduct,
   _putProduct,
   _deleteProduct,
+
 };

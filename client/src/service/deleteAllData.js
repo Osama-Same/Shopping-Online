@@ -1,7 +1,7 @@
 import axios from "axios";
 import { toast } from "react-toastify";
-//const url = "http://localhost:5000/";
-const url = "https://shopping1234567.herokuapp.com/";
+const url = "http://localhost:5000/";
+//const url = "https://shopping1234567.herokuapp.com/";
 
 export async function _deleteUser(id) {
   const res = await axios.delete(url + `users/${id}`);
@@ -71,11 +71,12 @@ export async function _deleteLike(id) {
   }
 }
 export async function _deleteOrders(id) {
-  const res = await axios.get(url + `orders/${id}`);
+  const res = await axios.delete(url + `orders/${id}`);
   if (res.data) {
     toast(`Delete Order`);
     return res.data;
   } else {
+    toast.error(`Delete Order`);
     toast.error(`Error server`);
   }
 }

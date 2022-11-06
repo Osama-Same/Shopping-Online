@@ -45,6 +45,7 @@ export function ViewProductPage({
 
   const [loading, setLoading] = useState(false);
 
+
   if (!selectProduct) return <div>No Prodcts</div>;
   return (
     <div>
@@ -154,7 +155,7 @@ export function ViewProductPage({
                     onClick={async () => {
                       setLoading(true);
                       const newLikee: LikeType = {
-                        id :0,
+                        id: 0,
                         idproduct: selectProduct.id,
                         iduser: user?.id,
                         likee: "like",
@@ -165,10 +166,11 @@ export function ViewProductPage({
                         (u: any) => u.iduser
                       );
                       if (find) {
-                        console.log(find)
+                        console.log(find);
                         await _deleteLike(find.id);
                         mainState.allLike = [find, ...mainState.allLike];
-                        mainState.selectProduct.likeeProduct = mainState.allLike
+                        mainState.selectProduct.likeeProduct =
+                          mainState.allLike;
                       }
                       if (!find) {
                         await _insetLike(newLikee);

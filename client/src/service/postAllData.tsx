@@ -1,7 +1,7 @@
 import axios from "axios";
 import { toast } from "react-toastify";
-const url = "https://shopping1234567.herokuapp.com/";
-
+//const url = "https://shopping1234567.herokuapp.com/";
+const url = "http://localhost:5000/";
 export async function _loginUser(user: any) {
   const res = await axios.post(url + "login", user);
 
@@ -100,17 +100,12 @@ export async function _insetNews(news: any) {
 
 export async function _insetOrders(orders: any) {
   const res = await axios.post(url + "orders", orders);
-  if (res.data.result) {
-    toast(`${res.data.result}`);
-    return res.data.result;
-  } else if (res.data.err) {
+ if (res.data.err) {
     toast.error(`${res.data.err}`);
     return res.data.err;
-  } else if (res.data.error) {
-    toast.error(`${res.data.error}`);
-    return res.data.error;
   } else {
-    toast.error(`Error server`);
+    toast(`order sucessfully`);
+    return res.data.result;
   }
 }
 
@@ -135,6 +130,16 @@ if (res.data.err) {
     return res.data.err;
   }else {
     toast(`Like sucessfully`);
+    return res.data.result;
+  }
+}
+export async function _insetSave(save: any) {
+  const res: any = await axios.post(url + "save", save);
+if (res.data.err) {
+    toast.error(`${res.data.err}`);
+    return res.data.err;
+  }else {
+    toast(`Save sucessfully`);
     return res.data.result;
   }
 }

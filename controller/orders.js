@@ -12,9 +12,9 @@ const _getOrders = (req, res) => {
 };
 const _saveOrders = (req, res) => {
   let iduser = req.body.iduser;
-  let idpost = req.body.idpost;
+  let idproduct = req.body.idproduct;
   let quantity = req.body.quantity;
-  const sql = `INSERT INTO orders ( iduser , idpost , quantity ) VALUES ('${iduser}','${idpost}' , '${quantity}')`;
+  const sql = `INSERT INTO orders ( iduser , idproduct , quantity ) VALUES ('${iduser}','${idproduct}' , '${quantity}')`;
   connection.query(sql, (err, result) => {
     if (err) {
       res.json(err);
@@ -26,11 +26,11 @@ const _saveOrders = (req, res) => {
 const _putOrders = (req, res) => {
   let id = req.params.id;
   let iduser = req.body.iduser;
-  let idpost = req.body.idpost;
+  let idproduct = req.body.idproduct;
   let quantity = req.body.quantity;
   const sql = `UPDATE orders
   SET iduser = '${iduser}',
-  idpost = '${idpost}',
+  idproduct = '${idproduct}',
   quantity = '${quantity}'
   WHERE id = '${id}'`;
   connection.query(sql, (err, result) => {

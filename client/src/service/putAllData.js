@@ -1,7 +1,7 @@
 import axios from "axios";
 import { toast } from "react-toastify";
-const url = "https://shopping1234567.herokuapp.com/";
-
+//const url = "https://shopping1234567.herokuapp.com/";
+const url = "http://localhost:5000/";
 export async function _putUser(id, user) {
   const res = await axios.put(url + `users/${id}`, user);
   if (res.data) {
@@ -114,6 +114,19 @@ export async function _putProducts(id, products) {
     return res.data;
   }
 }
+export async function _putProductssave(id, products) {
+  const res = await axios.put(url + `productsSave/${id}`, products);
+  if (res.data) {
+    console.log(res.data);
+    toast(`products Update sucessfully`);
+    return res.data;
+  }
+  if (res.data.err) {
+    toast.error(`${res.data.err}`);
+    return res.data;
+  }
+
+}
 export async function _putProductSave(id, productsave) {
   const res = await axios.put(url + `products/${id}`, productsave);
   if (res.data) {
@@ -135,6 +148,22 @@ export async function _putOrders(id, orders) {
   if (res.data) {
     console.log(res.data);
     toast(`orders Sucessfully`);
+    return res.data;
+  }
+  if (res.data.err) {
+    toast.error(`${res.data.err}`);
+    return res.data;
+  }
+  if (res.data.error) {
+    toast.error(`${res.data.error}`);
+    return res.data;
+  }
+}
+export async function _putSave(id, save) {
+  const res = await axios.put(url + `save/${id}`, save);
+  if (res.data) {
+    console.log(res.data);
+    toast(`Save Sucessfully`);
     return res.data;
   }
   if (res.data.err) {

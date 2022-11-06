@@ -20,38 +20,40 @@ export function CategoryPage({ mainState, setMainState }: CategoryPageProps) {
         all in any note or suggestion that will reach us and be of great
         interest to us.
       </Typography>
-      <div className="row">
-        {allCategories.map((e) => {
-          return (
-            <div className="col-md-4 pt-3 pb-3">
-              <Card>
-                <CardActionArea
-                  onClick={() => {
-                    const findProduct: any = allProducts.filter(
-                      (p: any) => p.idcategory === e.id
-                    );
-                    mainState.render = "products";
-                    mainState.allProducts = findProduct;
-                    setMainState({ ...mainState });
-                  }}
-                >
-                  <CardMedia
-                    component="img"
-                    height="230"
-                    image={e.logo}
-                    alt={e.logo}
-                  />
-                  <CardContent>
-                    <Typography gutterBottom variant="h6" component="div">
-                      {e.name}
-                    </Typography>
-                  </CardContent>
-                </CardActionArea>
-              </Card>
-            </div>
-          );
-        })}
-      </div>
+      <Container maxWidth="lg" sx={{ mt: 10, mb: 5 }}>
+        <div className="row">
+          {allCategories.map((e) => {
+            return (
+              <div className="col-md-4 pt-3 pb-3">
+                <Card>
+                  <CardActionArea
+                    onClick={() => {
+                      const findProduct: any = allProducts.filter(
+                        (p: any) => p.idcategory === e.id
+                      );
+                      mainState.render = "products";
+                      mainState.allProducts = findProduct;
+                      setMainState({ ...mainState });
+                    }}
+                  >
+                    <CardMedia
+                      component="img"
+                      height="230"
+                      image={e.logo}
+                      alt={e.logo}
+                    />
+                    <CardContent>
+                      <Typography gutterBottom variant="h6" component="div">
+                        {e.name}
+                      </Typography>
+                    </CardContent>
+                  </CardActionArea>
+                </Card>
+              </div>
+            );
+          })}
+        </div>
+      </Container>
     </Container>
   );
 }

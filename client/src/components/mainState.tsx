@@ -3,15 +3,16 @@ export type MainStateType = {
   allCategories: categoryType[];
   allComment: commentType[];
   allContact: ContactType[];
-  allProducts: productType[] ;
+  allProducts: productType[];
   allLike: LikeType[];
   allNews: NewsType[];
   allOrders: OrderType[];
   allSave: SaveType[];
-  user: UserType | null;
+  user: UserType | null | any;
   render: string;
   dark: string;
   selectProduct: productType | null | any;
+  saveUser: SaveType | null | any;
 };
 
 export type UserType = {
@@ -22,6 +23,7 @@ export type UserType = {
   phone: string;
   image: string;
   authorization?: string;
+  orderUser : OrderType[]
 };
 export type ContactType = {
   id?: number;
@@ -46,16 +48,17 @@ export type productType = {
   idcategory: number;
   name: string;
   country: string;
-  images: string;
+  images?: string;
   price: number;
   date: string;
   description: string;
-  cloudinary_id: string;
-  userProduct: UserType[];
-  categoryProduct: categoryType[];
-  CommentProduct: commentType[];
-  saveProduct: SaveType[];
-  likeeProduct: LikeType[];
+  cloudinary_id?: string;
+  save: string;
+  userProduct?: UserType[];
+  categoryProduct?: categoryType[];
+  CommentProduct?: commentType[];
+  likeeProduct?: LikeType[];
+  SaveProduct?: SaveType[] | any;
 };
 export type LikeType = {
   id?: number;
@@ -83,5 +86,5 @@ export type SaveType = {
   id: number;
   iduser: number;
   idproduct: number;
-  save: number;
+  save: string;
 };

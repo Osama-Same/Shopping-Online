@@ -137,6 +137,8 @@ export function ProfilePage({ mainState, setMainState }: ProfilePageProps) {
           window.location.href = "/";
           setMainState({ ...mainState });
         }}
+        mainState={mainState}
+        setMainState={setMainState}
       />
 
       {user && (

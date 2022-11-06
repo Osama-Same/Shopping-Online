@@ -26,7 +26,7 @@ export async function updateUserState(
   const _allContact = await _getAllContact();
   const _allSave = await _getAllSave();
 
-  _getCategories.forEach((product:any) => {
+  _getCategories.forEach((product: any) => {
     product.categoryProduct = _allProducts.filter(
       (c: any) => c.idcategory === product.id
     );
@@ -35,16 +35,22 @@ export async function updateUserState(
     p.userProduct = _allUsers.find((u: any) => u.id === p.iduser);
     p.categoryProduct = _getCategories.find((c: any) => c.id === p.idcategory);
     p.CommentProduct = _allComment.filter((c: any) => c.idproduct === p.id);
-    p.likeeProduct = _allLike.filter((l:any) => l.idproduct === p.id)
+    p.likeeProduct = _allLike.filter((l: any) => l.idproduct === p.id);
+    p.SaveProduct = _allSave.filter((s: any) => s.idproduct === p.id);
   });
 
-  _allComment.forEach((comment:any)=>{
-     comment.commentUser = _allUsers.find((u:any)=>u.id === comment.iduser )
-  })
-
-  _allLike.forEach((likee:any)=>{
-     likee.likeUser = _allUsers.find((u:any)=> u.id === likee.iduser)
-  })
+  _allUsers.forEach((user: any) => {
+    user.saveUser = _allSave.filter((s: any) => s.iduser === user.id);
+    user.commentUser = _allComment.filter((c: any) => c.iduser === user.id);
+    user.likeUser = _allLike.filter((l: any) => l.iduser === user.id);
+    user.productUser = _allProducts.filter((p: any) => p.iduser === user.id);
+    user.orderUser = _allOrders.filter((o: any) => o.iduser === user.id);
+    user.orderUser.forEach((order: any) => {
+      order.orderProduct = _allProducts.find(
+        (p: any) => p.id === order.idproduct
+      );
+    });
+  });
 
   if (!user) {
     mainState.allUsers = _allUsers;
@@ -67,5 +73,7 @@ export async function updateUserState(
     mainState.allNews = _allNews;
     mainState.allOrders = _allOrders;
     mainState.allSave = _allSave;
+    mainState.user = user;
+    mainState.user = _allUsers.find((u: any) => u.id === user?.id);
   }
 }

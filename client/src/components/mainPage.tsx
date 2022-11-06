@@ -8,6 +8,7 @@ import { RegisterPage } from "./register";
 import { LoginPage } from "./login";
 import { ProfilePage } from "./profile";
 import { ViewProductPage } from "./viewProduct";
+import { OrdersPage } from "./orders";
 interface MainPageProps {
   mainState: MainStateType;
   setMainState: (m: MainStateType) => void;
@@ -41,6 +42,9 @@ export function MainPage({ mainState, setMainState }: MainPageProps) {
   }
   if (render === "viewProductPage") {
     return <ViewProductPage mainState={mainState} setMainState={setMainState} />;
+  }
+  if (render === "orders") {
+    return <OrdersPage mainState={mainState} setMainState={setMainState} />;
   }
   return <div></div>;
 }

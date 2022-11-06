@@ -52,8 +52,7 @@ const {
   _putOrders,
   _deleteOrders,
 } = require("../controller/orders");
-
-const { _getSave ,_InsertSave ,_putSave , _deleteSave } = require("../controller/save");
+const { _getSave, _putSave, _save , _deleteSave} = require("../controller/save");
 
 const router = express.Router();
 
@@ -168,22 +167,9 @@ router.post(
   _saveProduct
 );
 
-router.put(
-  "/products/:id",
-  upload.single("images"),
-  [
-    check("name", "name field is required").isLength({ min: 3 }),
-    check("country", "country field is required").isLength({ min: 3 }),
-    check("price", "price field is required").isLength({ min: 3 }),
-    check("date", "date field is required").isLength({ min: 3 }),
-    check("description", "description field is required").isLength({ min: 3 }),
-  ],
-  _putProduct
-);
+router.put("/products/:id", upload.single("images"), _putProduct);
 
 router.delete("/products/:id", _deleteProduct);
-
-
 
 //-------------------------------------------------------------------
 
@@ -227,13 +213,11 @@ router.post(
 
 //-------------------------------------------------------------------
 
-// Save
+// save
 
 router.get("/save", _getSave);
-router.post("/save", _InsertSave);
-router.put("/save/:id", _getSave);
-router.delete("/save/:id", _getSave);
-
-//-------------------------------------------------------------------
+router.post("/save", _save);
+router.put("/save/:id", _putSave);
+router.put("/save/:id", _deleteSave);
 
 module.exports = router;

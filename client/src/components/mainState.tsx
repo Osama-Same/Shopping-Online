@@ -11,8 +11,9 @@ export type MainStateType = {
   user: UserType | null | any;
   render: string;
   dark: string;
-  selectProduct: productType | null | any;
-  saveUser: SaveType | null | any;
+  selectedProductView: productType | null | any;
+  selectedLikeProduct: LikeType | null | any;
+  selectedCommentProduct: commentType | null | any;
 };
 
 export type UserType = {
@@ -23,7 +24,10 @@ export type UserType = {
   phone: string;
   image: string;
   authorization?: string;
-  orderUser : OrderType[]
+  orderUser?: OrderType[];
+  saveUser?: SaveType[];
+  commentUser?: commentType[];
+  likeUser?: LikeType[];
 };
 export type ContactType = {
   id?: number;
@@ -41,6 +45,7 @@ export type categoryType = {
   logo: string;
   cloudinary_id: string;
   categorytype: number;
+  categoryProduct?: categoryType[];
 };
 export type productType = {
   id: number;
@@ -53,20 +58,17 @@ export type productType = {
   date: string;
   description: string;
   cloudinary_id?: string;
-  save: string;
-  userProduct?: UserType[];
-  categoryProduct?: categoryType[];
-  CommentProduct?: commentType[];
-  likeeProduct?: LikeType[];
-  SaveProduct?: SaveType[] | any;
+  commentProduct: commentType[];
+  likeeProduct: LikeType[];
+  SaveProduct: SaveType[];
 };
 export type LikeType = {
   id?: number;
   iduser: number;
   idproduct: number;
   likee: string;
-  likeNum: number;
-  likeUser?: UserType;
+  likeUser?: UserType[];
+  likeProduct?: productType[];
 };
 export type commentType = {
   id?: number;
@@ -74,17 +76,20 @@ export type commentType = {
   idproduct: number;
   comment: string;
   date: string;
-  commentUser?: UserType;
+  commentUser?: UserType[];
+  commentProduct?: productType[];
 };
 export type OrderType = {
   id: number;
   iduser: number;
   idproduct: number;
   quantity: number;
+  orderUser: UserType[];
 };
 export type SaveType = {
   id: number;
   iduser: number;
   idproduct: number;
   save: string;
+  saveUser: UserType[];
 };

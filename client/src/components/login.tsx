@@ -19,7 +19,7 @@ export function LoginPage({ mainState, setMainState }: LoginPageProps) {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   return (
-    <Container component="main" maxWidth="xs" sx={{ mt: 10, mb: 5 }}>
+    <Container component="main" maxWidth="xs" sx={{ mt: 15, mb: 5 }}>
       <Box
         sx={{
           marginTop: 8,

@@ -26,9 +26,10 @@ const App = () => {
     allSave: [],
     render: "",
     user: null,
-    selectProduct: null,
     dark: "light",
-    saveUser: null,
+    selectedProductView: null,
+    selectedLikeProduct :null,
+    selectedCommentProduct :null
   });
   useEffect(() => {
     updateUserState(mainState, setMainState);

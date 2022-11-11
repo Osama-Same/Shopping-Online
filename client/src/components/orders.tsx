@@ -3,28 +3,16 @@ import { useState } from "react";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
-import CardHeader from "@mui/material/CardHeader";
-import { Button, CardActionArea } from "@mui/material";
-import Avatar from "@mui/material/Avatar";
+import { Button } from "@mui/material";
 import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import FlagIcon from "@mui/icons-material/Flag";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
-import Box from "@mui/material/Box";
-import Badge from "@mui/material/Badge";
-import ButtonGroup from "@mui/material/ButtonGroup";
 import ClearIcon from "@mui/icons-material/Clear";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
-import MailIcon from "@mui/icons-material/Mail";
-import Switch from "@mui/material/Switch";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import IconButton from "@mui/material/IconButton";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
-import Divider from "@mui/material/Divider";
 import TextField from "@mui/material/TextField";
 import { _deleteOrders } from "../service/deleteAllData";
 import ConfirmDeleteDialog from "./common/ConfirmDeleteDialog";
@@ -35,6 +23,7 @@ interface OrdersPageProps {
 
 export function OrdersPage({ mainState, setMainState }: OrdersPageProps) {
   const { user } = mainState;
+  const { orderUser } = user;
   const [openConfirmDelDlg, setopenConfirmDelDlg] = useState(false);
   const [selectedUser, setSelectedUser] = useState<OrderType | null>(null);
   const getTotalPrice = ({ user }: any) => {
@@ -52,7 +41,7 @@ export function OrdersPage({ mainState, setMainState }: OrdersPageProps) {
 
       <div className="row pt-3 pb-3">
         <div className="col-md-8 pt-3 pb-3">
-          {user.orderUser.map((order: any) => {
+          {orderUser.map((order: any) => {
             return (
               <div className="row pt-3 pb-3">
                 <div className="col">
@@ -62,7 +51,7 @@ export function OrdersPage({ mainState, setMainState }: OrdersPageProps) {
                       height="190"
                       width="200"
                       image={order.orderProduct && order.orderProduct.images}
-                      alt={order.orderProduct.images}
+                      alt={order.orderProduct && order.orderProduct.images}
                     />
                   </Card>
                 </div>
@@ -129,8 +118,8 @@ export function OrdersPage({ mainState, setMainState }: OrdersPageProps) {
                     >
                       <Button
                         onClick={async () => {
-                          setSelectedUser(order);
                           setopenConfirmDelDlg(true);
+                          setSelectedUser(order);
                         }}
                       >
                         <ClearIcon />
@@ -200,9 +189,8 @@ export function OrdersPage({ mainState, setMainState }: OrdersPageProps) {
           onConfirm={async () => {
             if (!selectedUser) return;
             await _deleteOrders(selectedUser.id);
-          
-            
-            setMainState({ ...mainState })
+            mainState.user.orderUser = orderUser;
+            setMainState({ ...mainState });
           }}
           mainState={mainState}
           setMainState={setMainState}

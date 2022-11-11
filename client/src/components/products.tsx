@@ -1,4 +1,4 @@
-import { MainStateType, productType } from "./mainState";
+import { MainStateType, productType, LikeType, commentType } from "./mainState";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
@@ -31,7 +31,7 @@ interface ProductsPageProps {
 }
 
 export function ProductsPage({ mainState, setMainState }: ProductsPageProps) {
-  const { allProducts, user } = mainState;
+  const { allProducts, user, allLike, allComment, allUsers } = mainState;
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const [selectedProductCategory, setselectedProductCategory] = useState<
@@ -41,7 +41,7 @@ export function ProductsPage({ mainState, setMainState }: ProductsPageProps) {
   const [search, setSearch] = useState("");
   if (!allProducts) return <div>{loading && <CircularProgress />}</div>;
   return (
-    <Container maxWidth="lg" sx={{ mt: 10, mb: 5 }}>
+    <Container maxWidth="lg" sx={{ mt: 15, mb: 5 }}>
       <Typography variant="h4">Products</Typography>
       <Typography variant="body2" sx={{ mt: 5, mb: 5 }}>
         <Stack
@@ -51,7 +51,6 @@ export function ProductsPage({ mainState, setMainState }: ProductsPageProps) {
         >
           <Button
             variant="outlined"
-            style={{ color: "white" }}
             onClick={() => {
               let SearchProduct: any = allProducts.filter((e: any) => {
                 return e.name.toUpperCase().search(search.toUpperCase()) !== -1;
@@ -69,7 +68,7 @@ export function ProductsPage({ mainState, setMainState }: ProductsPageProps) {
               setMainState({ ...mainState });
             }}
           >
-            <SearchIcon />
+            <SearchIcon  />
           </Button>
           <TextField
             fullWidth
@@ -97,7 +96,6 @@ export function ProductsPage({ mainState, setMainState }: ProductsPageProps) {
               mainState.allProducts = findProduct;
               setMainState({ ...mainState });
               setselectedProductCategory(mainState.allProducts);
-              console.log("findProduct", findProduct);
             }}
             labelOption="name"
             labelImage="logo"
@@ -112,7 +110,22 @@ export function ProductsPage({ mainState, setMainState }: ProductsPageProps) {
               <Card>
                 <CardActionArea
                   onClick={() => {
-                    console.log("osa,a");
+                    const findProduct: any = allProducts.find(
+                      (p) => p.id === e.id
+                    );
+
+                    const findLike: any = allLike.filter(
+                      (l) => l.idproduct === e.id
+                    );
+                    const findComment: any = allComment.filter(
+                      (p) => p.idproduct === e.id 
+                    );
+
+                    mainState.selectedProductView = findProduct;
+                    mainState.selectedLikeProduct = findLike;
+                    mainState.selectedCommentProduct = findComment;
+                    mainState.render = "viewProductPage";
+                    setMainState({ ...mainState });
                   }}
                 >
                   <CardMedia
@@ -120,6 +133,7 @@ export function ProductsPage({ mainState, setMainState }: ProductsPageProps) {
                     height="230"
                     image={e.images}
                     alt={e.images}
+                    title="osama"
                   />
                   <CardContent>
                     <Typography gutterBottom variant="h6" component="div">
@@ -165,7 +179,7 @@ export function ProductsPage({ mainState, setMainState }: ProductsPageProps) {
                     size="small"
                     onClick={async () => {
                       if (!user) {
-                        setOpen(true)
+                        setOpen(true);
                       }
                       if (user) {
                         const data: any = {
@@ -179,7 +193,7 @@ export function ProductsPage({ mainState, setMainState }: ProductsPageProps) {
                         mainState.user.orderUser = [
                           data,
                           ...mainState.user.orderUser,
-                        ]
+                        ];
                       }
                     }}
                   >
@@ -193,8 +207,16 @@ export function ProductsPage({ mainState, setMainState }: ProductsPageProps) {
                         (p) => p.id === e.id
                       );
 
-                      console.log("findProduct", findProduct);
-                      mainState.selectProduct = findProduct;
+                      const findLike: any = allLike.filter(
+                        (l) => l.idproduct === e.id
+                      );
+                      const findComment: any = allComment.filter(
+                        (p) => p.idproduct === e.id 
+                      );
+
+                      mainState.selectedProductView = findProduct;
+                      mainState.selectedLikeProduct = findLike;
+                      mainState.selectedCommentProduct = findComment;
                       mainState.render = "viewProductPage";
                       setMainState({ ...mainState });
                     }}

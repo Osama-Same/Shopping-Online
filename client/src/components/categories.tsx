@@ -13,7 +13,7 @@ export function CategoryPage({ mainState, setMainState }: CategoryPageProps) {
   const { allCategories, allProducts } = mainState;
   if (!allCategories) return <div>No Products</div>;
   return (
-    <Container maxWidth="xl" sx={{ mt: 10, mb: 5 }}>
+    <Container maxWidth="xl" sx={{ mt: 15, mb: 5 }}>
       <Typography variant="h4">Categories</Typography>
       <Typography variant="body2" sx={{ mt: 5, mb: 5 }}>
         Your messages are the secret of our development, so do not hesitate at

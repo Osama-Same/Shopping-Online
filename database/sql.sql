@@ -68,7 +68,7 @@ CREATE TABLE
 CREATE TABLE
     likee (
         id INT AUTO_INCREMENT NOT NULL,
-        iduser INT UNIQUE,
+        iduser INT ,
         idproduct INT,
         likee VARCHAR(100) NOT NULL,
         FOREIGN KEY (idproduct) REFERENCES products (id),

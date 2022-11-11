@@ -23,7 +23,7 @@ export function RegisterPage({ mainState, setMainState }: RegisterPageProps) {
   const [image, setImage] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component="main" maxWidth="xs" sx={{ mt: 15, mb: 5 }}>
       <Box
         sx={{
           marginTop: 8,

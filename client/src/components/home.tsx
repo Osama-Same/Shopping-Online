@@ -3,6 +3,7 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Carousel from "react-bootstrap/Carousel";
 import Container from "@mui/material/Container";
+import { margin } from "@mui/system";
 
 interface HomePageProps {
   mainState: MainStateType;
@@ -12,7 +13,7 @@ export function HomePage({ mainState, setMainState }: HomePageProps) {
   return (
     <div>
        <CarouselFadeExample />
-      <Container maxWidth="xl" sx={{ mt: 10, mb: 5 }}>
+      <Container maxWidth="lg" sx={{ mt: 10, mb: 5 }}>
         <Typography variant="h4">Shopping Online</Typography>
         <Typography variant="body2" sx={{ mt: 5, mb: 5 }}>
           Marketing is one of the most important steps of commerce, and
@@ -65,7 +66,7 @@ export function HomePage({ mainState, setMainState }: HomePageProps) {
 export function CarouselFadeExample() {
   return (
     
-    <Carousel fade>
+    <Carousel fade style={{marginTop:"60px"}}>
       <Carousel.Item>
         <img
           className="d-block w-100"

@@ -119,7 +119,7 @@ export async function _insetComment(comment: any) {
     return res.data.error;
   } else {
     toast(`comment sucessfully`);
-    return res.data.result;
+    return res.data;
   }
 }
 

@@ -52,19 +52,16 @@ export async function _putNews(id, news) {
 }
 export async function _putLike(id, like) {
   const res = await axios.put(url + `like/${id}`, like);
-  if (res.data) {
-    console.log(res.data);
-    toast(`like Update sucessfully`);
-    return res.data;
-  }
+
   if (res.data.err) {
     toast.error(`${res.data.err}`);
     return res.data;
-  }
-  if (res.data.error) {
-    toast.error(`${res.data.error}`);
+  }else{
+    toast(`like Update sucessfully`);
+    console.log(res.data)
     return res.data;
   }
+ 
 }
 export async function _putComment(id, comment) {
   const res = await axios.put(url + `comment/${id}`, comment);

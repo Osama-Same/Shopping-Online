@@ -1,4 +1,4 @@
-import { MainStateType, commentType, LikeType } from "./mainState";
+import { MainStateType, commentType, LikeType, productType } from "./mainState";
 import { useState } from "react";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -29,7 +29,10 @@ import Chip from "@mui/material/Chip";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import FlagIcon from "@mui/icons-material/Flag";
 import { _insetComment, _insetLike } from "../service/postAllData";
-import { _deleteLike } from "../service/deleteAllData";
+import { _putLike } from "../service/putAllData";
+import CircularProgress from "@mui/material/CircularProgress";
+import { AlertDialog } from "./products";
+
 interface ViewProductPageProps {
   mainState: MainStateType;
   setMainState: (m: MainStateType) => void;
@@ -39,17 +42,24 @@ export function ViewProductPage({
   mainState,
   setMainState,
 }: ViewProductPageProps) {
-  const { selectProduct, user, allProducts } = mainState;
+  const {
+    selectedProductView,
+    user,
+    allProducts,
+    selectedCommentProduct,
+    allComment,
+    allLike,
+    selectedLikeProduct,
+  } = mainState;
+
   const [open, setOpen] = useState(false);
   const [comment, setComment] = useState("");
-
   const [loading, setLoading] = useState(false);
 
-
-  if (!selectProduct) return <div>No Prodcts</div>;
+  if (!allProducts) return <div>{loading && <CircularProgress />}</div>;
   return (
     <div>
-      <Container component="main" maxWidth="lg" sx={{ mt: 10, mb: 5 }}>
+      <Container component="main" maxWidth="lg" sx={{ mt: 15, mb: 5 }}>
         <Typography variant="h6" sx={{ mt: 10, mb: 3 }}>
           View Product
         </Typography>
@@ -73,8 +83,8 @@ export function ViewProductPage({
                     <CardMedia
                       component="img"
                       height="300"
-                      image={selectProduct.images}
-                      alt={selectProduct.images}
+                      image={selectedProductView.images}
+                      alt={selectedProductView.images}
                     />
                   </CardActionArea>
                 </Card>
@@ -87,7 +97,7 @@ export function ViewProductPage({
                       <ListItemIcon>
                         <BrandingWatermarkIcon />
                       </ListItemIcon>
-                      <ListItemText primary={selectProduct.name} />
+                      <ListItemText primary={selectedProductView.name} />
                     </ListItemButton>
                   </ListItem>
                 </List>
@@ -97,7 +107,7 @@ export function ViewProductPage({
                       <ListItemIcon>
                         <FlagIcon />{" "}
                       </ListItemIcon>
-                      <ListItemText primary={selectProduct.country} />
+                      <ListItemText primary={selectedProductView.country} />
                     </ListItemButton>
                   </ListItem>
                 </List>
@@ -107,7 +117,7 @@ export function ViewProductPage({
                       <ListItemIcon>
                         <CalendarTodayIcon />
                       </ListItemIcon>
-                      <ListItemText primary={selectProduct.date} />
+                      <ListItemText primary={selectedProductView.date} />
                     </ListItemButton>
                   </ListItem>
                 </List>
@@ -117,7 +127,7 @@ export function ViewProductPage({
                       <ListItemIcon>
                         <AttachMoneyIcon />
                       </ListItemIcon>
-                      <ListItemText primary={selectProduct.price} />
+                      <ListItemText primary={selectedProductView.price} />
                     </ListItemButton>
                   </ListItem>
                 </List>
@@ -128,65 +138,63 @@ export function ViewProductPage({
                       <ListItemIcon>
                         <DescriptionIcon />
                       </ListItemIcon>
-                      <ListItemText primary={selectProduct.description} />
+                      <ListItemText primary={selectedProductView.description} />
                     </ListItemButton>
                   </ListItem>
                 </List>
               </div>
-              {user && (
-                <Stack mb={2} mt={2} spacing={2} direction="row">
-                  <Button startIcon={<AddShoppingCartIcon />}>
-                    Add to Cart
-                  </Button>
-                  <Button
-                    startIcon={<CommentIcon />}
-                    onClick={() => {
-                      if (open === false) {
-                        setOpen(true);
-                      } else {
-                        setOpen(false);
-                      }
-                    }}
-                  >
-                    Comment
-                  </Button>
-                  <Button
-                    startIcon={<ThumbUpIcon />}
-                    onClick={async () => {
-                      setLoading(true);
-                      const newLikee: LikeType = {
-                        id: 0,
-                        idproduct: selectProduct.id,
-                        iduser: user?.id,
-                        likee: "like",
-                        likeNum: 1,
-                        likeUser: user,
-                      };
-                      const find = selectProduct.likeeProduct.find(
-                        (u: any) => u.iduser
-                      );
-                      if (find) {
-                        console.log(find);
-                        await _deleteLike(find.id);
-                        mainState.allLike = [find, ...mainState.allLike];
-                        mainState.selectProduct.likeeProduct =
-                          mainState.allLike;
-                      }
-                      if (!find) {
-                        await _insetLike(newLikee);
-                        mainState.allLike = [newLikee, ...mainState.allLike];
-                        mainState.selectProduct.likeeProduct = [
-                          newLikee,
-                          ...mainState.selectProduct.likeeProduct,
-                        ];
-                        setMainState({ ...mainState });
-                      }
-                    }}
-                  >
-                    Like {[mainState.selectProduct.likeeProduct.length]}
-                  </Button>
-                </Stack>
-              )}
+
+              <Stack mb={2} mt={2} spacing={2} direction="row">
+                <Button
+                  startIcon={<AddShoppingCartIcon />}
+                  onClick={async () => {
+                    if (!user) {
+                      setOpen(true);
+                    }
+                  }}
+                >
+                  Add to Cart
+                </Button>
+                <Button
+                  startIcon={<CommentIcon />}
+                  onClick={() => {
+                    if (open === false) {
+                      setOpen(true);
+                    } else {
+                      setOpen(false);
+                    }
+                  }}
+                >
+                  Comment
+                </Button>
+                <Button
+                  startIcon={<ThumbUpIcon />}
+                  onClick={async () => {
+                    if (!user) {
+                      setOpen(true);
+                    }
+                    setLoading(true);
+                    const newLike: LikeType = {
+                      iduser: user.id,
+                      idproduct: selectedProductView.id,
+                      likee: "like",
+                      likeUser: user,
+                      likeProduct: selectedProductView,
+                    };
+
+                    await _insetLike(newLike);
+                    mainState.allLike = [newLike, ...mainState.allLike];
+                    mainState.selectedLikeProduct = [
+                      newLike,
+                      ...mainState.selectedLikeProduct,
+                    ];
+                    setMainState({ ...mainState });
+                  }}
+                >
+                  like {selectedLikeProduct.length}
+                </Button>
+              </Stack>
+
               <div className="row pt-3 pb-3">
                 {user && (
                   <Box
@@ -219,21 +227,20 @@ export function ViewProductPage({
                                 setLoading(true);
                                 const newComment: commentType = {
                                   iduser: user.id,
-                                  idproduct: selectProduct.id,
                                   comment: comment,
                                   date: new Date().toString(),
+                                  idproduct: selectedProductView.id,
+                                  commentProduct: selectedProductView,
                                   commentUser: user,
                                 };
-
                                 await _insetComment(newComment);
-
                                 mainState.allComment = [
                                   newComment,
                                   ...mainState.allComment,
                                 ];
-                                mainState.selectProduct.CommentProduct = [
+                                mainState.selectedCommentProduct = [
                                   newComment,
-                                  ...mainState.selectProduct.CommentProduct,
+                                  ...mainState.selectedCommentProduct,
                                 ];
                                 setMainState({ ...mainState });
                                 setLoading(false);
@@ -248,19 +255,26 @@ export function ViewProductPage({
                     />
                   </Box>
                 )}
-                {selectProduct.CommentProduct.map((e: any) => {
+                {selectedCommentProduct.map((comment: any) => {
                   return (
                     <List>
                       <ListItem>
                         <ListItemAvatar>
                           <Avatar>
                             <Avatar
-                              src={e.commentUser?.image}
-                              alt="Remy Sharp"
+                              src={
+                                comment.commentUser && comment.commentUser.image
+                              }
+                              alt={
+                                comment.commentUser && comment.commentUser.image
+                              }
                             />
                           </Avatar>
                         </ListItemAvatar>
-                        <ListItemText primary={e.comment} secondary={e.date} />
+                        <ListItemText
+                          primary={comment.comment}
+                          secondary={comment.date}
+                        />
                       </ListItem>
                       <Divider variant="inset" component="li" />
                     </List>
@@ -276,7 +290,20 @@ export function ViewProductPage({
                   <Card>
                     <CardActionArea
                       onClick={() => {
-                        console.log("osa,a");
+                        const findProduct: any = allProducts.find(
+                          (p) => p.id === e.id
+                        );
+                        const findComment: any = allComment.filter(
+                          (p) => p.idproduct === e.id
+                        );
+                        const findLike: any = allLike.filter(
+                          (l) => l.idproduct === e.id
+                        );
+                        mainState.selectedProductView = findProduct;
+                        mainState.selectedCommentProduct = findComment;
+                        mainState.selectedLikeProduct = findLike;
+                        mainState.render = "viewProductPage";
+                        setMainState({ ...mainState });
                       }}
                     >
                       <CardMedia
@@ -323,6 +350,7 @@ export function ViewProductPage({
           </div>
         </div>
       </Container>
+      <AlertDialog open={open} setOpen={setOpen} />
     </div>
   );
 }

@@ -53,22 +53,21 @@ CREATE TABLE
         PRIMARY KEY (id)
     );
 
-
-
 CREATE TABLE
     save (
         id INT AUTO_INCREMENT NOT NULL,
-        iduser INT ,
-            idproduct INT,
+        iduser INT,
+        idproduct INT,
         save VARCHAR(100) NOT NULL,
         FOREIGN KEY (iduser) REFERENCES users (id),
         FOREIGN KEY (idproduct) REFERENCES products (id),
         PRIMARY KEY (id)
     );
+
 CREATE TABLE
     likee (
         id INT AUTO_INCREMENT NOT NULL,
-        iduser INT ,
+        iduser INT,
         idproduct INT,
         likee VARCHAR(100) NOT NULL,
         FOREIGN KEY (idproduct) REFERENCES products (id),
@@ -95,6 +94,18 @@ CREATE TABLE
         idproduct INT,
         quantity INT,
         FOREIGN KEY (idproduct) REFERENCES products (id),
+        FOREIGN KEY (iduser) REFERENCES users (id),
+        PRIMARY KEY (id)
+    );
+
+CREATE TABLE
+    checkOut (
+        id INT AUTO_INCREMENT NOT NULL,
+        iduser INT,
+        priceOut DOUBLE(6, 2) NOT NULL,
+        CreditCardNumber VARCHAR(100) NOT NULL,
+        expMonth VARCHAR (100) NOT NULL,
+        cvv VARCHAR (100) NOT NULL,
         FOREIGN KEY (iduser) REFERENCES users (id),
         PRIMARY KEY (id)
     );

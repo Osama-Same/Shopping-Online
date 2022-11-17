@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { Navigation } from "./components/navigation";
 import { MainPage } from "./components/mainPage";
+import { HeaderPage } from "./components/header";
 import { MainStateType } from "./components/mainState";
 import { ToastContainer } from "react-toastify";
 import { updateUserState } from "./components/users";
@@ -24,51 +25,28 @@ const App = () => {
     allNews: [],
     allProducts: [],
     allSave: [],
+    allCheckOut: [],
     render: "",
     user: null,
-    dark: "light",
     selectedProductView: null,
-    selectedLikeProduct :null,
-    selectedCommentProduct :null
+    selectedLikeProduct: null,
+    selectedCommentProduct: null,
   });
   useEffect(() => {
     updateUserState(mainState, setMainState);
   }, [mainState]);
 
   console.log(mainState);
-  const theme = useMemo(
-    () =>
-      createTheme({
-        palette: {
-          mode: mainState.dark === "dark" ? "light" : "dark",
-        },
-      }),
-    [mainState.dark]
-  );
-  const Item = styled(Paper)(({ theme }) => ({
-    backgroundColor: theme.palette.mode === "dark" ? "#121212" : "#fff",
-    ...theme.typography.body2,
-    padding: theme.spacing(0),
-    textAlign: "center",
-    color: theme.palette.text.primary,
-  }));
+
   return (
     <div className="App">
-      <ThemeProvider theme={theme}>
-        <ToastContainer />
-        <Navigation mainState={mainState} setMainState={setMainState} />
-        <Stack>
-          <Item>
-            <MainPage mainState={mainState} setMainState={setMainState} />
-          </Item>
-        </Stack>
-        <FooterPage mainState={mainState} setMainState={setMainState} />
-        {/* <Stack>
-          <Item>
-            <MainPage mainState={mainState} setMainState={setMainState} />
-          </Item>
-        </Stack> */}
-      </ThemeProvider>
+      <ToastContainer />
+      {/* <Navigation mainState={mainState} setMainState={setMainState} /> */}
+      <HeaderPage mainState={mainState} setMainState={setMainState} />
+
+      <MainPage mainState={mainState} setMainState={setMainState} />
+
+      <FooterPage mainState={mainState} setMainState={setMainState} />
     </div>
   );
 };

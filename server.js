@@ -12,22 +12,15 @@ const corsOptions = {
   optionsSuccessStatus: 200,
 };
 
-
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(router);
 
+
+
 const PORT = process.env.PORT || 5000;
+
 app.listen(PORT, () => {
   console.log(`http://localhost:${PORT}`);
 });
-
-
-
-
-
-
-
-
-

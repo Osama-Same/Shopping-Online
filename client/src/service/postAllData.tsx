@@ -100,7 +100,7 @@ export async function _insetNews(news: any) {
 
 export async function _insetOrders(orders: any) {
   const res = await axios.post(url + "orders", orders);
- if (res.data.err) {
+  if (res.data.err) {
     toast.error(`${res.data.err}`);
     return res.data.err;
   } else {
@@ -111,7 +111,7 @@ export async function _insetOrders(orders: any) {
 
 export async function _insetComment(comment: any) {
   const res = await axios.post(url + "comment", comment);
- if (res.data.err) {
+  if (res.data.err) {
     toast.error(`${res.data.err}`);
     return res.data.err;
   } else if (res.data.error) {
@@ -125,21 +125,31 @@ export async function _insetComment(comment: any) {
 
 export async function _insetLike(like: any) {
   const res: any = await axios.post(url + "like", like);
-if (res.data.err) {
+  if (res.data.err) {
     toast.error(`${res.data.err}`);
     return res.data.err;
-  }else {
+  } else {
     toast(`Like sucessfully`);
     return res.data.result;
   }
 }
 export async function _insetSave(save: any) {
   const res: any = await axios.post(url + "save", save);
-if (res.data.err) {
+  if (res.data.err) {
     toast.error(`${res.data.err}`);
     return res.data.err;
-  }else {
+  } else {
     toast(`Save sucessfully`);
+    return res.data.result;
+  }
+}
+export async function _insetCheckOut(checkOut: any) {
+  const res: any = await axios.post(url + "checkOut", checkOut);
+  if (res.data.err) {
+    toast.error(`${res.data.err}`);
+    return res.data.err;
+  } else {
+    toast(`check Out sucessfully`);
     return res.data.result;
   }
 }

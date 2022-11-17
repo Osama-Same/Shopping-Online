@@ -8,9 +8,9 @@ export type MainStateType = {
   allNews: NewsType[];
   allOrders: OrderType[];
   allSave: SaveType[];
+  allCheckOut: CheckOutType[];
   user: UserType | null | any;
   render: string;
-  dark: string;
   selectedProductView: productType | null | any;
   selectedLikeProduct: LikeType | null | any;
   selectedCommentProduct: commentType | null | any;
@@ -24,7 +24,7 @@ export type UserType = {
   phone: string;
   image: string;
   authorization?: string;
-  orderUser?: OrderType[];
+  orderUser?: OrderType[] | any;
   saveUser?: SaveType[];
   commentUser?: commentType[];
   likeUser?: LikeType[];
@@ -61,6 +61,7 @@ export type productType = {
   commentProduct: commentType[];
   likeeProduct: LikeType[];
   SaveProduct: SaveType[];
+  category?: categoryType[];
 };
 export type LikeType = {
   id?: number;
@@ -80,11 +81,12 @@ export type commentType = {
   commentProduct?: productType[];
 };
 export type OrderType = {
-  id: number;
+  id?: number;
   iduser: number;
   idproduct: number;
   quantity: number;
-  orderUser: UserType[];
+  orderUser?: UserType[] | any;
+  orderProduct?: productType[] | any;
 };
 export type SaveType = {
   id: number;
@@ -92,4 +94,12 @@ export type SaveType = {
   idproduct: number;
   save: string;
   saveUser: UserType[];
+};
+export type CheckOutType = {
+  id?: number;
+  iduser: number;
+  priceOut: number;
+  creditCardNumber: string;
+  expMonth: string;
+  cvv: string;
 };

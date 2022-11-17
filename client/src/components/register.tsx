@@ -9,7 +9,6 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import CircularProgress from "@mui/material/CircularProgress";
 import { _insertUser } from "../service/postAllData";
-import Link from "@mui/material/Link";
 interface RegisterPageProps {
   mainState: MainStateType;
   setMainState: (m: MainStateType) => void;

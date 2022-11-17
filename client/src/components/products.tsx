@@ -1,8 +1,13 @@
-import { MainStateType, productType, LikeType, commentType } from "./mainState";
+import {
+  categoryType,
+  MainStateType,
+  OrderType,
+  productType,
+} from "./mainState";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
-import { Button, CardActionArea } from "@mui/material";
+import { Avatar, Box, Button, CardActionArea, TextField } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
@@ -13,13 +18,10 @@ import ReadMoreIcon from "@mui/icons-material/ReadMore";
 import SaveIcon from "@mui/icons-material/Save";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import Container from "@mui/material/Container";
-import TextField from "@mui/material/TextField";
-import SearchIcon from "@mui/icons-material/Search";
 import { useState } from "react";
 import CircularProgress from "@mui/material/CircularProgress";
 import { _putSave } from "../service/putAllData";
-import { _insetSave, _insetOrders } from "../service/postAllData";
-import AutoCompleteSelect from "./common/AutoCompleteSelect";
+import { _insetSave, _insetOrders, _loginUser } from "../service/postAllData";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -31,77 +33,34 @@ interface ProductsPageProps {
 }
 
 export function ProductsPage({ mainState, setMainState }: ProductsPageProps) {
-  const { allProducts, user, allLike, allComment, allUsers } = mainState;
+  const { allProducts, user, allLike, allComment } = mainState;
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
-  const [selectedProductCategory, setselectedProductCategory] = useState<
-    productType[] | null
-  >(null);
-
-  const [search, setSearch] = useState("");
   if (!allProducts) return <div>{loading && <CircularProgress />}</div>;
   return (
-    <Container maxWidth="lg" sx={{ mt: 15, mb: 5 }}>
-      <Typography variant="h4">Products</Typography>
-      <Typography variant="body2" sx={{ mt: 5, mb: 5 }}>
-        <Stack
-          direction="row"
-          justifyContent="center"
-          sx={{ mt: 5, mb: 7, pt: 2 }}
-        >
-          <Button
-            variant="outlined"
+    <Container maxWidth="lg" sx={{ mt: 10, mb: 5 }}>
+      {mainState.allCategories.map((category: categoryType) => {
+        return (
+          <Chip
+            sx={{ marginLeft: "10px", marginBottom: "10px" }}
+            label={category.name}
+            avatar={<Avatar alt="Natacha" src={category.logo} />}
             onClick={() => {
-              let SearchProduct: any = allProducts.filter((e: any) => {
-                return e.name.toUpperCase().search(search.toUpperCase()) !== -1;
-              });
-
-              if (SearchProduct.length === 0) {
-                mainState.render = "products";
-                SearchProduct = mainState.allProducts;
-                console.log("SearchProduct", SearchProduct);
-                setMainState({ ...mainState });
-                setselectedProductCategory(allProducts);
-              }
-              mainState.allProducts = SearchProduct;
-              console.log("SearchProduct", SearchProduct);
-              setMainState({ ...mainState });
-            }}
-          >
-            <SearchIcon  />
-          </Button>
-          <TextField
-            fullWidth
-            type={"search"}
-            label="Search"
-            placeholder="Search Name Product"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-
-          <AutoCompleteSelect
-            textLabel="Categories"
-            options={mainState.allCategories}
-            selectedOption={selectedProductCategory}
-            onChange={(category: any) => {
               let findProduct: any = allProducts.filter(
-                (p: any) => p.idcategory === category.id
+                (p: productType) => p.idcategory === category.id
               );
               if (findProduct.length === 0) {
-                mainState.render = "products";
                 findProduct = mainState.allProducts;
-                setMainState({ ...mainState });
-                setselectedProductCategory(allProducts);
+                return setMainState({ ...mainState });
               }
+              mainState.render = "products";
               mainState.allProducts = findProduct;
-              setMainState({ ...mainState });
-              setselectedProductCategory(mainState.allProducts);
+              setLoading(false);
+              return setMainState({ ...mainState });
             }}
-            labelOption="name"
-            labelImage="logo"
           />
-        </Stack>
-      </Typography>
+        );
+      })}
 
       <div className="row">
         {allProducts.map((e: any) => {
@@ -118,7 +77,7 @@ export function ProductsPage({ mainState, setMainState }: ProductsPageProps) {
                       (l) => l.idproduct === e.id
                     );
                     const findComment: any = allComment.filter(
-                      (p) => p.idproduct === e.id 
+                      (p) => p.idproduct === e.id
                     );
 
                     mainState.selectedProductView = findProduct;
@@ -178,23 +137,22 @@ export function ProductsPage({ mainState, setMainState }: ProductsPageProps) {
                     startIcon={<AddShoppingCartIcon />}
                     size="small"
                     onClick={async () => {
-                      if (!user) {
-                        setOpen(true);
-                      }
-                      if (user) {
-                        const data: any = {
-                          iduser: user.id,
-                          idproduct: e.id,
-                          quantity: 1,
-                        };
-                        await _insetOrders(data);
-                        mainState.allOrders = [data, ...mainState.allOrders];
-                        setMainState({ ...mainState });
-                        mainState.user.orderUser = [
-                          data,
-                          ...mainState.user.orderUser,
-                        ];
-                      }
+                      if (!user) return setOpen(true);
+                      const newOrder: OrderType = {
+                        iduser: user.id,
+                        idproduct: e.id,
+                        quantity: 1,
+                        orderProduct: e,
+                        orderUser: user,
+                      };
+                      console.log(newOrder)
+                      await _insetOrders(newOrder);
+                      mainState.allOrders = [newOrder, ...mainState.allOrders];
+                      mainState.user.orderUser = [
+                        newOrder,
+                        ...mainState.user.orderUser                        ,
+                      ];
+                      setMainState({ ...mainState });
                     }}
                   >
                     Add to Cart
@@ -204,14 +162,14 @@ export function ProductsPage({ mainState, setMainState }: ProductsPageProps) {
                     size="small"
                     onClick={() => {
                       const findProduct: any = allProducts.find(
-                        (p) => p.id === e.id
+                        (p: any) => p.id === e.id
                       );
 
                       const findLike: any = allLike.filter(
                         (l) => l.idproduct === e.id
                       );
                       const findComment: any = allComment.filter(
-                        (p) => p.idproduct === e.id 
+                        (p) => p.idproduct === e.id
                       );
 
                       mainState.selectedProductView = findProduct;
@@ -275,36 +233,99 @@ export function ProductsPage({ mainState, setMainState }: ProductsPageProps) {
           );
         })}
       </div>
-      <AlertDialog open={open} setOpen={setOpen} />
+      <AlertDialog
+        open={open}
+        setOpen={setOpen}
+        mainState={mainState}
+        setMainState={setMainState}
+      />
     </Container>
   );
 }
 interface AlertDialogProps {
   open: boolean;
   setOpen: (b: boolean) => void;
+  mainState: MainStateType;
+  setMainState: (m: MainStateType) => void;
 }
-export function AlertDialog({ open, setOpen }: AlertDialogProps) {
+export function AlertDialog({
+  open,
+  setOpen,
+  mainState,
+  setMainState,
+}: AlertDialogProps) {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
   return (
     <div>
-      <Dialog
-        open={open}
-        onClose={() => setOpen(false)}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">
-          {"Use Google's location service?"}
-        </DialogTitle>
+      <Dialog open={open} onClose={() => setOpen(false)}>
         <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            Let Google help apps determine location. This means sending
-            anonymous location data to Google, even when no apps are running.
+          <DialogContentText sx={{ marginBottom: "5%", color: "black" }}>
+            Login
           </DialogContentText>
+          <Box
+            sx={{
+              width: 500,
+              maxWidth: "100%",
+              marginBottom: "5%",
+            }}
+          >
+            <TextField
+              fullWidth
+              name="email"
+              label="Email"
+              type="email"
+              onChange={(e) => setEmail(e.target.value)}
+              value={email}
+            />
+          </Box>
+          <Box
+            sx={{
+              width: 500,
+              maxWidth: "100%",
+              marginBottom: "5%",
+            }}
+          >
+            <TextField
+              fullWidth
+              name="password"
+              label="Password"
+              type="password"
+              onChange={(e) => setPassword(e.target.value)}
+              value={password}
+            />
+          </Box>
+          <Typography variant="body2">
+            Already have an account ?{" "}
+            <Button
+              component="button"
+              onClick={() => {
+                mainState.render = "register";
+                setMainState({ ...mainState });
+              }}
+            >
+              Register
+            </Button>
+          </Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setOpen(false)}>Disagree</Button>
-          <Button onClick={() => setOpen(true)} autoFocus>
-            Agree
+          <Button onClick={() => setOpen(false)}>Cancel</Button>
+          <Button
+            onClick={async () => {
+              setLoading(true);
+              const user = { email: email, password: password };
+              const res: any = await _loginUser(user);
+              mainState.user = res;
+              setMainState({ ...mainState });
+              if (res.authorization === "user") {
+                mainState.render = "products";
+                setMainState({ ...mainState });
+                setLoading(false);
+              }
+            }}
+          >
+            {loading ? <CircularProgress color="inherit" /> : "Login"}
           </Button>
         </DialogActions>
       </Dialog>

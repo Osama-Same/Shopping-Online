@@ -10,7 +10,6 @@ import Logout from "@mui/icons-material/Logout";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import { logOut } from "../service/getAllData";
-import Switch from "@mui/material/Switch";
 import IconButton from "@mui/material/IconButton";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import Badge from "@mui/material/Badge";
@@ -71,6 +70,7 @@ export function Navigation({ mainState, setMainState }: NavigationPageProps) {
                   mainState.render = "about";
                   setMainState({ ...mainState });
                 }}
+                
               >
                 About
               </Button>
@@ -105,13 +105,7 @@ export function Navigation({ mainState, setMainState }: NavigationPageProps) {
             </ul>
             <div className="d-flex ">
               <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-                <Switch
-                  onClick={() => {
-                    mainState.dark =
-                      mainState.dark === "dark" ? "light" : "dark";
-                    setMainState({ ...mainState });
-                  }}
-                />
+             
                 <Button
                   style={{ color: "white" }}
                   onClick={() => {
@@ -262,13 +256,7 @@ export function Navigation({ mainState, setMainState }: NavigationPageProps) {
                   <ListItemIcon>
                     <NightlightIcon />
                   </ListItemIcon>
-                  <Switch
-                    onClick={() => {
-                      mainState.dark =
-                        mainState.dark === "dark" ? "light" : "dark";
-                      setMainState({ ...mainState });
-                    }}
-                  />
+            
                 </MenuItem>
                 <MenuItem
                   onClick={() => {

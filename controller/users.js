@@ -131,7 +131,6 @@ const login = (req, res) => {
       const findUser = result.find((u) => u.id);
       if (findUser) {
         const id = findUser.id;
-        console.log(result);
         if (await bcrypt.compare(req.body.password, findUser.password)) {
           const token = jwt.sign({ id }, "jwtSecret", {
             expiresIn: process.env.TOKEN_EXPIRATION,

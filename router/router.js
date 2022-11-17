@@ -1,7 +1,7 @@
 const express = require("express");
 const { check } = require("express-validator");
 const { upload } = require("../connection/upload");
-
+const { _getCheckOut, _saveCheckOut } = require("../controller/checkout");
 const {
   _getUsers,
   _saveUser,
@@ -52,7 +52,12 @@ const {
   _putOrders,
   _deleteOrders,
 } = require("../controller/orders");
-const { _getSave, _putSave, _save , _deleteSave} = require("../controller/save");
+const {
+  _getSave,
+  _putSave,
+  _save,
+  _deleteSave,
+} = require("../controller/save");
 
 const router = express.Router();
 
@@ -219,5 +224,12 @@ router.get("/save", _getSave);
 router.post("/save", _save);
 router.put("/save/:id", _putSave);
 router.put("/save/:id", _deleteSave);
+//-------------------------------------------------------------------
+// check Out
+router.get("/checkOut", _getCheckOut);
+router.post("/checkOut",[
+  check("CreditCardNumber", "credit Card Number field is required").isLength({ max: 16 }),
+  check("cvv", "cvv field is required").isLength({ max: 3 }),
+], _saveCheckOut);
 
 module.exports = router;

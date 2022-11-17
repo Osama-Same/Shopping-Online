@@ -83,3 +83,11 @@ export async function _getAllSave() {
     toast.error(`Error server`);
   }
 }
+export async function _getAllCheckOut() {
+  const res = await axios.get(url + "checkOut");
+  if (res.data) {
+    return res.data;
+  } else {
+    toast.error(`Error server`);
+  }
+}

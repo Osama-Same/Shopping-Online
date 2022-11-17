@@ -350,7 +350,7 @@ export function ViewProductPage({
           </div>
         </div>
       </Container>
-      <AlertDialog open={open} setOpen={setOpen} />
+      <AlertDialog open={open} setOpen={setOpen} mainState={mainState} setMainState={setMainState}/>
     </div>
   );
 }

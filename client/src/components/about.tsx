@@ -1,6 +1,7 @@
 import { MainStateType } from "./mainState";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
+import { Divider } from "@mui/material";
 interface AboutPageProps {
   mainState: MainStateType;
   setMainState: (m: MainStateType) => void;
@@ -8,14 +9,11 @@ interface AboutPageProps {
 export function AboutPage({ mainState, setMainState }: AboutPageProps) {
   return (
     <Container maxWidth="lg" sx={{ mt: 10, mb: 5 }}>
+      <Typography variant="h5" sx={{ mb: 5, color: "orange" }}>
+        <Divider> Who Are We?</Divider>
+      </Typography>
       <div className="row pt-3 pb-3">
         <div className="col-md-6 pt-3 pb-3">
-          <Typography
-            variant="h4"
-            sx={{ textAlign: "left", mb: 2, color: "orange" }}
-          >
-            Who Are We?
-          </Typography>
           <Typography variant="body2" sx={{ textAlign: "left", mb: 2 }}>
             We are a team of professional and creative developers, designers, it
             specialists, marketers, and writers who will tailor the needs of
@@ -47,6 +45,9 @@ export function AboutPage({ mainState, setMainState }: AboutPageProps) {
           />
         </div>
       </div>
+      <Typography variant="h5" sx={{ mb: 5, color: "orange" }}>
+        <Divider> innovative Technology</Divider>
+      </Typography>
       <div className="row pt-3 pb-3">
         <div className="col">
           <img
@@ -56,6 +57,7 @@ export function AboutPage({ mainState, setMainState }: AboutPageProps) {
             height="300px"
           />
         </div>
+
         <div className="col-md-6 pt-3 pb-3">
           <Typography
             variant="h4"

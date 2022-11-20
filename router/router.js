@@ -1,7 +1,12 @@
 const express = require("express");
 const { check } = require("express-validator");
 const { upload } = require("../connection/upload");
-const { _getCheckOut, _saveCheckOut } = require("../controller/checkout");
+const {
+  _getCheckOut,
+  _saveCheckOut,
+  _deleteCheckOut,
+  _putCheckOut,
+} = require("../controller/checkout");
 const {
   _getUsers,
   _saveUser,
@@ -223,13 +228,32 @@ router.post(
 router.get("/save", _getSave);
 router.post("/save", _save);
 router.put("/save/:id", _putSave);
-router.put("/save/:id", _deleteSave);
+router.delete("/save/:id", _deleteSave);
 //-------------------------------------------------------------------
 // check Out
 router.get("/checkOut", _getCheckOut);
-router.post("/checkOut",[
-  check("CreditCardNumber", "credit Card Number field is required").isLength({ max: 16 }),
-  check("cvv", "cvv field is required").isLength({ max: 3 }),
-], _saveCheckOut);
+router.post(
+  "/checkOut",
+  [
+    check("CreditCardNumber", "credit Card Number field is required").isLength({
+      min: 16,
+      max: 16,
+    }),
+    check("cvv", "cvv field is required").isLength({ min: 3, max: 3 }),
+  ],
+  _saveCheckOut
+);
+router.put(
+  "/checkOut/:id",
+  [
+    check("CreditCardNumber", "credit Card Number field is required").isLength({
+      min: 16,
+      max: 16,
+    }),
+    check("cvv", "cvv field is required").isLength({ min: 3, max: 3 }),
+  ],
+  _putCheckOut
+);
+router.delete("/checkOut/:id", _deleteCheckOut);
 
 module.exports = router;

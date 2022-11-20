@@ -1,5 +1,5 @@
-import { MainStateType, UserType } from "./mainState";
-import { useState, useEffect } from "react";
+import { MainStateType, SaveType, UserType } from "./mainState";
+import { useState } from "react";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
@@ -19,61 +19,93 @@ import Container from "@mui/material/Container";
 import { _putUser } from "../service/putAllData";
 import ConfirmDeleteDialog from "./common/ConfirmDeleteDialog";
 import { _deleteUser } from "../service/deleteAllData";
+import Tabs from "@mui/material/Tabs";
+import FlagIcon from "@mui/icons-material/Flag";
+import Tab from "@mui/material/Tab";
+import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
+import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import { OrdersPage } from "./orders";
+import {
+  Card,
+  CardActionArea,
+  CardContent,
+  CardMedia,
+  Chip,
+  Divider,
+} from "@mui/material";
 interface ProfilePageProps {
   mainState: MainStateType;
   setMainState: (m: MainStateType) => void;
 }
 
 export function ProfilePage({ mainState, setMainState }: ProfilePageProps) {
-  const { user, allUsers } = mainState;
+  const { user } = mainState;
   const [open, setOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<UserType | null>(null);
   const [openConfirmDelDlg, setopenConfirmDelDlg] = useState(false);
-  const findUser: any = allUsers.find((u) => u.id === user?.id);
+
   return (
-    <Container component="main" maxWidth="lg" sx={{ mt: 15, mb: 5 }}>
+    <Container component="main" maxWidth="lg" sx={{ mt: 10, mb: 5 }}>
+      <TopsPage mainState={mainState} setMainState={setMainState} />
+      <Typography variant="h5" sx={{ mt: 10, mb: 5, color: "orange" }}>
+        <Divider textAlign="left"> Profile {user.name}</Divider>
+      </Typography>
       {user && (
         <div>
-          <Typography variant="h6" marginBottom="6%">
-            Profile {findUser.name}
-          </Typography>
           <div className="row">
             <div className="col-md-5 pt-3 pb-3">
-              <img
-                className="card-img-top pt-3 pb-3"
-                src={findUser.image}
-                height="200"
-                width="140"
-                alt={user.image}
-              />
-
-              <p className="font-weight-bold ">{findUser.name}</p>
-              <p className="font-weight-bold ">{findUser.email}</p>
-              <Stack spacing={2}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => {
-                    setOpen(true);
-                    setSelectedUser(user);
-                    mainState.allUsers = [findUser, ...mainState.allUsers];
-                    setMainState({ ...mainState });
-                  }}
-                >
-                  Edit Profile
-                </Button>
-                <Button
-                  variant="contained"
-                  color="error"
-                  onClick={() => {
-                    setSelectedUser(user);
-                    setopenConfirmDelDlg(true);
-                  }}
-                >
-                  Delete
-                </Button>
-              </Stack>
+              <Card>
+                <img
+                  className="rounded-circle pt-3 pb-3"
+                  src={user.image}
+                  width="304"
+                  height="236"
+                  alt={user.image}
+                />
+                <CardContent>
+                  <Typography sx={{ md: 2 }} variant="h5">
+                    {user.name}
+                  </Typography>
+                  <Typography sx={{ md: 2, mt: 2 }}>{user.email}</Typography>
+                  <Typography sx={{ md: 2, mt: 2 }}>
+                    <Stack
+                      direction="row"
+                      justifyContent="center"
+                      alignItems="center"
+                      spacing={2}
+                    >
+                      <Button
+                        startIcon={<EditIcon />}
+                        variant="contained"
+                        color="primary"
+                        onClick={() => {
+                          setOpen(true);
+                          setSelectedUser(user);
+                          mainState.user = user;
+                          setMainState({ ...mainState });
+                        }}
+                      >
+                        Edit Profile
+                      </Button>
+                      <Button
+                        startIcon={<DeleteIcon />}
+                        variant="contained"
+                        color="error"
+                        onClick={() => {
+                          setSelectedUser(user);
+                          setopenConfirmDelDlg(true);
+                        }}
+                      >
+                        Delete
+                      </Button>
+                    </Stack>
+                  </Typography>
+                </CardContent>
+              </Card>
             </div>
+
             <div className="col pt-3 pb-3">
               <Typography variant="h6" marginBottom="4%">
                 Information
@@ -83,7 +115,7 @@ export function ProfilePage({ mainState, setMainState }: ProfilePageProps) {
                   <ListItem disablePadding>
                     <ListItemButton>
                       <ListItemIcon>Name :</ListItemIcon>
-                      <ListItemText primary={findUser.name} />
+                      <ListItemText primary={user.name} />
                     </ListItemButton>
                   </ListItem>
                 </List>
@@ -93,7 +125,7 @@ export function ProfilePage({ mainState, setMainState }: ProfilePageProps) {
                   <ListItem disablePadding>
                     <ListItemButton>
                       <ListItemIcon>Eamil :</ListItemIcon>
-                      <ListItemText primary={findUser.email} />
+                      <ListItemText primary={user.email} />
                     </ListItemButton>
                   </ListItem>
                 </List>
@@ -103,7 +135,7 @@ export function ProfilePage({ mainState, setMainState }: ProfilePageProps) {
                   <ListItem disablePadding>
                     <ListItemButton>
                       <ListItemIcon>Password :</ListItemIcon>
-                      <ListItemText primary={findUser.password} />
+                      <ListItemText primary={user.password} />
                     </ListItemButton>
                   </ListItem>
                 </List>
@@ -113,7 +145,7 @@ export function ProfilePage({ mainState, setMainState }: ProfilePageProps) {
                   <ListItem disablePadding>
                     <ListItemButton>
                       <ListItemIcon>Phone :</ListItemIcon>
-                      <ListItemText primary={findUser.phone} />
+                      <ListItemText primary={user.phone} />
                     </ListItemButton>
                   </ListItem>
                 </List>
@@ -141,16 +173,12 @@ export function ProfilePage({ mainState, setMainState }: ProfilePageProps) {
         setMainState={setMainState}
       />
 
-      {user && (
-        <ProfileForm
-          open={open}
-          setOpen={setOpen}
-          user={selectedUser}
-          mainState={mainState}
-          setMainState={setMainState}
-          findUser={findUser}
-        />
-      )}
+      <ProfileForm
+        open={open}
+        setOpen={setOpen}
+        mainState={mainState}
+        setMainState={setMainState}
+      />
     </Container>
   );
 }
@@ -158,38 +186,23 @@ export function ProfilePage({ mainState, setMainState }: ProfilePageProps) {
 interface ProfileFormProps {
   open: boolean;
   setOpen: (b: boolean) => void;
-  user: UserType | any;
   mainState: MainStateType;
   setMainState: (m: MainStateType) => void;
-  findUser: any;
 }
 
 export function ProfileForm({
   open,
   setOpen,
-  user,
   mainState,
   setMainState,
-  findUser,
 }: ProfileFormProps) {
+  const { user } = mainState;
   const [name, setName] = useState(user ? user.name : "");
-  const [id, setID] = useState(user ? user.id : 0);
   const [email, setEmail] = useState(user ? user.email : "");
   const [password, setPassword] = useState(user ? user.Password : "");
   const [phone, setPhone] = useState(user ? user.phone : "");
   const [image, setImage] = useState(user ? user.image : null);
   const [loading, setLoading] = useState(false);
-  console.log(user);
-  useEffect(() => {
-    if (!user) return;
-    setName(user.name);
-    setEmail(user.email);
-    setPassword(user.password);
-    setPhone(user.phone);
-    setImage(user.image);
-    console.log(user.image);
-    setID(user.id);
-  }, [user, findUser]);
 
   const handleImage = (e: any) => {
     if (image === "") {
@@ -200,9 +213,12 @@ export function ProfileForm({
   };
   const handleSave = async () => {
     setLoading(true);
-    user.id = id;
-    const fromData: any = new FormData();
-    fromData.append("id", id);
+    user.name = name;
+    user.email = email;
+    user.phone = phone;
+    user.image = image;
+    const fromData = new FormData();
+    fromData.append("id", user.id);
     fromData.append("name", name);
     fromData.append("email", email);
     fromData.append("phone", phone);
@@ -212,112 +228,241 @@ export function ProfileForm({
     } else {
       fromData.append("image", image, image.name);
     }
-    setOpen(false);
-    await _putUser(id, fromData);
-    mainState.allUsers = [fromData, ...mainState.allUsers];
+    await _putUser(user.id, fromData);
+    mainState.user = user;
     setMainState({ ...mainState });
     setLoading(false);
+    setOpen(false);
   };
   return (
-    <div>
-      {open && user && (
-        <div>
-          <Dialog open={open} onClose={() => setOpen(false)}>
-            <DialogContent>
-              <DialogContentText sx={{ marginBottom: "5%", color: "black" }}>
-                User Form osama
-              </DialogContentText>
-              <Box
-                sx={{
-                  width: 500,
-                  maxWidth: "100%",
-                  marginBottom: "5%",
-                }}
-              >
-                <TextField
-                  fullWidth
-                  label="Name"
-                  onChange={(e) => setName(e.target.value)}
-                  name="name"
-                  value={name}
-                />
-              </Box>
-              <Box
-                sx={{
-                  width: 500,
-                  maxWidth: "100%",
-                  marginBottom: "5%",
-                }}
-              >
-                <TextField
-                  fullWidth
-                  label="Email"
-                  type="email"
-                  onChange={(e) => setEmail(e.target.value)}
-                  name="email"
-                  value={email}
-                />
-              </Box>
-              <Box
-                sx={{
-                  width: 500,
-                  maxWidth: "100%",
-                  marginBottom: "5%",
-                }}
-              >
-                <TextField
-                  fullWidth
-                  disabled
-                  label="Password"
-                  type="password"
-                  onChange={(e) => setPassword(e.target.value)}
-                  name="password"
-                  value={password}
-                />
-              </Box>
-              <Box
-                sx={{
-                  width: 500,
-                  maxWidth: "100%",
-                  marginBottom: "5%",
-                }}
-              >
-                <TextField
-                  fullWidth
-                  label="Phone"
-                  type="tel"
-                  onChange={(e) => setPhone(e.target.value)}
-                  name="phone"
-                  value={phone}
-                />
-              </Box>
-              <Box
-                sx={{
-                  width: 500,
-                  maxWidth: "100%",
-                  marginBottom: "5%",
-                }}
-              >
-                <Button variant="contained" component="label">
-                  <input
-                    accept=".jpg,.png,.svg"
-                    multiple
-                    type="file"
-                    name="image"
-                    onChange={handleImage}
+    <Dialog open={open} onClose={() => setOpen(false)}>
+      <DialogContent>
+        <DialogContentText sx={{ marginBottom: "5%", color: "black" }}>
+          User Form osama
+        </DialogContentText>
+        <Box
+          sx={{
+            width: 500,
+            maxWidth: "100%",
+            marginBottom: "5%",
+          }}
+        >
+          <TextField
+            fullWidth
+            label="Name"
+            onChange={(e) => setName(e.target.value)}
+            name="name"
+            value={name}
+          />
+        </Box>
+        <Box
+          sx={{
+            width: 500,
+            maxWidth: "100%",
+            marginBottom: "5%",
+          }}
+        >
+          <TextField
+            fullWidth
+            label="Email"
+            type="email"
+            onChange={(e) => setEmail(e.target.value)}
+            name="email"
+            value={email}
+          />
+        </Box>
+        <Box
+          sx={{
+            width: 500,
+            maxWidth: "100%",
+            marginBottom: "5%",
+          }}
+        >
+          <TextField
+            fullWidth
+            disabled
+            label="Password"
+            type="password"
+            onChange={(e) => setPassword(e.target.value)}
+            name="password"
+            value={password}
+          />
+        </Box>
+        <Box
+          sx={{
+            width: 500,
+            maxWidth: "100%",
+            marginBottom: "5%",
+          }}
+        >
+          <TextField
+            fullWidth
+            label="Phone"
+            type="tel"
+            onChange={(e) => setPhone(e.target.value)}
+            name="phone"
+            value={phone}
+          />
+        </Box>
+        <Box
+          sx={{
+            width: 500,
+            maxWidth: "100%",
+            marginBottom: "5%",
+          }}
+        >
+          <Button variant="contained" component="label">
+            <input
+              accept=".jpg,.png,.svg"
+              multiple
+              type="file"
+              name="image"
+              onChange={handleImage}
+            />
+          </Button>
+        </Box>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={() => setOpen(false)}>Cancel</Button>
+        <Button onClick={() => handleSave()}>
+          {loading ? <CircularProgress /> : "Save"}
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
+}
+
+interface SaveProfileProps {
+  mainState: MainStateType;
+  setMainState: (m: MainStateType) => void;
+}
+export function SaveProfile({ mainState, setMainState }: SaveProfileProps) {
+  const { user, allProducts, allComment, allLike } = mainState;
+  if (!user) return <div>Not User</div>;
+  return (
+    <Container component="main" maxWidth="lg" sx={{ mt: 10, mb: 5 }}>
+      <TopsPage mainState={mainState} setMainState={setMainState} />
+
+      <Typography variant="h5" sx={{ mt: 10, mb: 5, color: "orange" }}>
+        <Divider textAlign="left"> List Save</Divider>
+      </Typography>
+      <div className="row">
+        {user.saveUser.map((e: any) => {
+          return (
+            <div className="col-md-4 pt-3 pb-3">
+              <Card>
+                <CardActionArea
+                  onClick={() => {
+                    const findProduct: any = allProducts.find(
+                      (p) => p.id === e.saveProduct.id
+                    );
+
+                    const findLike: any = allLike.filter(
+                      (l) => l.idproduct === e.saveProduct.id
+                    );
+                    const findComment: any = allComment.filter(
+                      (p) => p.idproduct === e.saveProduct.id
+                    );
+
+                    mainState.selectedProductView = findProduct;
+                    mainState.selectedLikeProduct = findLike;
+                    mainState.selectedCommentProduct = findComment;
+                    mainState.render = "viewProductPage";
+                    setMainState({ ...mainState });
+                  }}
+                >
+                  <CardMedia
+                    component="img"
+                    height="230"
+                    image={e.saveProduct.images}
+                    alt={e.images}
+                    title="osama"
                   />
-                </Button>
-              </Box>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={() => setOpen(false)}>Cancel</Button>
-              <Button onClick={() => handleSave()}>
-                {loading ? <CircularProgress /> : "Save"}
-              </Button>
-            </DialogActions>
-          </Dialog>
-        </div>
-      )}
+                  <CardContent>
+                    <Typography gutterBottom variant="h6" component="div">
+                      {e.saveProduct.name}
+                    </Typography>
+                    <Typography variant="body2">
+                      {e.saveProduct.description}
+                    </Typography>
+                    <Stack
+                      mb={2}
+                      mt={2}
+                      spacing={2}
+                      direction="row"
+                      justifyContent="space-around"
+                      alignItems="center"
+                    >
+                      <Chip
+                        icon={<CalendarTodayIcon />}
+                        label={e.saveProduct.date}
+                        variant="outlined"
+                      />
+                      <Chip
+                        icon={<FlagIcon />}
+                        label={e.saveProduct.country}
+                        variant="outlined"
+                      />
+                      <Chip
+                        icon={<AttachMoneyIcon />}
+                        label={e.saveProduct.price}
+                        variant="outlined"
+                      />
+                    </Stack>
+                  </CardContent>
+                </CardActionArea>
+              </Card>
+            </div>
+          );
+        })}
+      </div>
+    </Container>
+  );
+}
+
+interface TopsProps {
+  mainState: MainStateType;
+  setMainState: (m: MainStateType) => void;
+}
+export function TopsPage({ mainState, setMainState }: TopsProps) {
+  const [value, setValue] = useState(0);
+  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    setValue(newValue);
+  };
+  return (
+    <Tabs value={value} onChange={handleChange} centered>
+      <Tab
+        label="Profile"
+        onClick={() => {
+          mainState.render = "profile";
+          setMainState({ ...mainState });
+        }}
+      />
+      <Tab
+        label="save"
+        onClick={() => {
+          mainState.render = "saveprofile";
+          setMainState({ ...mainState });
+        }}
+      />
+      <Tab
+        label="Orders"
+        onClick={() => {
+          mainState.render = "ordersprofile";
+          setMainState({ ...mainState });
+        }}
+      />
+    </Tabs>
+  );
+}
+
+export function OrderProfile({ mainState, setMainState }: TopsProps) {
+  return (
+    <div>
+      <Container component="main" maxWidth="lg" sx={{ mt: 10, mb: 5 }}>
+        <TopsPage mainState={mainState} setMainState={setMainState} />
+        <OrdersPage mainState={mainState} setMainState={setMainState} />
+      </Container>
     </div>
   );
 }

@@ -108,6 +108,7 @@ export function RegisterPage({ mainState, setMainState }: RegisterPageProps) {
               mainState.render = "login";
               setMainState({ ...mainState });
               setLoading(false);
+              
             }
           }}
         >

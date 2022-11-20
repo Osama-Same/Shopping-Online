@@ -4,13 +4,12 @@ import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Card from "@mui/material/Card";
 import CardMedia from "@mui/material/CardMedia";
-import { Box, Button, CardActionArea, CardContent } from "@mui/material";
+import { Button, CardActionArea, CardContent, Divider } from "@mui/material";
 import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import FlagIcon from "@mui/icons-material/Flag";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
-import ClearIcon from "@mui/icons-material/Clear";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import TextField from "@mui/material/TextField";
@@ -43,28 +42,22 @@ export function OrdersPage({ mainState, setMainState }: OrdersPageProps) {
     <Container maxWidth="lg" sx={{ mt: 10, mb: 5 }}>
       <div className="row">
         <Container maxWidth="sm">
-          {user.orderUser.map((order: any) => {
-            return (
-              <div className="col-md-12 pt-3 pb-3">
-                <Card>
-                  <CardActionArea
-                    onClick={() => {
-                      setMainState({ ...mainState });
-                    }}
-                  >
-                    <Stack
-                      direction="row"
-                      justifyContent="center"
-                      alignItems="center"
-                      spacing={2}
-                    >
+          <Typography variant="h5" sx={{ mb: 5, color: "orange" }}>
+            <Divider textAlign="left"> List Orders</Divider>
+          </Typography>
+          {user &&
+            user.orderUser.map((order: any) => {
+              return (
+                <div className="col-md-14 pt-3 pb-3">
+                  <Card>
+                    <Stack direction="row" justifyContent="left" spacing={2}>
                       <CardMedia
                         component="img"
                         sx={{ width: 151 }}
                         image={order.orderProduct && order.orderProduct.images}
                         alt="Live from space album cover"
                       />
-                      <CardContent sx={{ flex: "1 0 auto" }}>
+                      <CardContent>
                         <Typography mb={2} mt={2}>
                           <Stack
                             direction="row"
@@ -89,51 +82,42 @@ export function OrdersPage({ mainState, setMainState }: OrdersPageProps) {
                               }
                               variant="outlined"
                             />
+                            <Chip
+                              icon={<CalendarTodayIcon />}
+                              label={
+                                order.orderProduct && order.orderProduct.name
+                              }
+                              variant="outlined"
+                            />
                           </Stack>
                         </Typography>
-                        <Typography mb={2} mt={2}>
-                          <Chip
-                            icon={<CalendarTodayIcon />}
-                            label={
-                              order.orderProduct &&
-                              order.orderProduct.description
-                            }
-                            variant="outlined"
-                          />
-                        </Typography>
-                        <Typography variant="h5">
+
+                        <Stack spacing={2} direction="row">
                           <Button
-                            aria-label="reduce"
+                            variant="contained"
                             onClick={async () => {
-                              order.quantity = --order.quantity;
+                              order.orderProduct = order.orderProduct;
+                              order.quantity = order.quantity - 1;
                               await _putOrders(order.id, order);
-                              mainState.render = "orders";
+
                               setMainState({ ...mainState });
                             }}
                           >
                             <RemoveIcon fontSize="small" />
                           </Button>
                           <Button aria-label="reduce">{order.quantity}</Button>
-                          <Button aria-label="increase">
-                            <AddIcon
-                              fontSize="small"
-                              onClick={async () => {
-                                order.quantity = ++order.quantity;
-                                await _putOrders(order.id, order);
-                                mainState.render = "orders";
-                                setMainState({ ...mainState });
-                              }}
-                            />
-                          </Button>
-                        </Typography>
-                        <Stack
-                          justifyContent="center"
-                          direction="row"
-                          alignItems="center"
-                          mt={3}
-                        >
                           <Button
                             variant="contained"
+                            onClick={async () => {
+                              order.orderProduct = order.orderProduct;
+                              order.quantity = order.quantity + 1;
+                              await _putOrders(order.id, order);
+                              setMainState({ ...mainState });
+                            }}
+                          >
+                            <AddIcon />
+                          </Button>
+                          <Button
                             color="error"
                             onClick={async () => {
                               setopenConfirmDelDlg(true);
@@ -145,29 +129,31 @@ export function OrdersPage({ mainState, setMainState }: OrdersPageProps) {
                         </Stack>
                       </CardContent>
                     </Stack>
-                  </CardActionArea>
-                </Card>
-                {selectedUser && (
-                  <ConfirmDeleteDialog
-                    open={openConfirmDelDlg}
-                    setopen={setopenConfirmDelDlg}
-                    text={`Do ${selectedUser.id}  will be deleted permenantly, are you sure?`}
-                    onConfirm={async () => {
-                      if (!selectedUser) return;
-                      await _deleteOrders(selectedUser.id);
-                      mainState.render = "orders";
-                      setMainState({ ...mainState });
-                    }}
-                    mainState={mainState}
-                    setMainState={setMainState}
-                  />
-                )}
-              </div>
-            );
-          })}
+                  </Card>
+                  {selectedUser && (
+                    <ConfirmDeleteDialog
+                      open={openConfirmDelDlg}
+                      setopen={setopenConfirmDelDlg}
+                      text={`Do ${selectedUser.id}  will be deleted permenantly, are you sure?`}
+                      onConfirm={async () => {
+                        if (!selectedUser) return;
+                        await _deleteOrders(selectedUser.id);
+                        mainState.render = "orders";
+                        setMainState({ ...mainState });
+                      }}
+                      mainState={mainState}
+                      setMainState={setMainState}
+                    />
+                  )}
+                </div>
+              );
+            })}
         </Container>
         <div className="col">
-          <Container maxWidth="md">
+          <Container maxWidth="sm">
+            <Typography variant="h5" sx={{ mb: 5, color: "orange" }}>
+              <Divider textAlign="left"> Check Out</Divider>
+            </Typography>
             <div className="row pt-3 pb-3">
               <Card>
                 <Stack
@@ -220,8 +206,8 @@ export function OrdersPage({ mainState, setMainState }: OrdersPageProps) {
                   fullWidth
                   margin="normal"
                   name="expMonth"
-                  type={"month"}
-                  label="Exp Month"
+                  type={"date"}
+                
                   onChange={(e) => setExpMonth(e.target.value)}
                   value={expMonth}
                 />
@@ -262,184 +248,3 @@ export function OrdersPage({ mainState, setMainState }: OrdersPageProps) {
     </Container>
   );
 }
-
-/*  <div className="row pt-3 pb-3">
-        <div className="col-md-8 pt-3 pb-3">
-          {user.orderUser.map((order: OrderType | any) => {
-            return (
-              <div className="row pt-3 pb-3">
-                <div className="col">
-                  <Card>
-                    <CardMedia
-                      component="img"
-                      height="185"
-                      width="300"
-                      image={order.orderProduct && order.orderProduct.images}
-                      alt={order.orderProduct && order.orderProduct?.images}
-                    />
-                  </Card>
-                </div>
-                <div className="col-9 ">
-                  <Card>
-                    <Stack
-                      direction="row"
-                      alignItems="center"
-                      justifyContent="center"
-                      mb={2}
-                      mt={2}
-                      spacing={2}
-                    >
-                      <Chip
-                        icon={<FlagIcon />}
-                        label={order.orderProduct && order.orderProduct.country}
-                        variant="outlined"
-                      />
-                      <Chip
-                        icon={<AttachMoneyIcon />}
-                        label={order.orderProduct && order.orderProduct.price}
-                        variant="outlined"
-                      />
-                      <Chip
-                        icon={<CalendarTodayIcon />}
-                        label={order.orderProduct && order.orderProduct.date}
-                        variant="outlined"
-                      />
-                    </Stack>
-                    <Stack
-                      direction="row"
-                      alignItems="center"
-                      justifyContent="center"
-                      mb={2}
-                      mt={1}
-                      spacing={2}
-                    >
-                      <Chip
-                        icon={<CalendarTodayIcon />}
-                        label={
-                          order.orderProduct && order.orderProduct.description
-                        }
-                        variant="outlined"
-                      />
-                    </Stack>
-                    <Stack
-                      direction="row"
-                      alignItems="center"
-                      justifyContent="center"
-                    >
-                      <Button
-                        aria-label="reduce"
-                        onClick={async () => {
-                          order.quantity = --order.quantity;
-                          await _putOrders(order.id, order);
-                          mainState.render = "orders";
-                          setMainState({ ...mainState });
-                        }}
-                      >
-                        <RemoveIcon fontSize="small" />
-                      </Button>
-                      <Button aria-label="reduce">{order.quantity}</Button>
-                      <Button aria-label="increase">
-                        <AddIcon
-                          fontSize="small"
-                          onClick={async () => {
-                            order.quantity = ++order.quantity;
-                            await _putOrders(order.id, order);
-                            mainState.render = "orders";
-                            setMainState({ ...mainState });
-                          }}
-                        />
-                      </Button>
-                    </Stack>
-
-                    <Stack
-                      justifyContent="flex-end"
-                      direction="row"
-                      alignItems="center"
-                    >
-                      <Button
-                        onClick={async () => {
-                          setopenConfirmDelDlg(true);
-                          setSelectedUser(order);
-                        }}
-                      >
-                        <ClearIcon />
-                      </Button>
-                    </Stack>
-                  </Card>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-        <div className="col pt-3 pb-3">
-          <div className="row pt-3 pb-3">
-            <Card>
-              <Stack
-                direction="row"
-                alignItems="center"
-                justifyContent="space-around"
-                mb={2}
-                mt={2}
-                spacing={12}
-              >
-                <Typography>Total:</Typography>
-                <Typography> {getTotalPrice({ user })}</Typography>
-              </Stack>
-              <Stack
-                direction="row"
-                alignItems="center"
-                justifyContent="space-around"
-                mb={2}
-                mt={2}
-                spacing={12}
-              ></Stack>
-
-              <Typography mb={2}>Check Out</Typography>
-              <TextField
-                fullWidth
-                margin="normal"
-                id="demo-helper-text-aligned"
-                label="Card Number"
-              />
-              <TextField
-                fullWidth
-                margin="normal"
-                id="demo-helper-text-aligned"
-                label="Name"
-              />
-              <TextField
-                fullWidth
-                margin="normal"
-                id="demo-helper-text-aligned"
-                label="Name"
-              />
-              <Button fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-                Check Out
-              </Button>
-            </Card>
-          </div>
-        </div>
-      </div>
-
-      {selectedUser && (
-        <ConfirmDeleteDialog
-          open={openConfirmDelDlg}
-          setopen={setopenConfirmDelDlg}
-          text={`Do ${selectedUser.id}  will be deleted permenantly, are you sure?`}
-          onConfirm={async () => {
-            if (!selectedUser) return;
-            await _deleteOrders(selectedUser.id);
-            if (mainState.user && mainState.user.orderUser) {
-              const userProduct = mainState.user.orderUser.find(
-                (up: any) => up.id === selectedUser.idproduct
-              );
-              return (user.orderUser = userProduct);
-            }
-            mainState.render = "orders";
-            setMainState({ ...mainState });
-          }}
-          mainState={mainState}
-          setMainState={setMainState}
-        />
-      )}
-    </Container> */

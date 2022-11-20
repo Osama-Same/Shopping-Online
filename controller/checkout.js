@@ -31,7 +31,42 @@ const _saveCheckOut = (req, res) => {
     }
   });
 };
+const _putCheckOut = (req, res) => {
+  let id = req.params.id;
+  let iduser = req.body.iduser;
+  let priceOut = req.body.priceOut;
+  let CreditCardNumber = req.body.CreditCardNumber;
+  let expMonth = req.body.expMonth;
+  let cvv = req.body.cvv;
+  const sql = `UPDATE checkOut
+  SET iduser = '${iduser}',
+  priceOut = '${priceOut}',
+  CreditCardNumber = '${CreditCardNumber}',
+  expMonth = '${expMonth}',
+  cvv = '${cvv}'
+  WHERE id = '${id}'`;
+  connection.query(sql, (err, result) => {
+    if (err) {
+      res.json(err);
+    } else {
+      res.json(result);
+    }
+  });
+};
+const _deleteCheckOut = (req, res) => {
+  let id = req.params.id;
+  const sql = `DELETE FROM checkOut  WHERE id = '${id}'`;
+  connection.query(sql, (err, result) => {
+    if (err) {
+      res.json(err);
+    } else {
+      res.json(result);
+    }
+  });
+};
 module.exports = {
   _getCheckOut,
   _saveCheckOut,
+  _deleteCheckOut,
+  _putCheckOut
 };

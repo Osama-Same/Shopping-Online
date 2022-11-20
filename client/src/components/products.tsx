@@ -3,6 +3,7 @@ import {
   MainStateType,
   OrderType,
   productType,
+  SaveType,
 } from "./mainState";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -26,7 +27,7 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
+
 interface ProductsPageProps {
   mainState: MainStateType;
   setMainState: (m: MainStateType) => void;
@@ -135,9 +136,8 @@ export function ProductsPage({ mainState, setMainState }: ProductsPageProps) {
                 >
                   <Button
                     startIcon={<AddShoppingCartIcon />}
-                    size="small"
                     onClick={async () => {
-                      if (!user) return setOpen(true);
+                      if (!user) {return setOpen(true)};
                       const newOrder: OrderType = {
                         iduser: user.id,
                         idproduct: e.id,
@@ -145,12 +145,12 @@ export function ProductsPage({ mainState, setMainState }: ProductsPageProps) {
                         orderProduct: e,
                         orderUser: user,
                       };
-                      console.log(newOrder)
+                      console.log(newOrder);
                       await _insetOrders(newOrder);
                       mainState.allOrders = [newOrder, ...mainState.allOrders];
                       mainState.user.orderUser = [
                         newOrder,
-                        ...mainState.user.orderUser                        ,
+                        ...mainState.user.orderUser,
                       ];
                       setMainState({ ...mainState });
                     }}
@@ -185,47 +185,43 @@ export function ProductsPage({ mainState, setMainState }: ProductsPageProps) {
                     startIcon={<SaveIcon />}
                     size="small"
                     onClick={async () => {
-                      const data: any = {
+                      if (!user) return setOpen(true);
+                      const newSave: SaveType = {
                         iduser: e.iduser,
                         idproduct: e.id,
-                        save: "save",
+                        save: "unsave",
                       };
-                      const Findsave = mainState.allSave.find(
+                      const Findsave: any = mainState.allSave.find(
                         (s) => s.idproduct === e.id
                       );
-
                       if (Findsave === undefined) {
-                        await _insetSave(data);
-                        console.log("Findsave", Findsave);
-                        mainState.allSave = [data, ...mainState.allSave];
+                        await _insetSave(newSave);
+                        mainState.allSave = [newSave, ...mainState.allSave];
+                        user.saveUser = [newSave, ...user.save];
                         setMainState({ ...mainState });
-                        e.SaveProduct = [data, ...e.SaveProduct];
-                      } else if (Findsave.save === "save") {
+                      }
+                      if (Findsave.save === "save") {
                         const data: any = {
                           iduser: e.iduser,
                           idproduct: e.id,
                           save: "unsave",
                         };
-                        await _putSave(Findsave.id, data);
+                        await _putSave(e.SaveProduct.id, data);
                         console.log("Findsave", Findsave);
-                        mainState.allSave = [data, ...mainState.allSave];
-                        setMainState({ ...mainState });
-                        e.SaveProduct = [data, ...e.SaveProduct];
-                      } else {
-                        const data: any = {
-                          iduser: e.iduser,
-                          idproduct: e.id,
-                          save: "save",
-                        };
-                        await _putSave(Findsave.id, data);
-                        console.log("Findsaveaaa", Findsave);
-                        mainState.allSave = [data, ...mainState.allSave];
                         setMainState({ ...mainState });
                         e.SaveProduct = [data, ...e.SaveProduct];
                       }
+                      const data: any = {
+                        iduser: e.iduser,
+                        idproduct: e.id,
+                        save: "save",
+                      };
+                      await _putSave(e.SaveProduct.id, data);
+                      console.log("Findsaveaaa", Findsave);
+                      setMainState({ ...mainState });
                     }}
                   >
-                    save
+                    {e.save === undefined ? "save" : "unsave"}
                   </Button>
                 </Stack>
               </Card>

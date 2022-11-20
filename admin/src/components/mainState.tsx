@@ -9,25 +9,19 @@ export type MainStateType = {
   allOrders: OrderType[];
   allSave: SaveType[];
   allCheckOut: CheckOutType[];
-  user: UserType | null | any;
+
   render: string;
-  selectedProductView: productType | null | any;
-  selectedLikeProduct: LikeType | null | any;
-  selectedCommentProduct: commentType | null | any;
 };
 
 export type UserType = {
-  id: number;
+  id?: number;
   name: string;
   email: string;
   password: string;
   phone: string;
   image: string;
   authorization?: string;
-  orderUser?: OrderType[] | any;
-  saveUser?: SaveType[];
-  commentUser?: commentType[];
-  likeUser?: LikeType[] | any;
+  userProduct?: productType[] | any;
 };
 export type ContactType = {
   id?: number;
@@ -43,9 +37,7 @@ export type categoryType = {
   parentid: number;
   name: string;
   logo: string;
-  cloudinary_id: string;
   categorytype: number;
-  categoryProduct?: categoryType[];
 };
 export type productType = {
   id: number;
@@ -53,54 +45,42 @@ export type productType = {
   idcategory: number;
   name: string;
   country: string;
-  images?: string;
+  images: string;
   price: number;
   date: string;
   description: string;
-  cloudinary_id?: string;
-  commentProduct: commentType[];
-  likeeProduct: LikeType[];
-  SaveProduct: SaveType[];
-  category?: categoryType[];
 };
 export type LikeType = {
-  id?: number;
+  id: number;
   iduser: number;
   idproduct: number;
   likee: number;
-  likeUser?: UserType[];
-  likeProduct?: productType;
 };
 export type commentType = {
-  id?: number;
+  id: number;
   iduser: number;
   idproduct: number;
   comment: string;
   date: string;
-  commentUser?: UserType[];
-  commentProduct?: productType[];
 };
 export type OrderType = {
-  id?: number;
+  id: number;
   iduser: number;
   idproduct: number;
   quantity: number;
-  orderUser?: UserType[] | any;
-  orderProduct?: productType[] | any;
 };
 export type SaveType = {
   id?: number;
   iduser: number;
   idproduct: number;
   save: string;
-  saveUser?: UserType[];
-  saveProduct? : productType[]
 };
 export type CheckOutType = {
   id?: number;
   iduser: number;
   priceOut: number;
-  creditCardNumber: string;
+  CreditCardNumber: string;
   expMonth: string;
   cvv: string;
+  checkUser?: UserType | any;
 };

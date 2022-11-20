@@ -1,4 +1,4 @@
-import { MainStateType} from "./mainState";
+import { MainStateType } from "./mainState";
 import { useState } from "react";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
@@ -9,7 +9,7 @@ import CategoryIcon from "@mui/icons-material/Category";
 import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
 import LoginIcon from "@mui/icons-material/Login";
 import TextField from "@mui/material/TextField";
-import { Container, Stack } from "@mui/system";
+import { Container } from "@mui/system";
 import SearchIcon from "@mui/icons-material/Search";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
@@ -20,6 +20,7 @@ import {
   Badge,
   Chip,
   IconButton,
+  InputAdornment,
   ListItemIcon,
   Menu,
   MenuItem,
@@ -281,48 +282,70 @@ export function HeaderPage({ mainState, setMainState }: HeaderPageProps) {
                 Products
               </Typography>
               <Container maxWidth="md">
-                <Stack
-                  direction="row"
-                  justifyContent="center"
-                  sx={{ mt: 5, mb: 7, pt: 2 }}
-                >
-                  <TextField
-                    fullWidth
-                    variant="filled"
-                    type={"search"}
-                    placeholder="Search Name Product"
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                    size="small"
-                    color={"primary"}
-                    focused
-                  />
+                <TextField
+                  fullWidth
+                  variant="filled"
+                  type={"search"}
+                  placeholder="Search Name Product"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  size="small"
+                  color={"primary"}
+                  focused
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <Button
+                          onClick={() => {
+                            let SearchProduct: any = allProducts.filter(
+                              (e: any) => {
+                                return (
+                                  e.name
+                                    .toUpperCase()
+                                    .search(search.toUpperCase()) !== -1
+                                );
+                              }
+                            );
 
-                  <Button
-                    variant="contained"
-                    onClick={() => {
-                      let SearchProduct: any = allProducts.filter((e: any) => {
-                        return (
-                          e.name.toUpperCase().search(search.toUpperCase()) !==
-                          -1
-                        );
-                      });
-
-                      if (SearchProduct.length === 0) {
-                        mainState.render = "products";
-                        SearchProduct = mainState.allProducts;
-                        console.log("SearchProduct", SearchProduct);
-                        setMainState({ ...mainState });
-                      }
-                      mainState.allProducts = SearchProduct;
-                      console.log("SearchProduct", SearchProduct);
-                      setMainState({ ...mainState });
-                    }}
-                  >
-                    <SearchIcon style={{ color: "white" }} />
-                  </Button>
-                </Stack>
+                            if (SearchProduct.length === 0) {
+                              mainState.render = "products";
+                              SearchProduct = mainState.allProducts;
+                              console.log("SearchProduct", SearchProduct);
+                              setMainState({ ...mainState });
+                            }
+                            mainState.allProducts = SearchProduct;
+                            console.log("SearchProduct", SearchProduct);
+                            setMainState({ ...mainState });
+                          }}
+                        >
+                          <SearchIcon style={{ color: "white" }} />
+                        </Button>
+                      </InputAdornment>
+                    ),
+                  }}
+                />
               </Container>
+            </div>
+          )}
+          {mainState.render === "viewProductPage" && (
+            <div
+              className="p-5 text-center bg-light"
+              style={{
+                minHeight: "40vh",
+                backgroundPosition: "center",
+                backgroundSize: "cover",
+                color: "silver",
+                background:
+                  "linear-gradient(rgba(4, 9, 30, 0.7), rgba(4, 9, 30, 0.7)), url('https://motionarray.imgix.net/preview-1004604-7RBRX7k1QXWac3KH-large.jpg?w=1400&q=60&fit=max&auto=format')",
+              }}
+            >
+              <Typography variant="h5" sx={{ mt: 5, mb: 5 }}>
+                View Product
+              </Typography>
+              <Typography variant="body2" sx={{ mt: 5, mb: 5 }}>
+                A site specialized in buying and selling that provides you with
+                many important services
+              </Typography>
             </div>
           )}
         </div>
@@ -612,47 +635,48 @@ export function HeaderPage({ mainState, setMainState }: HeaderPageProps) {
                 many important services
               </Typography>
               <Container maxWidth="md">
-                <Stack
-                  direction="row"
-                  justifyContent="center"
-                  sx={{ mt: 5, mb: 7, pt: 2 }}
-                >
-                  <TextField
-                    fullWidth
-                    variant="filled"
-                    type={"search"}
-                    placeholder="Search Name Product"
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                    size="small"
-                    color={"primary"}
-                    focused
-                  />
+                <TextField
+                  fullWidth
+                  variant="filled"
+                  type={"search"}
+                  placeholder="Search Name Product"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  size="small"
+                  color={"primary"}
+                  focused
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <Button
+                          onClick={() => {
+                            let SearchProduct: any = allProducts.filter(
+                              (e: any) => {
+                                return (
+                                  e.name
+                                    .toUpperCase()
+                                    .search(search.toUpperCase()) !== -1
+                                );
+                              }
+                            );
 
-                  <Button
-                    variant="contained"
-                    onClick={() => {
-                      let SearchProduct: any = allProducts.filter((e: any) => {
-                        return (
-                          e.name.toUpperCase().search(search.toUpperCase()) !==
-                          -1
-                        );
-                      });
-
-                      if (SearchProduct.length === 0) {
-                        mainState.render = "products";
-                        SearchProduct = mainState.allProducts;
-                        console.log("SearchProduct", SearchProduct);
-                        setMainState({ ...mainState });
-                      }
-                      mainState.allProducts = SearchProduct;
-                      console.log("SearchProduct", SearchProduct);
-                      setMainState({ ...mainState });
-                    }}
-                  >
-                    <SearchIcon style={{ color: "white" }} />
-                  </Button>
-                </Stack>
+                            if (SearchProduct.length === 0) {
+                              mainState.render = "products";
+                              SearchProduct = mainState.allProducts;
+                              console.log("SearchProduct", SearchProduct);
+                              setMainState({ ...mainState });
+                            }
+                            mainState.allProducts = SearchProduct;
+                            console.log("SearchProduct", SearchProduct);
+                            setMainState({ ...mainState });
+                          }}
+                        >
+                          <SearchIcon style={{ color: "white" }} />
+                        </Button>
+                      </InputAdornment>
+                    ),
+                  }}
+                />
               </Container>
             </div>
           )}
@@ -685,6 +709,78 @@ export function HeaderPage({ mainState, setMainState }: HeaderPageProps) {
                 }}
                 variant="standard"
               />
+            </div>
+          )}
+          {mainState.render === "viewProductPage" && (
+            <div
+              className="p-5 text-center bg-light"
+              style={{
+                minHeight: "40vh",
+                backgroundPosition: "center",
+                backgroundSize: "cover",
+                color: "silver",
+                background:
+                  "linear-gradient(rgba(4, 9, 30, 0.7), rgba(4, 9, 30, 0.7)), url('https://motionarray.imgix.net/preview-1004604-7RBRX7k1QXWac3KH-large.jpg?w=1400&q=60&fit=max&auto=format')",
+              }}
+            >
+              <Typography variant="h5" sx={{ mt: 5, mb: 5 }}>
+                View Product
+              </Typography>
+              <Typography variant="body2" sx={{ mt: 5, mb: 5 }}>
+                A site specialized in buying and selling that provides you with
+                many important services
+              </Typography>
+            </div>
+          )}
+          {mainState.render === "profile" && (
+            <div
+              className="p-5 text-center bg-light"
+              style={{
+                minHeight: "40vh",
+                backgroundPosition: "center",
+                backgroundSize: "cover",
+                color: "silver",
+                background:
+                  "linear-gradient(rgba(4, 9, 30, 0.7), rgba(4, 9, 30, 0.7)), url('https://motionarray.imgix.net/preview-1004604-7RBRX7k1QXWac3KH-large.jpg?w=1400&q=60&fit=max&auto=format')",
+              }}
+            >
+              <Typography variant="h5" sx={{ mt: 5, mb: 5 }}>
+                {user.email}
+              </Typography>
+            </div>
+          )}
+          {mainState.render === "saveprofile" && (
+            <div
+              className="p-5 text-center bg-light"
+              style={{
+                minHeight: "40vh",
+                backgroundPosition: "center",
+                backgroundSize: "cover",
+                color: "silver",
+                background:
+                  "linear-gradient(rgba(4, 9, 30, 0.7), rgba(4, 9, 30, 0.7)), url('https://motionarray.imgix.net/preview-1004604-7RBRX7k1QXWac3KH-large.jpg?w=1400&q=60&fit=max&auto=format')",
+              }}
+            >
+              <Typography variant="h5" sx={{ mt: 5, mb: 5 }}>
+                {user.email}
+              </Typography>
+            </div>
+          )}
+          {mainState.render === "ordersprofile" && (
+            <div
+              className="p-5 text-center bg-light"
+              style={{
+                minHeight: "40vh",
+                backgroundPosition: "center",
+                backgroundSize: "cover",
+                color: "silver",
+                background:
+                  "linear-gradient(rgba(4, 9, 30, 0.7), rgba(4, 9, 30, 0.7)), url('https://motionarray.imgix.net/preview-1004604-7RBRX7k1QXWac3KH-large.jpg?w=1400&q=60&fit=max&auto=format')",
+              }}
+            >
+              <Typography variant="h5" sx={{ mt: 5, mb: 5 }}>
+                {user.email}
+              </Typography>
             </div>
           )}
         </div>

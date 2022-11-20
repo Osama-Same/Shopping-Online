@@ -28,14 +28,15 @@ const _saveLike = (req, res) => {
 };
 
 const _putLike = (req, res) => {
-  let iduser = req.params.iduser;
-  let idpost = req.body.idpost;
+  let id = req.params.id;
+  let iduser = req.body.iduser;
+  let idproduct = req.body.idproduct;
   let likee = req.body.likee;
   const sql = `UPDATE likee
   SET iduser = '${iduser}',
-  idpost = '${idpost}',
+  idproduct = '${idproduct}',
   likee = '${likee}'
-  WHERE iduser = '${iduser}'`;
+  WHERE id = '${id}'`;
   connection.query(sql, (err, result) => {
     if (err) {
       res.json(err);
@@ -46,7 +47,7 @@ const _putLike = (req, res) => {
 };
 const _deleteLike = (req, res) => {
   let iduser = req.params.iduser;
-  const sql = `DELETE FROM likee  WHERE id = '${iduser}'`;
+  const sql = `DELETE FROM likee  WHERE iduser = '${iduser}'`;
   connection.query(sql, (err, result) => {
     if (err) {
       res.json(err);

@@ -2,7 +2,7 @@ import { MainStateType } from "./mainState";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import { Card } from "@mui/material";
+import { Card, Divider } from "@mui/material";
 import RedeemIcon from "@mui/icons-material/Redeem";
 import { Stack } from "@mui/system";
 import AppleIcon from "@mui/icons-material/Apple";
@@ -21,11 +21,14 @@ export function HomePage({ mainState, setMainState }: HomePageProps) {
   return (
     <div>
       <Container maxWidth="lg" sx={{ mt: 10, mb: 5 }}>
+        <Typography variant="h4" sx={{ mb: 5, color: "orange" }}>
+          <Divider> Shopping Online</Divider>
+        </Typography>
         <div className="row  pt-3 pb-3">
           <div className="col-md-6 pt-3 pb-3">
             <Typography variant="body2" sx={{ textAlign: "left" }}>
               <Typography variant="h4" sx={{ mb: 5, color: "orange" }}>
-                Shopping Online
+                Electronic commerce
               </Typography>
               is a form of electronic commerce which allows consumers to
               directly buy goods or services from a seller over the Internet
@@ -60,7 +63,7 @@ export function HomePage({ mainState, setMainState }: HomePageProps) {
       </Container>
       <Container maxWidth="lg" sx={{ mt: 10, mb: 5 }}>
         <Typography variant="h4" sx={{ mb: 5, color: "orange" }}>
-          Services
+          <Divider>Services</Divider>
         </Typography>
         <div className="row">
           <div className="col-md-4 pt-3 pb-3">
@@ -149,6 +152,9 @@ export function HomePage({ mainState, setMainState }: HomePageProps) {
         </div>
       </Container>
       <Container maxWidth="lg" sx={{ mt: 10, mb: 5 }}>
+        <Typography variant="h5" sx={{ mb: 5, color: "orange" }}>
+          <Divider>Stay tuned!</Divider>
+        </Typography>
         <div className="row  pt-3 pb-3">
           <div className="col">
             <Card>
@@ -186,6 +192,9 @@ export function HomePage({ mainState, setMainState }: HomePageProps) {
         </div>
       </Container>
       <Container maxWidth="lg" sx={{ mt: 10, mb: 5 }}>
+        <Typography variant="h5" sx={{ mb: 5, color: "orange" }}>
+          <Divider> Give feedback</Divider>
+        </Typography>
         <Typography sx={{ mb: 3 }}>
           We’d love to hear what you think!
         </Typography>

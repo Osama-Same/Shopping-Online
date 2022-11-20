@@ -6,7 +6,7 @@ import { CategoryPage } from "./categories";
 import { ProductsPage } from "./products";
 import { RegisterPage } from "./register";
 import { LoginPage } from "./login";
-import { ProfilePage } from "./profile";
+import { ProfilePage,SaveProfile ,OrderProfile} from "./profile";
 import { ViewProductPage } from "./viewProduct";
 import { OrdersPage } from "./orders";
 interface MainPageProps {
@@ -39,6 +39,12 @@ export function MainPage({ mainState, setMainState }: MainPageProps) {
   }
   if (render === "profile") {
     return <ProfilePage mainState={mainState} setMainState={setMainState} />;
+  }
+  if (render === "saveprofile") {
+    return <SaveProfile mainState={mainState} setMainState={setMainState} />;
+  }
+  if (render === "ordersprofile") {
+    return <OrderProfile mainState={mainState} setMainState={setMainState} />;
   }
   if (render === "viewProductPage") {
     return <ViewProductPage mainState={mainState} setMainState={setMainState} />;

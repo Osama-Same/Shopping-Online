@@ -124,10 +124,13 @@ export function FooterPage({ mainState, setMainState }: FooterPageProps) {
                   <ListItem disablePadding>
                     <TextField
                       fullWidth
-                      style={{ color: "white" }}
+                      className="Autocomplete"
                       label="Newsletter"
                       onChange={(e) => setEmail(e.target.value)}
                       value={email}
+                      placeholder="Email News ..."
+                      color="warning"
+                      focused
                     />
                   </ListItem>
                   <br></br>

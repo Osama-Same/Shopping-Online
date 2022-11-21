@@ -32,6 +32,10 @@ const _saveCheckOut = (req, res) => {
   });
 };
 const _putCheckOut = (req, res) => {
+  /* const error = validationResult(req);
+  if (!error.isEmpty()) {
+    return res.json({ error: error.array()[0].msg });
+  } */
   let id = req.params.id;
   let iduser = req.body.iduser;
   let priceOut = req.body.priceOut;

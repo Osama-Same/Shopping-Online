@@ -407,8 +407,27 @@ export function SaveProductPage({
               fromData.append("images", images, images.name);
             }
             await _insetProduct(fromData);
-            let getAllProducts = await _getAllProducts();
-            mainState.allProducts = getAllProducts;
+            mainState.allProducts = await _getAllProducts();
+            mainState.allProducts.forEach((product: productType) => {
+              product.productUser = mainState.allUsers.find(
+                (u: UserType) => u.id === product.iduser
+              );
+              product.productCategory = mainState.allCategories.find(
+                (c: categoryType) => c.id === product.idcategory
+              );
+              product.productlike = mainState.allLike.filter(
+                (l: LikeType) => l.idproduct === product.id
+              );
+              product.productComment = mainState.allComment.filter(
+                (c: commentType) => c.idproduct === product.id
+              );
+              product.productOrders = mainState.allOrders.filter(
+                (c: OrderType) => c.idproduct === product.id
+              );
+              product.productSave = mainState.allSave.filter(
+                (c: SaveType) => c.idproduct === product.id
+              );
+            });
             mainState.render = "products";
             setMainState({ ...mainState });
             setLoading(false);
@@ -554,9 +573,17 @@ export function SaveCheckOutPage({
             checkOut.CreditCardNumber = CreditCardNumber;
             checkOut.expMonth = expMonth;
             checkOut.cvv = cvv;
+            const selectedUser = mainState.allUsers.find(
+              (u: UserType) => u.id === checkOut.iduser
+            );
+            checkOut.checkUser = selectedUser;
             await _insetCheckOut(checkOut);
-            let allCheckOut = await _getAllCheckOut();
-            mainState.allCheckOut = allCheckOut;
+            mainState.allCheckOut = await _getAllCheckOut();
+            mainState.allCheckOut.forEach((out: CheckOutType) => {
+              out.checkUser = mainState.allUsers.find(
+                (u: UserType) => u.id === out.iduser
+              );
+            });
             mainState.render = "checkOut";
             setMainState({ ...mainState });
             setLoading(false);
@@ -673,8 +700,12 @@ export function SaveCategoriesPage({
               fromData.append("logo", logo, logo.name);
             }
             await _insetCategory(fromData);
-            let getAllCategories = await _getAllCategories();
-            mainState.allCategories = getAllCategories;
+            mainState.allCategories = await _getAllCategories();
+            mainState.allCategories.forEach((category: categoryType) => {
+              category.categoryProduct = mainState.allProducts.filter(
+                (p: productType) => p.idcategory === category.id
+              );
+            });
             setMainState({ ...mainState });
             setLoading(false);
             setopen(false);
@@ -817,8 +848,15 @@ export function SaveCommentPage({
             comments.comment = comment;
             comments.date = date;
             await _insetComment(comments);
-            let getAllComment = await _getAllComment();
-            mainState.allComment = getAllComment;
+            mainState.allComment = await _getAllComment();
+            mainState.allComment.forEach((comment: commentType) => {
+              comment.commentUser = mainState.allUsers.find(
+                (u: UserType) => u.id === comment.iduser
+              );
+              comment.commentProduct = mainState.allProducts.find(
+                (p: productType) => p.id === comment.idproduct
+              );
+            });
             setMainState({ ...mainState });
             setLoading(false);
             setopen(false);
@@ -952,8 +990,15 @@ export function SaveLikePage({
             like.idproduct = idproduct;
             like.likee = likee;
             await _insetLike(like);
-            let getAllLike = await _getAllLike();
-            mainState.allLike = getAllLike;
+            mainState.allLike = await _getAllLike();
+            mainState.allLike.forEach((l: LikeType) => {
+              l.likeUser = mainState.allUsers.find(
+                (u: UserType) => u.id === l.iduser
+              );
+              l.likeProduct = mainState.allProducts.find(
+                (p: productType) => p.id === l.idproduct
+              );
+            });
             setMainState({ ...mainState });
             setLoading(false);
             setopen(false);
@@ -1154,8 +1199,15 @@ export function SaveOrderPage({
             order.idproduct = idproduct;
             order.quantity = quantity;
             await _insetOrders(order);
-            let getAllOrders = await _getAllOrders();
-            mainState.allOrders = getAllOrders;
+            mainState.allOrders = await _getAllOrders();
+            mainState.allOrders.forEach((order: OrderType) => {
+              order.orderUser = mainState.allUsers.find(
+                (u: UserType) => u.id === order.iduser
+              );
+              order.orderProduct = mainState.allProducts.find(
+                (p: productType) => p.id === order.idproduct
+              );
+            });
             setMainState({ ...mainState });
             setLoading(false);
             setopen(false);
@@ -1370,8 +1422,15 @@ export function SavePage({
             savee.idproduct = idproduct;
             savee.save = save;
             await _insetSave(savee);
-            let getAllSave = await _getAllSave();
-            mainState.allSave = getAllSave;
+            mainState.allSave = await _getAllSave();
+            mainState.allSave.forEach((s: SaveType) => {
+              s.saveUser = mainState.allUsers.find(
+                (u: UserType) => u.id === s.iduser
+              );
+              s.saveProduct = mainState.allProducts.find(
+                (p: productType) => p.id === s.idproduct
+              );
+            });
             setMainState({ ...mainState });
             setLoading(false);
             setopen(false);

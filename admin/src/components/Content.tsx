@@ -67,7 +67,17 @@ import {
   SaveType,
   UserType,
 } from "./mainState";
-import { _getAllUser } from "../service/getAllData";
+import {
+  _getAllCategories,
+  _getAllCheckOut,
+  _getAllContact,
+  _getAllLike,
+  _getAllNews,
+  _getAllOrders,
+  _getAllProducts,
+  _getAllSave,
+  _getAllUser,
+} from "../service/getAllData";
 
 interface ContactProps {
   mainState: MainStateType;
@@ -89,7 +99,7 @@ export function Content({ mainState, setMainState }: ContactProps) {
   const [open, setopen] = useState(false);
   const [openSave, setopenSave] = useState(false);
   const [openEdit, setopenEdit] = useState(false);
-  const [loading, setloading] = useState(false);
+
   const [selectedUser, setSelectedUser] = useState<UserType | null>(null);
   const [selectedProduct, setSelectedProduct] = useState<productType | null>(
     null
@@ -172,7 +182,6 @@ export function Content({ mainState, setMainState }: ContactProps) {
                         password: "",
                         phone: "",
                         image: "",
-                        userProduct: [],
                       };
                       setopenSave(true);
                       setSelectedUser(newUser);
@@ -211,7 +220,12 @@ export function Content({ mainState, setMainState }: ContactProps) {
                     <TableCell>phone</TableCell>
                     <TableCell>image</TableCell>
                     <TableCell>authorization</TableCell>
-                    <TableCell>Product length</TableCell>
+                    <TableCell>Product_num</TableCell>
+                    <TableCell>Like_num</TableCell>
+                    <TableCell>Comment_num</TableCell>
+                    <TableCell>Orders_num</TableCell>
+                    <TableCell>Save_num</TableCell>
+                    <TableCell>CheckOut_num</TableCell>
                     <TableCell>Edit</TableCell>
                     <TableCell>Delete</TableCell>
                   </TableRow>
@@ -250,6 +264,21 @@ export function Content({ mainState, setMainState }: ContactProps) {
                           </TableCell>
                           <TableCell component="th" scope="row">
                             {user.userProduct && user.userProduct?.length}
+                          </TableCell>
+                          <TableCell component="th" scope="row">
+                            {user.userLike && user.userLike.length}
+                          </TableCell>
+                          <TableCell component="th" scope="row">
+                            {user.userComment && user.userComment.length}
+                          </TableCell>
+                          <TableCell component="th" scope="row">
+                            {user.userOrders && user.userOrders.length}
+                          </TableCell>
+                          <TableCell component="th" scope="row">
+                            {user.userSave && user.userSave.length}
+                          </TableCell>
+                          <TableCell component="th" scope="row">
+                            {user.userCheckOut && user.userCheckOut.length}
                           </TableCell>
                           <TableCell component="th" scope="row">
                             <Button
@@ -292,9 +321,7 @@ export function Content({ mainState, setMainState }: ContactProps) {
               text={`Do ${selectedUser.email}  will be deleted permenantly, are you sure?`}
               onConfirm={async () => {
                 if (!selectedUser) return;
-                setloading(true);
                 await _deleteUser(selectedUser.id);
-                setloading(false);
                 mainState.allUsers = mainState.allUsers.filter(
                   (u: UserType) => u.id !== selectedUser.id
                 );
@@ -334,11 +361,36 @@ export function Content({ mainState, setMainState }: ContactProps) {
             <Toolbar>
               <Grid container spacing={2} alignItems="center">
                 <Grid item>
-                  <SearchIcon color="inherit" sx={{ display: "block" }} />
+                  <Button
+                    onClick={async () => {
+                      let SearchProduct: any = allProducts.filter(
+                        (e: productType) => {
+                          return (
+                            e.name
+                              .toUpperCase()
+                              .search(search.toUpperCase()) !== -1
+                          );
+                        }
+                      );
+
+                      if (SearchProduct.length === 0) {
+                        mainState.render = "products";
+                        SearchProduct = mainState.allProducts;
+                        mainState.allProducts = await _getAllProducts();
+                        setMainState({ ...mainState });
+                      }
+                      mainState.allProducts = SearchProduct;
+                      setMainState({ ...mainState });
+                    }}
+                  >
+                    <SearchIcon color="inherit" sx={{ display: "block" }} />
+                  </Button>
                 </Grid>
                 <Grid item xs>
                   <TextField
                     fullWidth
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
                     placeholder="Search by email address, phone number, or user UID"
                     InputProps={{
                       disableUnderline: true,
@@ -399,7 +451,12 @@ export function Content({ mainState, setMainState }: ContactProps) {
                     <TableCell>images</TableCell>
                     <TableCell>price</TableCell>
                     <TableCell>date</TableCell>
+                    <TableCell>country</TableCell>
                     <TableCell>description</TableCell>
+                    <TableCell>Like_num</TableCell>
+                    <TableCell>Comment_num</TableCell>
+                    <TableCell>Order_num</TableCell>
+                    <TableCell>Save_num</TableCell>
                     <TableCell>Edit</TableCell>
                     <TableCell>Delete</TableCell>
                   </TableRow>
@@ -418,10 +475,11 @@ export function Content({ mainState, setMainState }: ContactProps) {
                             {product.id}
                           </TableCell>
                           <TableCell component="th" scope="row">
-                            {product.iduser}
+                            {product.productUser && product.productUser.name}
                           </TableCell>
                           <TableCell component="th" scope="row">
-                            {product.idcategory}
+                            {product.productCategory &&
+                              product.productCategory.name}
                           </TableCell>
                           <TableCell component="th" scope="row">
                             {product.name}
@@ -443,6 +501,24 @@ export function Content({ mainState, setMainState }: ContactProps) {
                             {product.country}
                           </TableCell>
                           <TableCell component="th" scope="row">
+                            {product.description}
+                          </TableCell>
+                          <TableCell component="th" scope="row">
+                            {product.productlike && product.productlike.length}
+                          </TableCell>
+                          <TableCell component="th" scope="row">
+                            {product.productComment &&
+                              product.productComment.length}
+                          </TableCell>
+                          <TableCell component="th" scope="row">
+                            {product.productOrders &&
+                              product.productOrders.length}
+                          </TableCell>
+                          <TableCell component="th" scope="row">
+                            {product.productSave && product.productSave.length}
+                          </TableCell>
+
+                          <TableCell component="th" scope="row">
                             <Button
                               variant="contained"
                               onClick={() => {
@@ -456,6 +532,10 @@ export function Content({ mainState, setMainState }: ContactProps) {
                           <TableCell component="th" scope="row">
                             <Button
                               variant="contained"
+                              disabled={
+                                product.productComment.length > 0 ||
+                                product.productlike.length > 0
+                              }
                               color="error"
                               onClick={() => {
                                 setopen(true);
@@ -479,9 +559,7 @@ export function Content({ mainState, setMainState }: ContactProps) {
               text={`Do ${selectedProduct.name}  will be deleted permenantly, are you sure?`}
               onConfirm={async () => {
                 if (!selectedProduct) return;
-                setloading(true);
                 await _deleteAllPost(selectedProduct.id);
-                setloading(false);
                 mainState.allProducts = mainState.allProducts.filter(
                   (p: productType) => p.id !== selectedProduct.id
                 );
@@ -521,11 +599,36 @@ export function Content({ mainState, setMainState }: ContactProps) {
             <Toolbar>
               <Grid container spacing={2} alignItems="center">
                 <Grid item>
-                  <SearchIcon color="inherit" sx={{ display: "block" }} />
+                  <Button
+                    onClick={async () => {
+                      let SearchCategory: any = allCategories.filter(
+                        (e: categoryType) => {
+                          return (
+                            e.name
+                              .toUpperCase()
+                              .search(search.toUpperCase()) !== -1
+                          );
+                        }
+                      );
+
+                      if (SearchCategory.length === 0) {
+                        mainState.render = "categories";
+                        SearchCategory = mainState.allCategories;
+                        mainState.allCategories = await _getAllCategories();
+                        setMainState({ ...mainState });
+                      }
+                      mainState.allCategories = SearchCategory;
+                      setMainState({ ...mainState });
+                    }}
+                  >
+                    <SearchIcon color="inherit" sx={{ display: "block" }} />
+                  </Button>
                 </Grid>
                 <Grid item xs>
                   <TextField
                     fullWidth
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
                     placeholder="Search by email address, phone number, or user UID"
                     InputProps={{
                       disableUnderline: true,
@@ -580,6 +683,7 @@ export function Content({ mainState, setMainState }: ContactProps) {
                     <TableCell>name</TableCell>
                     <TableCell>categorytype</TableCell>
                     <TableCell>logo</TableCell>
+                    <TableCell>product_num</TableCell>
                     <TableCell>Edit</TableCell>
                     <TableCell>Delete</TableCell>
                   </TableRow>
@@ -613,7 +717,10 @@ export function Content({ mainState, setMainState }: ContactProps) {
                               sx={{ width: 56, height: 56 }}
                             />
                           </TableCell>
-
+                          <TableCell component="th" scope="row">
+                            {category.categoryProduct &&
+                              category.categoryProduct.length}
+                          </TableCell>
                           <TableCell component="th" scope="row">
                             <Button
                               variant="contained"
@@ -627,6 +734,7 @@ export function Content({ mainState, setMainState }: ContactProps) {
                           </TableCell>
                           <TableCell component="th" scope="row">
                             <Button
+                              disabled={category.categoryProduct.length > 0}
                               variant="contained"
                               color="error"
                               onClick={() => {
@@ -650,10 +758,8 @@ export function Content({ mainState, setMainState }: ContactProps) {
               setopen={setopen}
               text={`Do ${selectedCategories.name}  will be deleted permenantly, are you sure?`}
               onConfirm={async () => {
-                if (!selectedCategories) return;
-                setloading(true);
+                if (!selectedCategories) return;       
                 await _deleteCategories(selectedCategories.id);
-                setloading(false);
                 mainState.allCategories = mainState.allCategories.filter(
                   (c: categoryType) => c.id !== selectedCategories.id
                 );
@@ -693,11 +799,36 @@ export function Content({ mainState, setMainState }: ContactProps) {
             <Toolbar>
               <Grid container spacing={2} alignItems="center">
                 <Grid item>
-                  <SearchIcon color="inherit" sx={{ display: "block" }} />
+                  <Button
+                    onClick={async () => {
+                      let SearchComment: any = allComment.filter(
+                        (e: commentType) => {
+                          return (
+                            e.commentUser.name
+                              .toUpperCase()
+                              .search(search.toUpperCase()) !== -1
+                          );
+                        }
+                      );
+
+                      if (SearchComment.length === 0) {
+                        mainState.render = "comment";
+                        SearchComment = mainState.allComment;
+                        mainState.allComment = await _getAllLike();
+                        setMainState({ ...mainState });
+                      }
+                      mainState.allComment = SearchComment;
+                      setMainState({ ...mainState });
+                    }}
+                  >
+                    <SearchIcon color="inherit" sx={{ display: "block" }} />
+                  </Button>
                 </Grid>
                 <Grid item xs>
                   <TextField
                     fullWidth
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
                     placeholder="Search by email address, phone number, or user UID"
                     InputProps={{
                       disableUnderline: true,
@@ -770,10 +901,11 @@ export function Content({ mainState, setMainState }: ContactProps) {
                             {command.id}
                           </TableCell>
                           <TableCell component="th" scope="row">
-                            {command.iduser}
+                            {command.commentUser && command.commentUser.name}
                           </TableCell>
                           <TableCell component="th" scope="row">
-                            {command.idproduct}
+                            {command.commentProduct &&
+                              command.commentProduct.name}
                           </TableCell>
                           <TableCell component="th" scope="row">
                             {command.comment}
@@ -819,9 +951,7 @@ export function Content({ mainState, setMainState }: ContactProps) {
               text={`Do ${selectedComment.comment}  will be deleted permenantly, are you sure?`}
               onConfirm={async () => {
                 if (!selectedComment) return;
-                setloading(true);
                 await _deleteComment(selectedComment.id);
-                setloading(false);
                 mainState.allComment = mainState.allComment.filter(
                   (l: commentType) => l.id !== selectedComment.id
                 );
@@ -861,11 +991,34 @@ export function Content({ mainState, setMainState }: ContactProps) {
             <Toolbar>
               <Grid container spacing={2} alignItems="center">
                 <Grid item>
-                  <SearchIcon color="inherit" sx={{ display: "block" }} />
+                  <Button
+                    onClick={async () => {
+                      let SearchLike: any = allLike.filter((e: LikeType) => {
+                        return (
+                          e.likeUser.name
+                            .toUpperCase()
+                            .search(search.toUpperCase()) !== -1
+                        );
+                      });
+
+                      if (SearchLike.length === 0) {
+                        mainState.render = "like";
+                        SearchLike = mainState.allLike;
+                        mainState.allLike = await _getAllLike();
+                        setMainState({ ...mainState });
+                      }
+                      mainState.allLike = SearchLike;
+                      setMainState({ ...mainState });
+                    }}
+                  >
+                    <SearchIcon color="inherit" sx={{ display: "block" }} />
+                  </Button>
                 </Grid>
                 <Grid item xs>
                   <TextField
                     fullWidth
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
                     placeholder="Search by email address, phone number, or user UID"
                     InputProps={{
                       disableUnderline: true,
@@ -936,10 +1089,10 @@ export function Content({ mainState, setMainState }: ContactProps) {
                             {like.id}
                           </TableCell>
                           <TableCell component="th" scope="row">
-                            {like.iduser}
+                            {like.likeUser && like.likeUser.name}
                           </TableCell>
                           <TableCell component="th" scope="row">
-                            {like.idproduct}
+                            {like.likeProduct && like.likeProduct.name}
                           </TableCell>
                           <TableCell component="th" scope="row">
                             {like.likee}
@@ -982,9 +1135,7 @@ export function Content({ mainState, setMainState }: ContactProps) {
               text={`Do ${selectedLike.likee}  will be deleted permenantly, are you sure?`}
               onConfirm={async () => {
                 if (!selectedLike) return;
-                setloading(true);
                 await _deleteLike(selectedLike.id);
-                setloading(false);
                 mainState.allLike = mainState.allLike.filter(
                   (l: LikeType) => l.id !== selectedLike.id
                 );
@@ -1024,11 +1175,33 @@ export function Content({ mainState, setMainState }: ContactProps) {
             <Toolbar>
               <Grid container spacing={2} alignItems="center">
                 <Grid item>
-                  <SearchIcon color="inherit" sx={{ display: "block" }} />
+                  <Button
+                    onClick={async () => {
+                      let SearchNews: any = allNews.filter((e: NewsType) => {
+                        return (
+                          e.email.toUpperCase().search(search.toUpperCase()) !==
+                          -1
+                        );
+                      });
+
+                      if (SearchNews.length === 0) {
+                        mainState.render = "news";
+                        SearchNews = mainState.allNews;
+                        mainState.allNews = await _getAllNews();
+                        setMainState({ ...mainState });
+                      }
+                      mainState.allNews = SearchNews;
+                      setMainState({ ...mainState });
+                    }}
+                  >
+                    <SearchIcon color="inherit" sx={{ display: "block" }} />
+                  </Button>
                 </Grid>
                 <Grid item xs>
                   <TextField
                     fullWidth
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
                     placeholder="Search by email address, phone number, or user UID"
                     InputProps={{
                       disableUnderline: true,
@@ -1134,9 +1307,7 @@ export function Content({ mainState, setMainState }: ContactProps) {
               text={`Do ${selectedNews.email}  will be deleted permenantly, are you sure?`}
               onConfirm={async () => {
                 if (!selectedNews) return;
-                setloading(true);
                 await _deleteNews(selectedNews.id);
-                setloading(false);
                 mainState.allNews = mainState.allNews.filter(
                   (o: NewsType) => o.id !== selectedNews.id
                 );
@@ -1176,11 +1347,36 @@ export function Content({ mainState, setMainState }: ContactProps) {
             <Toolbar>
               <Grid container spacing={2} alignItems="center">
                 <Grid item>
-                  <SearchIcon color="inherit" sx={{ display: "block" }} />
+                  <Button
+                    onClick={async () => {
+                      let SearchOrder: any = allOrders.filter(
+                        (e: OrderType) => {
+                          return (
+                            e.orderUser.email
+                              .toUpperCase()
+                              .search(search.toUpperCase()) !== -1
+                          );
+                        }
+                      );
+
+                      if (SearchOrder.length === 0) {
+                        mainState.render = "orders";
+                        SearchOrder = mainState.allOrders;
+                        mainState.allOrders = await _getAllOrders();
+                        setMainState({ ...mainState });
+                      }
+                      mainState.allOrders = SearchOrder;
+                      setMainState({ ...mainState });
+                    }}
+                  >
+                    <SearchIcon color="inherit" sx={{ display: "block" }} />
+                  </Button>
                 </Grid>
                 <Grid item xs>
                   <TextField
                     fullWidth
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
                     placeholder="Search by email address, phone number, or user UID"
                     InputProps={{
                       disableUnderline: true,
@@ -1251,10 +1447,10 @@ export function Content({ mainState, setMainState }: ContactProps) {
                             {order.id}
                           </TableCell>
                           <TableCell component="th" scope="row">
-                            {order.iduser}
+                            {order.orderUser && order.orderUser.email}
                           </TableCell>
                           <TableCell component="th" scope="row">
-                            {order.idproduct}
+                            {order.orderProduct && order.orderProduct.name}
                           </TableCell>
                           <TableCell component="th" scope="row">
                             {order.quantity}
@@ -1296,9 +1492,7 @@ export function Content({ mainState, setMainState }: ContactProps) {
               text={`Do ${selectedOrders.quantity}  will be deleted permenantly, are you sure?`}
               onConfirm={async () => {
                 if (!selectedOrders) return;
-                setloading(true);
                 await _deleteOrders(selectedOrders.id);
-                setloading(false);
                 mainState.allOrders = mainState.allOrders.filter(
                   (o: OrderType) => o.id !== selectedOrders.id
                 );
@@ -1338,11 +1532,36 @@ export function Content({ mainState, setMainState }: ContactProps) {
             <Toolbar>
               <Grid container spacing={2} alignItems="center">
                 <Grid item>
-                  <SearchIcon color="inherit" sx={{ display: "block" }} />
+                  <Button
+                    onClick={async () => {
+                      let SearchContact: any = allContact.filter(
+                        (e: ContactType) => {
+                          return (
+                            e.email
+                              .toUpperCase()
+                              .search(search.toUpperCase()) !== -1
+                          );
+                        }
+                      );
+
+                      if (SearchContact.length === 0) {
+                        mainState.render = "contact";
+                        SearchContact = mainState.allContact;
+                        mainState.allContact = await _getAllContact();
+                        setMainState({ ...mainState });
+                      }
+                      mainState.allContact = SearchContact;
+                      setMainState({ ...mainState });
+                    }}
+                  >
+                    <SearchIcon color="inherit" sx={{ display: "block" }} />
+                  </Button>
                 </Grid>
                 <Grid item xs>
                   <TextField
                     fullWidth
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
                     placeholder="Search by email address, phone number, or user UID"
                     InputProps={{
                       disableUnderline: true,
@@ -1453,9 +1672,7 @@ export function Content({ mainState, setMainState }: ContactProps) {
               text={`Do ${selectedContact.email}  will be deleted permenantly, are you sure?`}
               onConfirm={async () => {
                 if (!selectedContact) return;
-                setloading(true);
                 await _deleteContact(selectedContact.id);
-                setloading(false);
                 mainState.allContact = mainState.allContact.filter(
                   (c: ContactType) => c.id !== selectedContact.id
                 );
@@ -1495,11 +1712,34 @@ export function Content({ mainState, setMainState }: ContactProps) {
             <Toolbar>
               <Grid container spacing={2} alignItems="center">
                 <Grid item>
-                  <SearchIcon color="inherit" sx={{ display: "block" }} />
+                  <Button
+                    onClick={async () => {
+                      let SearchSave: any = allSave.filter((e: SaveType) => {
+                        return (
+                          e.saveUser.name
+                            .toUpperCase()
+                            .search(search.toUpperCase()) !== -1
+                        );
+                      });
+
+                      if (SearchSave.length === 0) {
+                        mainState.render = "save";
+                        SearchSave = mainState.allSave;
+                        mainState.allSave = await _getAllSave();
+                        setMainState({ ...mainState });
+                      }
+                      mainState.allSave = SearchSave;
+                      setMainState({ ...mainState });
+                    }}
+                  >
+                    <SearchIcon color="inherit" sx={{ display: "block" }} />
+                  </Button>{" "}
                 </Grid>
                 <Grid item xs>
                   <TextField
                     fullWidth
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
                     placeholder="Search by email address, phone number, or user UID"
                     InputProps={{
                       disableUnderline: true,
@@ -1570,10 +1810,10 @@ export function Content({ mainState, setMainState }: ContactProps) {
                             {save.id}
                           </TableCell>
                           <TableCell component="th" scope="row">
-                            {save.iduser}
+                            {save.saveUser && save.saveUser?.name}
                           </TableCell>
                           <TableCell component="th" scope="row">
-                            {save.idproduct}
+                            {save.saveProduct && save.saveProduct?.name}
                           </TableCell>
                           <TableCell component="th" scope="row">
                             {save.save}
@@ -1615,9 +1855,7 @@ export function Content({ mainState, setMainState }: ContactProps) {
               text={`Do ${selectedSave.save}  will be deleted permenantly, are you sure?`}
               onConfirm={async () => {
                 if (!selectedSave) return;
-                setloading(true);
                 await _deleteSave(selectedSave.id);
-                setloading(false);
                 mainState.allSave = mainState.allSave.filter(
                   (s: SaveType) => s.id !== selectedSave.id
                 );
@@ -1657,11 +1895,36 @@ export function Content({ mainState, setMainState }: ContactProps) {
             <Toolbar>
               <Grid container spacing={2} alignItems="center">
                 <Grid item>
-                  <SearchIcon color="inherit" sx={{ display: "block" }} />
+                  <Button
+                    onClick={async () => {
+                      let SearchCheck: any = allCheckOut.filter(
+                        (e: CheckOutType) => {
+                          return (
+                            e.checkUser.name
+                              .toUpperCase()
+                              .search(search.toUpperCase()) !== -1
+                          );
+                        }
+                      );
+
+                      if (SearchCheck.length === 0) {
+                        mainState.render = "checkOut";
+                        SearchCheck = mainState.allCheckOut;
+                        mainState.allCheckOut = await _getAllCheckOut();
+                        setMainState({ ...mainState });
+                      }
+                      mainState.allCheckOut = SearchCheck;
+                      setMainState({ ...mainState });
+                    }}
+                  >
+                    <SearchIcon color="inherit" sx={{ display: "block" }} />
+                  </Button>
                 </Grid>
                 <Grid item xs>
                   <TextField
                     fullWidth
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
                     placeholder="Search by email address, phone number, or user UID"
                     InputProps={{
                       disableUnderline: true,
@@ -1675,7 +1938,6 @@ export function Content({ mainState, setMainState }: ContactProps) {
                     variant="contained"
                     sx={{ mr: 1 }}
                     onClick={() => {
-                      if(!selectedUser) return 
                       const newOut: CheckOutType = {
                         id: 0,
                         iduser: 0,
@@ -1684,14 +1946,8 @@ export function Content({ mainState, setMainState }: ContactProps) {
                         expMonth: "",
                         cvv: "",
                       };
-
                       setopenSave(true);
                       setSelectedCheckOut(newOut);
-                      mainState.allCheckOut = [
-                        newOut,
-                        ...mainState.allCheckOut,
-                      ];
-                      setMainState({ ...mainState });
                     }}
                   >
                     Add check Out
@@ -1743,7 +1999,7 @@ export function Content({ mainState, setMainState }: ContactProps) {
                             {out.id}
                           </TableCell>
                           <TableCell component="th" scope="row">
-                            {out && out.checkUser && out.checkUser?.name}
+                            {out.checkUser && out.checkUser?.name}
                           </TableCell>
                           <TableCell component="th" scope="row">
                             {out.priceOut}
@@ -1794,9 +2050,7 @@ export function Content({ mainState, setMainState }: ContactProps) {
               text={`Do ${selectedCheckOut.CreditCardNumber}  will be deleted permenantly, are you sure?`}
               onConfirm={async () => {
                 if (!selectedCheckOut) return;
-                setloading(true);
                 await _deleteCheckOut(selectedCheckOut.id);
-                setloading(false);
                 mainState.allCheckOut = mainState.allCheckOut.filter(
                   (c: CheckOutType) => c.id !== selectedCheckOut.id
                 );

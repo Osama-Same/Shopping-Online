@@ -412,8 +412,27 @@ export function EidtProductPage({
               fromData.append("images", images, images.name);
             }
             await _putProducts(product.id, fromData);
-            let getAllProducts = await _getAllProducts();
-            mainState.allProducts = getAllProducts;
+            mainState.allProducts = await _getAllProducts();
+            mainState.allProducts.forEach((product: productType) => {
+              product.productUser = mainState.allUsers.find(
+                (u: UserType) => u.id === product.iduser
+              );
+              product.productCategory = mainState.allCategories.find(
+                (c: categoryType) => c.id === product.idcategory
+              );
+              product.productlike = mainState.allLike.filter(
+                (l: LikeType) => l.idproduct === product.id
+              );
+              product.productComment = mainState.allComment.filter(
+                (c: commentType) => c.idproduct === product.id
+              );
+              product.productOrders = mainState.allOrders.filter(
+                (c: OrderType) => c.idproduct === product.id
+              );
+              product.productSave = mainState.allSave.filter(
+                (c: SaveType) => c.idproduct === product.id
+              );
+            });
             mainState.render = "products";
             setMainState({ ...mainState });
             setLoading(false);
@@ -540,8 +559,12 @@ export function EditCategoriesPage({
               fromData.append("logo", logo, logo.name);
             }
             await _putCategories(category.id, fromData);
-            let getAllCategories = await _getAllCategories();
-            mainState.allCategories = getAllCategories;
+            mainState.allCategories = await _getAllCategories();
+            mainState.allCategories.forEach((category: categoryType) => {
+              category.categoryProduct = mainState.allProducts.filter(
+                (p: productType) => p.idcategory === category.id
+              );
+            });
             setMainState({ ...mainState });
             setLoading(false);
             setopen(false);
@@ -669,8 +692,15 @@ export function EditCommentPage({
             comments.date = date;
 
             await _putComment(comments.id, comments);
-            let getAllComment = await _getAllComment();
-            mainState.allComment = getAllComment;
+            mainState.allComment = await _getAllComment();
+            mainState.allComment.forEach((comment: commentType) => {
+              comment.commentUser = mainState.allUsers.find(
+                (u: UserType) => u.id === comment.iduser
+              );
+              comment.commentProduct = mainState.allProducts.find(
+                (p: productType) => p.id === comment.idproduct
+              );
+            });
             setMainState({ ...mainState });
             setLoading(false);
             setopen(false);
@@ -777,8 +807,15 @@ export function EditLikePage({
             like.idproduct = idproduct;
             like.likee = likee;
             await _putLike(like.id, like);
-            let getAllLike = await _getAllLike();
-            mainState.allLike = getAllLike;
+            mainState.allLike = await _getAllLike();
+            mainState.allLike.forEach((l: LikeType) => {
+              l.likeUser = mainState.allUsers.find(
+                (u: UserType) => u.id === l.iduser
+              );
+              l.likeProduct = mainState.allProducts.find(
+                (p: productType) => p.id === l.idproduct
+              );
+            });
             setMainState({ ...mainState });
             setLoading(false);
             setopen(false);
@@ -956,8 +993,15 @@ export function EditOrderPage({
             order.idproduct = idproduct;
             order.quantity = quantity;
             await _putOrders(order.id, order);
-            let getAllOrder = await _getAllOrders();
-            mainState.allOrders = getAllOrder;
+            mainState.allOrders = await _getAllOrders();
+            mainState.allOrders.forEach((order: OrderType) => {
+              order.orderUser = mainState.allUsers.find(
+                (u: UserType) => u.id === order.iduser
+              );
+              order.orderProduct = mainState.allProducts.find(
+                (p: productType) => p.id === order.idproduct
+              );
+            });
             setMainState({ ...mainState });
             setLoading(false);
             setopen(false);
@@ -1160,8 +1204,15 @@ export function EditSavePage({
             savee.idproduct = idproduct;
             savee.save = save;
             await _putSave(savee.id, savee);
-            let getAllSave = await _getAllSave();
-            mainState.allSave = getAllSave;
+            mainState.allSave = await _getAllSave();
+            mainState.allSave.forEach((s: SaveType) => {
+              s.saveUser = mainState.allUsers.find(
+                (u: UserType) => u.id === s.iduser
+              );
+              s.saveProduct = mainState.allProducts.find(
+                (p: productType) => p.id === s.idproduct
+              );
+            });
             setMainState({ ...mainState });
             setLoading(false);
             setopen(false);
@@ -1196,19 +1247,15 @@ export function EditCheckOutPage({
   );
   const [expMonth, setExpMonth] = useState(checkOut ? checkOut.expMonth : "");
   const [cvv, setCvv] = useState(checkOut ? checkOut.cvv : "");
-  const [selectedUser, setselectedUser] = useState<any>(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (!checkOut) return;
-    setIduser(checkOut.iduser)
+    setIduser(checkOut.iduser);
     setpriceOut(checkOut.priceOut);
     setCreditCardNumber(checkOut.CreditCardNumber);
     setExpMonth(checkOut.expMonth);
     setCvv(checkOut.cvv);
-    setselectedUser(
-      mainState.allUsers.find((u: UserType) => u.id === checkOut.iduser)
-    );
   }, [checkOut]);
   return (
     <Dialog open={open} onClose={() => setopen(false)}>
@@ -1275,7 +1322,7 @@ export function EditCheckOutPage({
             label="CreditCardNumber"
             type="text"
             onChange={(e) => setCreditCardNumber(e.target.value)}
-            name="password"
+            name="CreditCardNumber"
             value={CreditCardNumber}
           />
         </Box>
@@ -1320,13 +1367,13 @@ export function EditCheckOutPage({
             checkOut.CreditCardNumber = CreditCardNumber;
             checkOut.expMonth = expMonth;
             checkOut.cvv = cvv;
-            checkOut = selectedUser;
             await _putCheckOut(checkOut.id, checkOut);
-            /* let allCheckOut = await _getAllCheckOut();
-            mainState.allCheckOut = allCheckOut; */
-            mainState.allCheckOut.filter(
-              (u: CheckOutType) => u.id === checkOut.id
-            );
+            mainState.allCheckOut = await _getAllCheckOut();
+            mainState.allCheckOut.forEach((out: CheckOutType) => {
+              out.checkUser = mainState.allUsers.find(
+                (u: UserType) => u.id === out.iduser
+              );
+            });
             mainState.render = "checkOut";
             setMainState({ ...mainState });
             setLoading(false);

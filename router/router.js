@@ -245,13 +245,13 @@ router.post(
 );
 router.put(
   "/checkOut/:id",
-  [
+  /* [
     check("CreditCardNumber", "credit Card Number field is required").isLength({
       min: 16,
       max: 16,
     }),
     check("cvv", "cvv field is required").isLength({ min: 3, max: 3 }),
-  ],
+  ], */
   _putCheckOut
 );
 router.delete("/checkOut/:id", _deleteCheckOut);

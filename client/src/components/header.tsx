@@ -456,8 +456,8 @@ export function HeaderPage({ mainState, setMainState }: HeaderPageProps) {
                   >
                     <Badge
                       badgeContent={
-                        mainState.user?.orderUser &&
-                        mainState.user?.orderUser.length
+                        mainState.user.userOrders &&
+                        mainState.user?.userOrders.length
                       }
                       color="primary"
                     >

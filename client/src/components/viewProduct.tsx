@@ -1,4 +1,10 @@
-import { MainStateType, commentType, LikeType, OrderType } from "./mainState";
+import {
+  MainStateType,
+  commentType,
+  LikeType,
+  OrderType,
+  productType,
+} from "./mainState";
 import { useState } from "react";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -35,6 +41,7 @@ import {
 import { _deleteLike } from "../service/deleteAllData";
 import CircularProgress from "@mui/material/CircularProgress";
 import { AlertDialog } from "./products";
+import { _getAllLike } from "../service/getAllData";
 
 interface ViewProductPageProps {
   mainState: MainStateType;
@@ -45,21 +52,11 @@ export function ViewProductPage({
   mainState,
   setMainState,
 }: ViewProductPageProps) {
-  const {
-    selectedProductView,
-    user,
-    allProducts,
-    selectedCommentProduct,
-    allComment,
-    allLike,
-    selectedLikeProduct,
-  } = mainState;
-
   const [open, setOpen] = useState(false);
   const [comment, setComment] = useState("");
   const [loading, setLoading] = useState(false);
 
-  if (!allProducts) return <div>{loading && <CircularProgress />}</div>;
+  /*  if (!allProducts) return <div>{loading && <CircularProgress />}</div>; */
   return (
     <div>
       <Container component="main" maxWidth="lg" sx={{ mt: 15, mb: 5 }}>
@@ -74,8 +71,8 @@ export function ViewProductPage({
                   <CardMedia
                     sx={{ width: 250, height: 350 }}
                     component="img"
-                    image={selectedProductView.images}
-                    alt={selectedProductView.images}
+                    image={mainState.selectedProduct.images}
+                    alt={mainState.selectedProduct.images}
                   />
                   <CardContent>
                     <List>
@@ -83,32 +80,40 @@ export function ViewProductPage({
                         <ListItemIcon>
                           <BrandingWatermarkIcon />
                         </ListItemIcon>
-                        <ListItemText primary={selectedProductView.name} />
+                        <ListItemText
+                          primary={mainState.selectedProduct.name}
+                        />
                       </ListItemButton>
                       <ListItemButton>
                         <ListItemIcon>
                           <FlagIcon />
                         </ListItemIcon>
-                        <ListItemText primary={selectedProductView.country} />
+                        <ListItemText
+                          primary={mainState.selectedProduct.country}
+                        />
                       </ListItemButton>
                       <ListItemButton>
                         <ListItemIcon>
                           <CalendarTodayIcon />
                         </ListItemIcon>
-                        <ListItemText primary={selectedProductView.date} />
+                        <ListItemText
+                          primary={mainState.selectedProduct.date}
+                        />
                       </ListItemButton>
                       <ListItemButton>
                         <ListItemIcon>
                           <AttachMoneyIcon />
                         </ListItemIcon>
-                        <ListItemText primary={selectedProductView.price} />
+                        <ListItemText
+                          primary={mainState.selectedProduct.price}
+                        />
                       </ListItemButton>
                       <ListItemButton>
                         <ListItemIcon>
                           <DescriptionIcon />
                         </ListItemIcon>
                         <ListItemText
-                          primary={selectedProductView.description}
+                          primary={mainState.selectedProduct.description}
                         />
                       </ListItemButton>
                     </List>
@@ -124,13 +129,13 @@ export function ViewProductPage({
                         startIcon={<AddShoppingCartIcon />}
                         size="small"
                         onClick={async () => {
-                          if (!user) return setOpen(true);
+                          if (!mainState.user) return setOpen(true);
                           const newOrder: OrderType = {
-                            iduser: user.id,
-                            idproduct: selectedProductView.id,
+                            iduser: mainState.user.id,
+                            idproduct: mainState.selectedProduct.id,
                             quantity: 1,
-                            orderProduct: selectedProductView,
-                            orderUser: user,
+                            orderProduct: mainState.selectedProduct,
+                            orderUser: mainState.user,
                           };
                           console.log(newOrder);
                           await _insetOrders(newOrder);
@@ -151,28 +156,38 @@ export function ViewProductPage({
                         variant="contained"
                         startIcon={<ThumbUpIcon />}
                         onClick={async () => {
-                          if (!user){ return setOpen(true)};
-
-                    
-                            const newLike: LikeType = {
-                              iduser: user.id,
-                              idproduct: selectedProductView.id,
-                              likee: 1,
-                              likeProduct: selectedProductView,
-                              likeUser : user
-                            };
-
+                          if (!mainState.user) {
+                            return setOpen(true);
+                          }
+                          const newLike: LikeType = {
+                            iduser: mainState.user.id,
+                            idproduct: mainState.selectedProduct.id,
+                            likee: 1,
+                            likeProduct: mainState.selectedProduct,
+                            likeUser: mainState.user,
+                          };
+                          const findLikeUser = mainState.ListLikeProduct.find(
+                            (like: LikeType) =>
+                              like.iduser === mainState.user.id
+                          );
+                          console.log("findLikeUser", findLikeUser?.iduser);
+                          if (findLikeUser?.iduser) {
+                            await _deleteLike(findLikeUser.likeUser.id);
+                            mainState.allLike = await _getAllLike();
+                            setMainState({ ...mainState });
+                          } else {
                             await _insetLike(newLike);
                             mainState.allLike = [newLike, ...mainState.allLike];
-                            mainState.selectedLikeProduct = [
+                            mainState.ListLikeProduct = [
                               newLike,
-                              ...mainState.selectedLikeProduct,
+                              ...mainState.ListLikeProduct,
                             ];
+                            mainState.allLike = await _getAllLike();
                             setMainState({ ...mainState });
-                          
+                          }
                         }}
                       >
-                        like {selectedLikeProduct.length}
+                        like {mainState.ListLikeProduct.length}
                       </Button>
                     </Stack>
                   </CardContent>
@@ -180,68 +195,88 @@ export function ViewProductPage({
               </Card>
 
               <div className="row pt-3 pb-3">
-                {user && (
-                  <Box
-                    sx={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      marginTop: 5,
-                    }}
-                  >
-                    <TextField
-                      fullWidth
-                      defaultValue="Normal"
-                      name="comment"
-                      onChange={(e) => setComment(e.target.value)}
-                      value={comment}
-                      placeholder="Comment .... "
-                      InputProps={{
-                        startAdornment: (
-                          <InputAdornment position="start">
-                            <Avatar
-                              src={user.image}
-                              alt="Remy Sharp"
-                              sx={{ width: 24, height: 24 }}
-                            />
-                          </InputAdornment>
-                        ),
-                        endAdornment: (
-                          <InputAdornment position="end">
-                            <Button
-                              onClick={async () => {
-                                setLoading(true);
-                                const newComment: commentType = {
-                                  iduser: user.id,
-                                  comment: comment,
-                                  date: new Date().toString(),
-                                  idproduct: selectedProductView.id,
-                                  commentProduct: selectedProductView,
-                                  commentUser: user,
-                                };
-                                await _insetComment(newComment);
-                                mainState.allComment = [
-                                  newComment,
-                                  ...mainState.allComment,
-                                ];
-                                mainState.selectedCommentProduct = [
-                                  newComment,
-                                  ...mainState.selectedCommentProduct,
-                                ];
-                                setMainState({ ...mainState });
-                                setLoading(false);
-                              }}
-                            >
-                              Comment
-                            </Button>
-                          </InputAdornment>
-                        ),
+                {mainState.user ? (
+                  <div>
+                    {" "}
+                    <Box
+                      sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        marginTop: 5,
                       }}
-                      variant="standard"
-                    />
-                  </Box>
+                    >
+                      <TextField
+                        fullWidth
+                        defaultValue="Normal"
+                        name="comment"
+                        onChange={(e) => setComment(e.target.value)}
+                        value={comment}
+                        placeholder="Comment .... "
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              <Avatar
+                                src={mainState.user.image}
+                                alt="Remy Sharp"
+                                sx={{ width: 24, height: 24 }}
+                              />
+                            </InputAdornment>
+                          ),
+                          endAdornment: (
+                            <InputAdornment position="end">
+                              <Button
+                                onClick={async () => {
+                                  setLoading(true);
+                                  const newComment: commentType = {
+                                    iduser: mainState.user.id,
+                                    comment: comment,
+                                    date: new Date().toString(),
+                                    idproduct: mainState.selectedProduct.id,
+                                    commentProduct: mainState.selectedProduct,
+                                    commentUser: mainState.user,
+                                  };
+                                  await _insetComment(newComment);
+                                  mainState.allComment = [
+                                    newComment,
+                                    ...mainState.allComment,
+                                  ];
+                                  mainState.ListCommentProduct = [
+                                    newComment,
+                                    ...mainState.ListCommentProduct,
+                                  ];
+                                  setMainState({ ...mainState });
+                                  setLoading(false);
+                                }}
+                              >
+                                Comment
+                              </Button>
+                            </InputAdornment>
+                          ),
+                        }}
+                        variant="standard"
+                      />
+                    </Box>
+                  </div>
+                ) : (
+                  <div>
+                    <Button
+                      variant="contained"
+                      color="success"
+                      onClick={() => {
+                        if (!mainState.user) {
+                          return setOpen(true);
+                        }
+                        mainState.render = "viewProductPage";
+                        setMainState({ ...mainState });
+                      }}
+                    >
+                      Login Comment
+                    </Button>
+                  </div>
                 )}
-                {selectedCommentProduct.map((comment: any) => {
+
+                {mainState.ListCommentProduct.map((comment: any) => {
                   return (
                     <List>
                       <ListItem>
@@ -272,27 +307,28 @@ export function ViewProductPage({
 
           <div className="col pt-3 pb-3">
             <Container maxWidth="sm">
-            <Typography variant="h5" sx={{ mb: 5, color: "orange" }}>
+              <Typography variant="h5" sx={{ mb: 5, color: "orange" }}>
                 <Divider textAlign="left"> List Product</Divider>
               </Typography>
-              {allProducts.map((e) => {
+              {mainState.allProducts.map((product: productType) => {
                 return (
                   <div className="col pt-3 pb-3">
                     <Card>
                       <CardActionArea
                         onClick={() => {
-                          const findProduct: any = allProducts.find(
-                            (p) => p.id === e.id
+                          const findProduct = mainState.allProducts.find(
+                            (p: productType) => p.id === product.id
                           );
-                          const findComment: any = allComment.filter(
-                            (p) => p.idproduct === e.id
+
+                          const findLike = mainState.allLike.filter(
+                            (l: LikeType) => l.idproduct === product.id
                           );
-                          const findLike: any = allLike.filter(
-                            (l) => l.idproduct === e.id
+                          const findComment = mainState.allComment.filter(
+                            (p: commentType) => p.idproduct === product.id
                           );
-                          mainState.selectedProductView = findProduct;
-                          mainState.selectedCommentProduct = findComment;
-                          mainState.selectedLikeProduct = findLike;
+                          mainState.selectedProduct = findProduct;
+                          mainState.ListLikeProduct = findLike;
+                          mainState.ListCommentProduct = findComment;
                           mainState.render = "viewProductPage";
                           setMainState({ ...mainState });
                         }}
@@ -300,15 +336,15 @@ export function ViewProductPage({
                         <CardMedia
                           component="img"
                           height="230"
-                          image={e.images}
-                          alt={e.images}
+                          image={product.images}
+                          alt={product.images}
                         />
                         <CardContent>
                           <Typography gutterBottom variant="h6" component="div">
-                            {e.name}
+                            {product.name}
                           </Typography>
                           <Typography variant="body2">
-                            {e.description}
+                            {product.description}
                           </Typography>
                         </CardContent>
                         <Stack
@@ -321,17 +357,17 @@ export function ViewProductPage({
                         >
                           <Chip
                             icon={<CalendarTodayIcon />}
-                            label={e.date}
+                            label={product.date}
                             variant="outlined"
                           />
                           <Chip
                             icon={<FlagIcon />}
-                            label={e.country}
+                            label={product.country}
                             variant="outlined"
                           />
                           <Chip
                             icon={<AttachMoneyIcon />}
-                            label={e.price}
+                            label={product.price}
                             variant="outlined"
                           />
                         </Stack>

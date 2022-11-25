@@ -1,4 +1,10 @@
-import { MainStateType, OrderType, CheckOutType } from "./mainState";
+import {
+  MainStateType,
+  OrderType,
+  CheckOutType,
+  UserType,
+  productType,
+} from "./mainState";
 import { useState } from "react";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
@@ -17,6 +23,7 @@ import { _deleteOrders } from "../service/deleteAllData";
 import { _putOrders } from "../service/putAllData";
 import ConfirmDeleteDialog from "./common/ConfirmDeleteDialog";
 import { _insetCheckOut } from "../service/postAllData";
+import { _getAllOrders } from "../service/getAllData";
 interface OrdersPageProps {
   mainState: MainStateType;
   setMainState: (m: MainStateType) => void;
@@ -28,15 +35,17 @@ export function OrdersPage({ mainState, setMainState }: OrdersPageProps) {
   const [CreditCardNumber, setCreditCardNumber] = useState("");
   const [expMonth, setExpMonth] = useState("");
   const [cvv, setCvv] = useState("");
-  const [selectedUser, setSelectedUser] = useState<OrderType | null>(null);
-  const getTotalPrice = ({ user }: any) => {
+  const [selectedOrderUser, setSelectedOrderUser] = useState<OrderType | null>(
+    null
+  );
+  /*   const getTotalPrice = ({ user }: any) => {
     let totalPrice = 0;
     if (!user) return totalPrice;
     user.orderUser.forEach((e: any) => {
       totalPrice += e.quantity * e.orderProduct.price;
     });
     return totalPrice;
-  };
+  }; */
   if (!user) return <>Not User</>;
   return (
     <Container maxWidth="lg" sx={{ mt: 10, mb: 5 }}>
@@ -46,7 +55,7 @@ export function OrdersPage({ mainState, setMainState }: OrdersPageProps) {
             <Divider textAlign="left"> List Orders</Divider>
           </Typography>
           {user &&
-            user.orderUser.map((order: any) => {
+            user.userOrders.map((order: OrderType) => {
               return (
                 <div className="col-md-14 pt-3 pb-3">
                   <Card>
@@ -92,14 +101,26 @@ export function OrdersPage({ mainState, setMainState }: OrdersPageProps) {
                           </Stack>
                         </Typography>
 
-                        <Stack spacing={2} direction="row">
+                        <Stack spacing={1} direction="row">
                           <Button
-                            variant="contained"
                             onClick={async () => {
                               order.orderProduct = order.orderProduct;
                               order.quantity = order.quantity - 1;
                               await _putOrders(order.id, order);
-
+                              mainState.allOrders = await _getAllOrders();
+                              mainState.allUsers.forEach((user: UserType) => {
+                                user.userOrders = mainState.allOrders.filter(
+                                  (o: OrderType) => o.iduser === user.id
+                                );
+                                user.userOrders.forEach(
+                                  (uo: OrderType) =>
+                                    (uo.orderProduct =
+                                      mainState.allProducts.find(
+                                        (p: productType) =>
+                                          p.id === uo.idproduct
+                                      ))
+                                );
+                              });
                               setMainState({ ...mainState });
                             }}
                           >
@@ -107,11 +128,24 @@ export function OrdersPage({ mainState, setMainState }: OrdersPageProps) {
                           </Button>
                           <Button aria-label="reduce">{order.quantity}</Button>
                           <Button
-                            variant="contained"
                             onClick={async () => {
                               order.orderProduct = order.orderProduct;
                               order.quantity = order.quantity + 1;
                               await _putOrders(order.id, order);
+                              mainState.allOrders = await _getAllOrders();
+                              mainState.allUsers.forEach((user: UserType) => {
+                                user.userOrders = mainState.allOrders.filter(
+                                  (o: OrderType) => o.iduser === user.id
+                                );
+                                user.userOrders.forEach(
+                                  (uo: OrderType) =>
+                                    (uo.orderProduct =
+                                      mainState.allProducts.find(
+                                        (p: productType) =>
+                                          p.id === uo.idproduct
+                                      ))
+                                );
+                              });
                               setMainState({ ...mainState });
                             }}
                           >
@@ -121,7 +155,7 @@ export function OrdersPage({ mainState, setMainState }: OrdersPageProps) {
                             color="error"
                             onClick={async () => {
                               setopenConfirmDelDlg(true);
-                              setSelectedUser(order);
+                              setSelectedOrderUser(order);
                             }}
                           >
                             Delete
@@ -130,21 +164,24 @@ export function OrdersPage({ mainState, setMainState }: OrdersPageProps) {
                       </CardContent>
                     </Stack>
                   </Card>
-                  {selectedUser && (
-                    <ConfirmDeleteDialog
-                      open={openConfirmDelDlg}
-                      setopen={setopenConfirmDelDlg}
-                      text={`Do ${selectedUser.id}  will be deleted permenantly, are you sure?`}
-                      onConfirm={async () => {
-                        if (!selectedUser) return;
-                        await _deleteOrders(selectedUser.id);
-                        mainState.render = "orders";
-                        setMainState({ ...mainState });
-                      }}
-                      mainState={mainState}
-                      setMainState={setMainState}
-                    />
-                  )}
+
+                  <ConfirmDeleteDialog
+                    open={openConfirmDelDlg}
+                    setopen={setopenConfirmDelDlg}
+                    text={`Do ${selectedOrderUser?.orderProduct.name}  will be deleted permenantly, are you sure?`}
+                    onConfirm={async () => {
+                      if (!selectedOrderUser) return;
+                      await _deleteOrders(selectedOrderUser.id);
+                      user.userOrders = user.userOrders.filter(
+                        (o: OrderType) => o.id !== selectedOrderUser.id
+                      );
+
+                      mainState.render = "orders";
+                      setMainState({ ...mainState });
+                    }}
+                    mainState={mainState}
+                    setMainState={setMainState}
+                  />
                 </div>
               );
             })}
@@ -165,7 +202,7 @@ export function OrdersPage({ mainState, setMainState }: OrdersPageProps) {
                   spacing={12}
                 >
                   <Typography>Total:</Typography>
-                  <Typography> {getTotalPrice({ user })}</Typography>
+                  {/*  <Typography> {getTotalPrice({ user })}</Typography> */}
                 </Stack>
 
                 <Typography mb={2} mt={5} sx={{ fontSize: "40px" }}>
@@ -207,7 +244,6 @@ export function OrdersPage({ mainState, setMainState }: OrdersPageProps) {
                   margin="normal"
                   name="expMonth"
                   type={"date"}
-                
                   onChange={(e) => setExpMonth(e.target.value)}
                   value={expMonth}
                 />
@@ -226,7 +262,7 @@ export function OrdersPage({ mainState, setMainState }: OrdersPageProps) {
                   variant="contained"
                   sx={{ mt: 3, mb: 2 }}
                   onClick={async () => {
-                    let data: CheckOutType = {
+                    /*   let data: CheckOutType = {
                       iduser: user.id,
                       priceOut: getTotalPrice({ user }),
                       creditCardNumber: CreditCardNumber,
@@ -234,7 +270,7 @@ export function OrdersPage({ mainState, setMainState }: OrdersPageProps) {
                       cvv: cvv,
                     };
                     await _insetCheckOut(data);
-                    mainState.allCheckOut = [data, ...mainState.allCheckOut];
+                    mainState.allCheckOut = [data, ...mainState.allCheckOut]; */
                     setMainState({ ...mainState });
                   }}
                 >

@@ -6,6 +6,8 @@ import {
   productType,
   OrderType,
   SaveType,
+  CheckOutType,
+  categoryType,
 } from "./mainState";
 import {
   _getAllUser,
@@ -15,9 +17,9 @@ import {
   _getAllLike,
   _getAllNews,
   _getAllOrders,
-  _getAllPost,
   _getAllSave,
   _getAllCheckOut,
+  _getAllProducts,
 } from "../service/getAllData";
 
 export async function updateUserState(
@@ -31,41 +33,48 @@ export async function updateUserState(
   const _allLike = await _getAllLike();
   const _allNews = await _getAllNews();
   const _allOrders = await _getAllOrders();
-  const _allProducts = await _getAllPost();
+  const _allProducts = await _getAllProducts();
   const _allContact = await _getAllContact();
   const _allSave = await _getAllSave();
   const _allCheckOut = await _getAllCheckOut();
 
+  _allUsers.forEach((user: UserType) => {
+    user.userOrders = _allOrders.filter((o: OrderType) => o.iduser === user.id);
+    user.userOrders.forEach((order: OrderType) => {
+      order.orderProduct = _allProducts.find(
+        (p: productType) => p.id === order.idproduct
+      );
+    });
+    user.userSave = _allSave.filter((s: SaveType) => s.iduser === user.id);
+    user.userSave.forEach((save: SaveType) => {
+      save.saveProduct = _allProducts.find(
+        (p: productType) => p.id === save.idproduct
+      );
+    });
+  });
+
+  _allCategories.forEach((category: categoryType) => {
+    category.categoryProduct = _allProducts.filter(
+      (p: productType) => p.idcategory === category.id
+    );
+  });
   _allComment.forEach((comment: commentType) => {
     comment.commentUser = _allUsers.find(
       (u: UserType) => u.id === comment.iduser
     );
-    comment.commentProduct = _allProducts.filter(
+    comment.commentProduct = _allProducts.find(
       (p: productType) => p.id === comment.idproduct
     );
   });
   _allLike.forEach((like: LikeType) => {
     like.likeUser = _allUsers.find((u: UserType) => u.id === like.iduser);
-    like.likeProduct = _allProducts.filter(
+    like.likeProduct = _allProducts.find(
       (p: productType) => p.id === like.idproduct
     );
   });
 
-  _allUsers.forEach((use: UserType) => {
-    use.saveUser = _allSave.filter(
-      (s: SaveType) => s.iduser === use.id && s.save === "unsave"
-    );
-    use.saveUser?.forEach((us: SaveType) => {
-      us.saveProduct = _allProducts.find(
-        (p: productType) => p.id === us.idproduct
-      );
-    });
-    use.orderUser = _allOrders.filter((o: OrderType) => o.iduser === use.id);
-    use.orderUser.forEach((uo: any) => {
-      uo.orderProduct = _allProducts.find(
-        (p: productType) => p.id === uo.idproduct
-      );
-    });
+  _allCheckOut.forEach((out: CheckOutType) => {
+    out.checkUser = _allUsers.find((u: UserType) => u.id === out.iduser);
   });
   if (!user) {
     mainState.allUsers = _allUsers;

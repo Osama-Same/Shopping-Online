@@ -1,5 +1,7 @@
 import {
   categoryType,
+  commentType,
+  LikeType,
   MainStateType,
   OrderType,
   productType,
@@ -27,6 +29,7 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
+import { _getAllSave } from "../service/getAllData";
 
 interface ProductsPageProps {
   mainState: MainStateType;
@@ -64,26 +67,25 @@ export function ProductsPage({ mainState, setMainState }: ProductsPageProps) {
       })}
 
       <div className="row">
-        {allProducts.map((e: any) => {
+        {allProducts.map((product: any) => {
           return (
             <div className="col-md-4 pt-3 pb-3">
               <Card>
                 <CardActionArea
                   onClick={() => {
-                    const findProduct: any = allProducts.find(
-                      (p) => p.id === e.id
+                    const findProduct = allProducts.find(
+                      (p: productType) => p.id === product.id
                     );
 
-                    const findLike: any = allLike.filter(
-                      (l) => l.idproduct === e.id
+                    const findLike = allLike.filter(
+                      (l: LikeType) => l.idproduct === product.id
                     );
-                    const findComment: any = allComment.filter(
-                      (p) => p.idproduct === e.id
+                    const findComment = allComment.filter(
+                      (p: commentType) => p.idproduct === product.id
                     );
-
-                    mainState.selectedProductView = findProduct;
-                    mainState.selectedLikeProduct = findLike;
-                    mainState.selectedCommentProduct = findComment;
+                    mainState.selectedProduct = findProduct;
+                    mainState.ListLikeProduct = findLike;
+                    mainState.ListCommentProduct = findComment;
                     mainState.render = "viewProductPage";
                     setMainState({ ...mainState });
                   }}
@@ -91,15 +93,17 @@ export function ProductsPage({ mainState, setMainState }: ProductsPageProps) {
                   <CardMedia
                     component="img"
                     height="230"
-                    image={e.images}
-                    alt={e.images}
+                    image={product.images}
+                    alt={product.images}
                     title="osama"
                   />
                   <CardContent>
                     <Typography gutterBottom variant="h6" component="div">
-                      {e.name}
+                      {product.name}
                     </Typography>
-                    <Typography variant="body2">{e.description}</Typography>
+                    <Typography variant="body2">
+                      {product.description}
+                    </Typography>
                   </CardContent>
                   <Stack
                     mb={2}
@@ -111,17 +115,17 @@ export function ProductsPage({ mainState, setMainState }: ProductsPageProps) {
                   >
                     <Chip
                       icon={<CalendarTodayIcon />}
-                      label={e.date}
+                      label={product.date}
                       variant="outlined"
                     />
                     <Chip
                       icon={<FlagIcon />}
-                      label={e.country}
+                      label={product.country}
                       variant="outlined"
                     />
                     <Chip
                       icon={<AttachMoneyIcon />}
-                      label={e.price}
+                      label={product.price}
                       variant="outlined"
                     />
                   </Stack>
@@ -137,21 +141,21 @@ export function ProductsPage({ mainState, setMainState }: ProductsPageProps) {
                   <Button
                     startIcon={<AddShoppingCartIcon />}
                     onClick={async () => {
-                      if (!user) {return setOpen(true)};
+                      if (!user) {
+                        return setOpen(true);
+                      }
                       const newOrder: OrderType = {
+                        idproduct: product.id,
                         iduser: user.id,
-                        idproduct: e.id,
-                        quantity: 1,
-                        orderProduct: e,
-                        orderUser: user,
+                        quantity: 0,
                       };
-                      console.log(newOrder);
                       await _insetOrders(newOrder);
-                      mainState.allOrders = [newOrder, ...mainState.allOrders];
-                      mainState.user.orderUser = [
+                      mainState.user.userOrders = [
                         newOrder,
-                        ...mainState.user.orderUser,
+                        ...mainState.user.userOrders,
                       ];
+                      mainState.allOrders = [newOrder, ...mainState.allOrders];
+
                       setMainState({ ...mainState });
                     }}
                   >
@@ -161,67 +165,73 @@ export function ProductsPage({ mainState, setMainState }: ProductsPageProps) {
                     startIcon={<ReadMoreIcon />}
                     size="small"
                     onClick={() => {
-                      const findProduct: any = allProducts.find(
-                        (p: any) => p.id === e.id
+                      const findProduct = allProducts.find(
+                        (p: productType) => p.id === product.id
                       );
 
-                      const findLike: any = allLike.filter(
-                        (l) => l.idproduct === e.id
+                      const findLike = allLike.filter(
+                        (l: LikeType) => l.idproduct === product.id
                       );
-                      const findComment: any = allComment.filter(
-                        (p) => p.idproduct === e.id
+                      const findComment = allComment.filter(
+                        (p: commentType) => p.idproduct === product.id
                       );
-
-                      mainState.selectedProductView = findProduct;
-                      mainState.selectedLikeProduct = findLike;
-                      mainState.selectedCommentProduct = findComment;
+                      mainState.selectedProduct = findProduct;
+                      mainState.ListLikeProduct = findLike;
+                      mainState.ListCommentProduct = findComment;
                       mainState.render = "viewProductPage";
                       setMainState({ ...mainState });
                     }}
                   >
                     See Details
                   </Button>
+                  {}
                   <Button
                     startIcon={<SaveIcon />}
                     size="small"
                     onClick={async () => {
                       if (!user) return setOpen(true);
                       const newSave: SaveType = {
-                        iduser: e.iduser,
-                        idproduct: e.id,
+                        iduser: user.id,
+                        idproduct: product.id,
                         save: "unsave",
                       };
-                      const Findsave: any = mainState.allSave.find(
-                        (s) => s.idproduct === e.id
+                      let Findsave: any = mainState.allSave.find(
+                        (s) => s.idproduct === product.id
                       );
-                      if (Findsave === undefined) {
+                      const findUserSave :any = mainState.allSave.find(
+                        (s: SaveType) => s.idproduct === product.id
+                      );
+
+                      console.log(findUserSave);
+                      if (findUserSave === undefined) {
                         await _insetSave(newSave);
                         mainState.allSave = [newSave, ...mainState.allSave];
-                        user.saveUser = [newSave, ...user.save];
+                        user.userSave = [newSave, ...user.saveUser];
                         setMainState({ ...mainState });
                       }
-                      if (Findsave.save === "save") {
+                      if (findUserSave.save === "save") {
                         const data: any = {
-                          iduser: e.iduser,
-                          idproduct: e.id,
+                          iduser: user.id,
+                          idproduct: product.id,
                           save: "unsave",
                         };
-                        await _putSave(e.SaveProduct.id, data);
-                        console.log("Findsave", Findsave);
+                        await _putSave(findUserSave.id, data);
+                        mainState.allSave = await _getAllSave();
                         setMainState({ ...mainState });
-                        e.SaveProduct = [data, ...e.SaveProduct];
                       }
-                      const data: any = {
-                        iduser: e.iduser,
-                        idproduct: e.id,
-                        save: "save",
-                      };
-                      await _putSave(e.SaveProduct.id, data);
-                      console.log("Findsaveaaa", Findsave);
-                      setMainState({ ...mainState });
+                      if (findUserSave.save !== "save") {
+                        const data: any = {
+                          iduser: user.id,
+                          idproduct: product.id,
+                          save: "save",
+                        };
+                        await _putSave(findUserSave.id, data);
+                        mainState.allSave = await _getAllSave();
+                        setMainState({ ...mainState });
+                      }
                     }}
                   >
-                    {e.save === undefined ? "save" : "unsave"}
+                    save
                   </Button>
                 </Stack>
               </Card>

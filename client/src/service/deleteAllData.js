@@ -23,7 +23,7 @@ export async function _deleteContact(id) {
   }
 }
 
-export async function _getAllNews(id) {
+export async function _deleteNews(id) {
   const res = await axios.delete(url + `news/${id}`);
   if (res.data) {
     toast(`Delete news`);
@@ -42,7 +42,7 @@ export async function _deleteCategories(id) {
     toast.error(`Error server`);
   }
 }
-export async function _getAllPost(id) {
+export async function _deleteAllPost(id) {
   const res = await axios.delete(url + `products/${id}`);
   if (res.data) {
     toast(`Delete products`);
@@ -52,7 +52,7 @@ export async function _getAllPost(id) {
   }
 }
 export async function _deleteComment(id) {
-  const res = await axios.get(url + `comment/${id}`);
+  const res = await axios.delete(url + `comment/${id}`);
   if (res.data) {
     toast(`Delete comment`);
     return res.data;
@@ -77,6 +77,25 @@ export async function _deleteOrders(id) {
     return res.data;
   } else {
     toast.error(`Delete Order`);
+    toast.error(`Error server`);
+  }
+}
+
+export async function _deleteCheckOut(id) {
+  const res = await axios.delete(url + `checkOut/${id}`);
+  if (res.data) {
+    toast(`Delete Check Out`);
+    return res.data;
+  } else {
+    toast.error(`Error server`);
+  }
+}
+export async function _deleteSave(id) {
+  const res = await axios.delete(url + `save/${id}`);
+  if (res.data) {
+    toast(`Delete Check Out`);
+    return res.data;
+  } else {
     toast.error(`Error server`);
   }
 }

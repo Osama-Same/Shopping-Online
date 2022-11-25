@@ -70,17 +70,15 @@ export async function _insetCategory(categories: any) {
 
 export async function _insetProduct(products: any) {
   const res = await axios.post(url + "products", products);
-  if (res.data.result) {
-    toast(`${res.data.result}`);
-    return res.data.result;
-  } else if (res.data.err) {
+  if (res.data.err) {
     toast.error(`${res.data.err}`);
     return res.data.err;
   } else if (res.data.error) {
     toast.error(`${res.data.error}`);
     return res.data.error;
   } else {
-    toast.error(`Error server`);
+    toast(`Product sucessfully`);
+    return res.data.result;
   }
 }
 

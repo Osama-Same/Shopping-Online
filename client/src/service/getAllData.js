@@ -43,7 +43,7 @@ export async function _getAllCategories() {
     toast.error(`Error server`);
   }
 }
-export async function _getAllPost() {
+export async function _getAllProducts() {
   const res = await axios.get(url + "products");
   if (res.data) {
     return res.data;

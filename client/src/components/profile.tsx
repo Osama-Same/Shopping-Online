@@ -1,4 +1,11 @@
-import { MainStateType, SaveType, UserType } from "./mainState";
+import {
+  commentType,
+  LikeType,
+  MainStateType,
+  productType,
+  SaveType,
+  UserType,
+} from "./mainState";
 import { useState } from "react";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -35,6 +42,7 @@ import {
   Chip,
   Divider,
 } from "@mui/material";
+import { _getAllUser } from "../service/getAllData";
 interface ProfilePageProps {
   mainState: MainStateType;
   setMainState: (m: MainStateType) => void;
@@ -199,7 +207,7 @@ export function ProfileForm({
   const { user } = mainState;
   const [name, setName] = useState(user ? user.name : "");
   const [email, setEmail] = useState(user ? user.email : "");
-  const [password, setPassword] = useState(user ? user.Password : "");
+  const [password, setPassword] = useState(user ? user.password : "");
   const [phone, setPhone] = useState(user ? user.phone : "");
   const [image, setImage] = useState(user ? user.image : null);
   const [loading, setLoading] = useState(false);
@@ -229,7 +237,10 @@ export function ProfileForm({
       fromData.append("image", image, image.name);
     }
     await _putUser(user.id, fromData);
-    mainState.user = user;
+    mainState.allUsers = await _getAllUser();
+    mainState.user = mainState.allUsers.find(
+      (u: UserType) => u.id === user?.id
+    );
     setMainState({ ...mainState });
     setLoading(false);
     setOpen(false);
@@ -347,26 +358,25 @@ export function SaveProfile({ mainState, setMainState }: SaveProfileProps) {
         <Divider textAlign="left"> List Save</Divider>
       </Typography>
       <div className="row">
-        {user.saveUser.map((e: any) => {
+        {user.userSave.map((product: SaveType) => {
           return (
             <div className="col-md-4 pt-3 pb-3">
               <Card>
                 <CardActionArea
                   onClick={() => {
-                    const findProduct: any = allProducts.find(
-                      (p) => p.id === e.saveProduct.id
+                    const findProduct = allProducts.find(
+                      (p: productType) => p.id === product.id
                     );
 
-                    const findLike: any = allLike.filter(
-                      (l) => l.idproduct === e.saveProduct.id
+                    const findLike = allLike.filter(
+                      (l: LikeType) => l.idproduct === product.id
                     );
-                    const findComment: any = allComment.filter(
-                      (p) => p.idproduct === e.saveProduct.id
+                    const findComment = allComment.filter(
+                      (p: commentType) => p.idproduct === product.id
                     );
-
-                    mainState.selectedProductView = findProduct;
-                    mainState.selectedLikeProduct = findLike;
-                    mainState.selectedCommentProduct = findComment;
+                    mainState.selectedProduct = findProduct;
+                    mainState.ListLikeProduct = findLike;
+                    mainState.ListCommentProduct = findComment;
                     mainState.render = "viewProductPage";
                     setMainState({ ...mainState });
                   }}
@@ -374,16 +384,16 @@ export function SaveProfile({ mainState, setMainState }: SaveProfileProps) {
                   <CardMedia
                     component="img"
                     height="230"
-                    image={e.saveProduct.images}
-                    alt={e.images}
+                    image={product.saveProduct && product.saveProduct.images}
+                    alt={product.saveProduct.images}
                     title="osama"
                   />
                   <CardContent>
                     <Typography gutterBottom variant="h6" component="div">
-                      {e.saveProduct.name}
+                    {product.saveProduct.name}
                     </Typography>
                     <Typography variant="body2">
-                      {e.saveProduct.description}
+                      {product.saveProduct.description}
                     </Typography>
                     <Stack
                       mb={2}
@@ -395,17 +405,19 @@ export function SaveProfile({ mainState, setMainState }: SaveProfileProps) {
                     >
                       <Chip
                         icon={<CalendarTodayIcon />}
-                        label={e.saveProduct.date}
+                        label={product.saveProduct.date}
                         variant="outlined"
                       />
                       <Chip
                         icon={<FlagIcon />}
-                        label={e.saveProduct.country}
+                        label={
+                          product.saveProduct.country
+                        }
                         variant="outlined"
                       />
                       <Chip
                         icon={<AttachMoneyIcon />}
-                        label={e.saveProduct.price}
+                        label={product.saveProduct.price}
                         variant="outlined"
                       />
                     </Stack>

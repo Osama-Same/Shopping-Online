@@ -9,11 +9,16 @@ export type MainStateType = {
   allOrders: OrderType[];
   allSave: SaveType[];
   allCheckOut: CheckOutType[];
-  user: UserType | null | any;
+  listUserOrder: OrderType[];
+  ListUserSave: SaveType[];
+  ListCheckOut: CheckOutType[];
+  ListLikeProduct: LikeType[];
+  ListOrdersProduct: OrderType[];
+  ListCommentProduct: commentType[];
+  ListCategoriesProducts: productType[];
   render: string;
-  selectedProductView: productType | null | any;
-  selectedLikeProduct: LikeType | null | any;
-  selectedCommentProduct: commentType | null | any;
+  user: UserType | null | any;
+  selectedProduct: productType | null | any;
 };
 
 export type UserType = {
@@ -24,10 +29,30 @@ export type UserType = {
   phone: string;
   image: string;
   authorization?: string;
-  orderUser?: OrderType[] | any;
-  saveUser?: SaveType[];
-  commentUser?: commentType[];
-  likeUser?: LikeType[] | any;
+  userProduct?: productType[] | any;
+  userLike?: LikeType[] | any;
+  userComment?: commentType[] | any;
+  userOrders?: OrderType[] | any;
+  userSave?: SaveType[] | any;
+  userCheckOut?: CheckOutType[] | any;
+};
+
+export type productType = {
+  id: number;
+  iduser: number;
+  idcategory: number;
+  name: string;
+  country: string;
+  images: string;
+  price: number;
+  date: string;
+  description: string;
+  productUser?: UserType | any;
+  productCategory?: categoryType | any;
+  productlike?: LikeType[] | any;
+  productComment?: commentType[] | any;
+  productOrders?: OrderType[] | any;
+  productSave?: SaveType[] | any;
 };
 export type ContactType = {
   id?: number;
@@ -40,36 +65,17 @@ export type NewsType = {
 };
 export type categoryType = {
   id: number;
-  parentid: number;
   name: string;
   logo: string;
-  cloudinary_id: string;
-  categorytype: number;
-  categoryProduct?: categoryType[];
-};
-export type productType = {
-  id: number;
-  iduser: number;
-  idcategory: number;
-  name: string;
-  country: string;
-  images?: string;
-  price: number;
-  date: string;
-  description: string;
-  cloudinary_id?: string;
-  commentProduct: commentType[];
-  likeeProduct: LikeType[];
-  SaveProduct: SaveType[];
-  category?: categoryType[];
+  categoryProduct?: productType[] | any;
 };
 export type LikeType = {
   id?: number;
   iduser: number;
   idproduct: number;
   likee: number;
-  likeUser?: UserType[];
-  likeProduct?: productType;
+  likeProduct?: productType | any;
+  likeUser?: UserType | any;
 };
 export type commentType = {
   id?: number;
@@ -77,30 +83,31 @@ export type commentType = {
   idproduct: number;
   comment: string;
   date: string;
-  commentUser?: UserType[];
-  commentProduct?: productType[];
+  commentProduct?: productType | any;
+  commentUser?: UserType | any;
 };
 export type OrderType = {
   id?: number;
   iduser: number;
   idproduct: number;
   quantity: number;
-  orderUser?: UserType[] | any;
-  orderProduct?: productType[] | any;
+  orderProduct?: productType | any;
+  orderUser?: UserType | any;
 };
 export type SaveType = {
   id?: number;
   iduser: number;
   idproduct: number;
   save: string;
-  saveUser?: UserType[];
-  saveProduct? : productType[]
+  saveProduct?: productType | any;
+  saveUser?: UserType | any;
 };
 export type CheckOutType = {
   id?: number;
   iduser: number;
   priceOut: number;
-  creditCardNumber: string;
+  CreditCardNumber: string;
   expMonth: string;
   cvv: string;
+  checkUser?: UserType | any;
 };

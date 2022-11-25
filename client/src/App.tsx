@@ -18,11 +18,16 @@ const App = () => {
     allProducts: [],
     allSave: [],
     allCheckOut: [],
+    listUserOrder: [],
+    ListUserSave: [],
+    ListCheckOut: [],
+    ListLikeProduct: [],
+    ListCommentProduct: [],
+    ListOrdersProduct: [],
+    ListCategoriesProducts: [],
     render: "",
     user: null,
-    selectedProductView: null,
-    selectedLikeProduct: null,
-    selectedCommentProduct: null,
+    selectedProduct: null,
   });
   useEffect(() => {
     updateUserState(mainState, setMainState);

@@ -1,7 +1,6 @@
 const connection = require("../connection/connection");
 const cloudinary = require("../connection/cloudinary");
 
-
 const _getCategories = (req, res) => {
   let sql = `select * from categories`;
   connection.query(sql, (err, result) => {
@@ -15,8 +14,6 @@ const _getCategories = (req, res) => {
 
 const _saveCategory = async (req, res) => {
   let name = req.body.name;
-  let parentid = req.body.parentid;
-  let categorytype = req.body.categorytype;
   let img = null;
   if (req.file) {
     img = await cloudinary.uploader.upload(req.file.path, {
@@ -26,8 +23,8 @@ const _saveCategory = async (req, res) => {
 
   let logo = img?.secure_url;
   let cloudinary_id = img?.public_id;
-  const sql = `INSERT INTO categories (parentid , name ,logo,cloudinary_id ,categorytype)
-  VALUES ( '${parentid}','${name}','${logo}' , '${cloudinary_id}', '${categorytype}')`;
+  const sql = `INSERT INTO categories (name ,logo,cloudinary_id )
+  VALUES ( '${name}','${logo}' , '${cloudinary_id}')`;
   connection.query(sql, (err, result) => {
     if (err) {
       res.json({ err: " You have entered invalid  Email" });
@@ -37,7 +34,6 @@ const _saveCategory = async (req, res) => {
     }
   });
 };
-
 
 // update category
 const _putCategory = async (req, res) => {
@@ -52,8 +48,6 @@ const _putCategory = async (req, res) => {
       console.log(category);
       if (category) {
         let name = req.body.name || category.name;
-        let parentid = req.body.parentid || category.parentid;
-        let categorytype = req.body.categorytype || category.categorytype;
         let img = null;
         if (req.file) {
           await cloudinary.uploader.destroy(category.cloudinary_id);
@@ -64,11 +58,9 @@ const _putCategory = async (req, res) => {
         let logo = img?.secure_url || category.logo;
         let cloudinary_id = img?.public_id || category.cloudinary_id;
         let sql = `update categories set 
-                   parentid = '${parentid}',
                    name = '${name}',
                    logo = '${logo}',
-                   cloudinary_id = '${cloudinary_id}',
-                   categorytype = '${categorytype}'
+                   cloudinary_id = '${cloudinary_id}'
                    where id = '${id}'`;
         connection.query(sql, (err, result) => {
           if (err) {

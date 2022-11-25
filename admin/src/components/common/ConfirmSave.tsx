@@ -167,9 +167,6 @@ export function SaveUserPage({
         <Button
           onClick={async () => {
             setLoading(true);
-            const findProduct = mainState.allProducts.filter(
-              (p: productType) => p.iduser === user.id
-            );
             const fromData: any = new FormData();
             fromData.append("name", name);
             fromData.append("email", email);
@@ -184,12 +181,26 @@ export function SaveUserPage({
             user.password = password;
             user.phone = phone;
             user.authorization = "user";
-            user.userProduct = findProduct;
             await _insertUser(fromData);
-
             mainState.allUsers = [user, ...mainState.allUsers];
-            let getallUsers = await _getAllUser();
-            mainState.allUsers = getallUsers;
+            mainState.allUsers = await _getAllUser();
+            mainState.allUsers.forEach((user: UserType) => {
+              user.userLike = mainState.allLike.filter(
+                (l: LikeType) => l.iduser === user.id
+              );
+              user.userComment = mainState.allComment.filter(
+                (c: commentType) => c.iduser === user.id
+              );
+              user.userOrders = mainState.allOrders.filter(
+                (o: OrderType) => o.iduser === user.id
+              );
+              user.userSave = mainState.allSave.filter(
+                (s: SaveType) => s.iduser === user.id
+              );
+              user.userCheckOut = mainState.allCheckOut.filter(
+                (c: CheckOutType) => c.iduser === user.id
+              );
+            });
             mainState.render = "users";
             setMainState({ ...mainState });
             setLoading(false);
@@ -610,10 +621,8 @@ export function SaveCategoriesPage({
   mainState,
   setMainState,
 }: SaveCategoriesPageProps) {
-  const [parentid, setParentid] = useState(0);
   const [name, setName] = useState("");
   const [logo, setLogo] = useState<any>(null);
-  const [categorytype, setcategorytype] = useState(0);
   const [loading, setLoading] = useState(false);
   return (
     <Dialog open={open} onClose={() => setopen(false)}>
@@ -630,40 +639,10 @@ export function SaveCategoriesPage({
         >
           <TextField
             fullWidth
-            label="parentid"
-            onChange={(e: any) => setParentid(e.target.value)}
-            name="parentid"
-            value={parentid}
-          />
-        </Box>
-        <Box
-          sx={{
-            width: 500,
-            maxWidth: "100%",
-            marginBottom: "5%",
-          }}
-        >
-          <TextField
-            fullWidth
             label="Name"
             onChange={(e) => setName(e.target.value)}
             name="name"
             value={name}
-          />
-        </Box>
-        <Box
-          sx={{
-            width: 500,
-            maxWidth: "100%",
-            marginBottom: "5%",
-          }}
-        >
-          <TextField
-            fullWidth
-            label="categorytype"
-            onChange={(e: any) => setcategorytype(e.target.value)}
-            name="categorytype"
-            value={categorytype}
           />
         </Box>
         <Box
@@ -691,8 +670,6 @@ export function SaveCategoriesPage({
             setLoading(true);
             const fromData: any = new FormData();
             fromData.append("name", name);
-            fromData.append("parentid", parentid);
-            fromData.append("categorytype", categorytype);
             if (logo !== "") {
               category.logo = logo;
               fromData.append("logo", category.logo);

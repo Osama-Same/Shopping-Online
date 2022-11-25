@@ -9,6 +9,13 @@ export type MainStateType = {
   allOrders: OrderType[];
   allSave: SaveType[];
   allCheckOut: CheckOutType[];
+  listUserOrder: OrderType[];
+  ListUserSave: SaveType[];
+  ListCheckOut: CheckOutType[];
+  ListLikeProduct: LikeType[];
+  ListOrdersProduct: OrderType[];
+  ListCommentProduct: commentType[];
+  ListCategoriesProducts: productType[];
   render: string;
 };
 
@@ -25,7 +32,7 @@ export type UserType = {
   userComment?: commentType[] | any;
   userOrders?: OrderType[] | any;
   userSave?: SaveType[] | any;
-  userCheckOut?: CheckOutType | any;
+  userCheckOut?: CheckOutType[] | any;
 };
 
 export type productType = {
@@ -56,10 +63,8 @@ export type NewsType = {
 };
 export type categoryType = {
   id: number;
-  parentid: number;
   name: string;
   logo: string;
-  categorytype: number;
   categoryProduct?: productType[] | any;
 };
 export type LikeType = {

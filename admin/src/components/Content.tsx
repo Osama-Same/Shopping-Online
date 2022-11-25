@@ -78,7 +78,15 @@ import {
   _getAllSave,
   _getAllUser,
 } from "../service/getAllData";
-
+import {
+  ListTableOrder,
+  ListUserCheckOut,
+  ListUserSave,
+  ListProductLike,
+  ListProductComment,
+  ListCategoriesProduct,
+} from "./listTable";
+import Category from "@mui/icons-material/Category";
 interface ContactProps {
   mainState: MainStateType;
   setMainState: (m: MainStateType) => void;
@@ -120,6 +128,12 @@ export function Content({ mainState, setMainState }: ContactProps) {
     null
   );
   const [search, setSearch] = useState("");
+  const [openListTableOrders, setOpenListTableOrders] = useState(false);
+  const [openListTableLike, setOpenListTableLike] = useState(false);
+  const [openListTableComment, setOpenListTableComment] = useState(false);
+  const [openListTableSave, setOpenListTableSave] = useState(false);
+  const [openListTableCheckOut, setOpenListTableCheckOut] = useState(false);
+  const [openListTableProduct, setOpenListTableProduct] = useState(false);
 
   return (
     <Paper sx={{ maxWidth: 2000, margin: "auto", overflow: "hidden" }}>
@@ -211,7 +225,7 @@ export function Content({ mainState, setMainState }: ContactProps) {
             align="center"
           >
             <TableContainer component={Paper}>
-              <Table sx={{ minWidth: 650 }} aria-label="simple table">
+              <Table sx={{ minWidth: 700 }} aria-label="simple table">
                 <TableHead>
                   <TableRow>
                     <TableCell>id</TableCell>
@@ -220,12 +234,9 @@ export function Content({ mainState, setMainState }: ContactProps) {
                     <TableCell>phone</TableCell>
                     <TableCell>image</TableCell>
                     <TableCell>authorization</TableCell>
-                    <TableCell>Product_num</TableCell>
-                    <TableCell>Like_num</TableCell>
-                    <TableCell>Comment_num</TableCell>
-                    <TableCell>Orders_num</TableCell>
-                    <TableCell>Save_num</TableCell>
-                    <TableCell>CheckOut_num</TableCell>
+                    <TableCell>Orders</TableCell>
+                    <TableCell>Save</TableCell>
+                    <TableCell>CheckOut</TableCell>
                     <TableCell>Edit</TableCell>
                     <TableCell>Delete</TableCell>
                   </TableRow>
@@ -263,22 +274,53 @@ export function Content({ mainState, setMainState }: ContactProps) {
                             {user.authorization}
                           </TableCell>
                           <TableCell component="th" scope="row">
-                            {user.userProduct && user.userProduct?.length}
+                            <Button
+                              variant="contained"
+                              onClick={() => {
+                                const findUserOrder = allOrders.filter(
+                                  (o: OrderType) => o.iduser === user.id
+                                );
+                                mainState.listUserOrder = findUserOrder;
+                                setOpenListTableOrders(true);
+
+                                setSelectedUser(user);
+                              }}
+                            >
+                              Orders
+                            </Button>
                           </TableCell>
                           <TableCell component="th" scope="row">
-                            {user.userLike && user.userLike.length}
+                            <Button
+                              variant="contained"
+                              onClick={() => {
+                                const findUserSave = allSave.filter(
+                                  (o: SaveType) => o.iduser === user.id
+                                );
+                                mainState.ListUserSave = findUserSave;
+
+                                setOpenListTableSave(true);
+
+                                setSelectedUser(user);
+                              }}
+                            >
+                              Save
+                            </Button>
                           </TableCell>
                           <TableCell component="th" scope="row">
-                            {user.userComment && user.userComment.length}
-                          </TableCell>
-                          <TableCell component="th" scope="row">
-                            {user.userOrders && user.userOrders.length}
-                          </TableCell>
-                          <TableCell component="th" scope="row">
-                            {user.userSave && user.userSave.length}
-                          </TableCell>
-                          <TableCell component="th" scope="row">
-                            {user.userCheckOut && user.userCheckOut.length}
+                            <Button
+                              variant="contained"
+                              onClick={() => {
+                                const findUserCheckOut = allCheckOut.filter(
+                                  (o: CheckOutType) => o.iduser === user.id
+                                );
+                                mainState.ListCheckOut = findUserCheckOut;
+
+                                setOpenListTableCheckOut(true);
+                                setSelectedUser(user);
+                              }}
+                            >
+                              CheckOut
+                            </Button>
                           </TableCell>
                           <TableCell component="th" scope="row">
                             <Button
@@ -293,9 +335,6 @@ export function Content({ mainState, setMainState }: ContactProps) {
                           </TableCell>
                           <TableCell component="th" scope="row">
                             <Button
-                              disabled={
-                                user.userProduct && user.userProduct.length > 0
-                              }
                               variant="contained"
                               color="error"
                               onClick={() => {
@@ -313,7 +352,33 @@ export function Content({ mainState, setMainState }: ContactProps) {
               </Table>
             </TableContainer>
           </Typography>
-
+          {selectedUser && (
+            <ListUserCheckOut
+              open={openListTableCheckOut}
+              setopen={setOpenListTableCheckOut}
+              check={selectedUser}
+              mainState={mainState}
+              setMainState={setMainState}
+            />
+          )}
+          {selectedUser && (
+            <ListUserSave
+              open={openListTableSave}
+              setopen={setOpenListTableSave}
+              save={selectedUser}
+              mainState={mainState}
+              setMainState={setMainState}
+            />
+          )}
+          {selectedUser && (
+            <ListTableOrder
+              open={openListTableOrders}
+              setopen={setOpenListTableOrders}
+              userOrders={selectedUser}
+              mainState={mainState}
+              setMainState={setMainState}
+            />
+          )}
           {selectedUser && (
             <ConfirmDeleteDialog
               open={open}
@@ -453,10 +518,8 @@ export function Content({ mainState, setMainState }: ContactProps) {
                     <TableCell>date</TableCell>
                     <TableCell>country</TableCell>
                     <TableCell>description</TableCell>
-                    <TableCell>Like_num</TableCell>
-                    <TableCell>Comment_num</TableCell>
-                    <TableCell>Order_num</TableCell>
-                    <TableCell>Save_num</TableCell>
+                    <TableCell>Like</TableCell>
+                    <TableCell>Comment</TableCell>
                     <TableCell>Edit</TableCell>
                     <TableCell>Delete</TableCell>
                   </TableRow>
@@ -478,9 +541,9 @@ export function Content({ mainState, setMainState }: ContactProps) {
                             {product.productUser && product.productUser.name}
                           </TableCell>
                           <TableCell component="th" scope="row">
-                            {product.productCategory &&
-                              product.productCategory.name}
+                            {product.idcategory}
                           </TableCell>
+
                           <TableCell component="th" scope="row">
                             {product.name}
                           </TableCell>
@@ -504,18 +567,35 @@ export function Content({ mainState, setMainState }: ContactProps) {
                             {product.description}
                           </TableCell>
                           <TableCell component="th" scope="row">
-                            {product.productlike && product.productlike.length}
+                            <Button
+                              variant="contained"
+                              onClick={() => {
+                                const FindProductLike = allLike.filter(
+                                  (l: LikeType) => l.idproduct === product.id
+                                );
+                                mainState.ListLikeProduct = FindProductLike;
+                                setOpenListTableLike(true);
+                                setSelectedProduct(product);
+                              }}
+                            >
+                              Like
+                            </Button>
                           </TableCell>
                           <TableCell component="th" scope="row">
-                            {product.productComment &&
-                              product.productComment.length}
-                          </TableCell>
-                          <TableCell component="th" scope="row">
-                            {product.productOrders &&
-                              product.productOrders.length}
-                          </TableCell>
-                          <TableCell component="th" scope="row">
-                            {product.productSave && product.productSave.length}
+                            <Button
+                              variant="contained"
+                              onClick={() => {
+                                const FindProductComment = allComment.filter(
+                                  (c: commentType) => c.idproduct === product.id
+                                );
+                                mainState.ListCommentProduct =
+                                  FindProductComment;
+                                setOpenListTableComment(true);
+                                setSelectedProduct(product);
+                              }}
+                            >
+                              Comment
+                            </Button>
                           </TableCell>
 
                           <TableCell component="th" scope="row">
@@ -532,10 +612,6 @@ export function Content({ mainState, setMainState }: ContactProps) {
                           <TableCell component="th" scope="row">
                             <Button
                               variant="contained"
-                              disabled={
-                                product.productComment.length > 0 ||
-                                product.productlike.length > 0
-                              }
                               color="error"
                               onClick={() => {
                                 setopen(true);
@@ -569,12 +645,19 @@ export function Content({ mainState, setMainState }: ContactProps) {
             />
           )}
           {selectedProduct && (
-            <SaveProductPage
-              open={openSave}
-              setopen={setopenSave}
+            <ListProductLike
+              open={openListTableLike}
+              setopen={setOpenListTableLike}
               product={selectedProduct}
               mainState={mainState}
-              setMainState={setMainState}
+            />
+          )}
+          {selectedProduct && (
+            <ListProductComment
+              open={openListTableComment}
+              setopen={setOpenListTableComment}
+              product={selectedProduct}
+              mainState={mainState}
             />
           )}
           {selectedProduct && (
@@ -644,10 +727,8 @@ export function Content({ mainState, setMainState }: ContactProps) {
                     onClick={() => {
                       const newCategory: categoryType = {
                         id: 0,
-                        parentid: 0,
                         name: "",
                         logo: "",
-                        categorytype: 0,
                       };
                       setopenSave(true);
                       setSelectedCategories(newCategory);
@@ -679,11 +760,9 @@ export function Content({ mainState, setMainState }: ContactProps) {
                 <TableHead>
                   <TableRow>
                     <TableCell>id</TableCell>
-                    <TableCell>parentid</TableCell>
                     <TableCell>name</TableCell>
-                    <TableCell>categorytype</TableCell>
                     <TableCell>logo</TableCell>
-                    <TableCell>product_num</TableCell>
+                    <TableCell>product</TableCell>
                     <TableCell>Edit</TableCell>
                     <TableCell>Delete</TableCell>
                   </TableRow>
@@ -702,13 +781,7 @@ export function Content({ mainState, setMainState }: ContactProps) {
                             {category.id}
                           </TableCell>
                           <TableCell component="th" scope="row">
-                            {category.parentid}
-                          </TableCell>
-                          <TableCell component="th" scope="row">
                             {category.name}
-                          </TableCell>
-                          <TableCell component="th" scope="row">
-                            {category.categorytype}
                           </TableCell>
                           <TableCell component="th" scope="row">
                             <Avatar
@@ -718,8 +791,25 @@ export function Content({ mainState, setMainState }: ContactProps) {
                             />
                           </TableCell>
                           <TableCell component="th" scope="row">
-                            {category.categoryProduct &&
-                              category.categoryProduct.length}
+                            <Button
+                              variant="contained"
+                              color="success"
+                              onClick={() => {
+                                const findCategoriesProduct =
+                                  allProducts.filter(
+                                    (p: productType) =>
+                                      p.idcategory === category.id
+                                  );
+                                mainState.ListCategoriesProducts =
+                                  findCategoriesProduct;
+                                setOpenListTableProduct(true);
+                                setSelectedCategories(category);
+                              }}
+                            >
+                              Products{" "}
+                              {category.categoryProduct &&
+                                category.categoryProduct.length}
+                            </Button>
                           </TableCell>
                           <TableCell component="th" scope="row">
                             <Button
@@ -734,7 +824,10 @@ export function Content({ mainState, setMainState }: ContactProps) {
                           </TableCell>
                           <TableCell component="th" scope="row">
                             <Button
-                              disabled={category.categoryProduct.length > 0}
+                              disabled={
+                                category.categoryProduct &&
+                                category.categoryProduct.length > 0
+                              }
                               variant="contained"
                               color="error"
                               onClick={() => {
@@ -758,7 +851,7 @@ export function Content({ mainState, setMainState }: ContactProps) {
               setopen={setopen}
               text={`Do ${selectedCategories.name}  will be deleted permenantly, are you sure?`}
               onConfirm={async () => {
-                if (!selectedCategories) return;       
+                if (!selectedCategories) return;
                 await _deleteCategories(selectedCategories.id);
                 mainState.allCategories = mainState.allCategories.filter(
                   (c: categoryType) => c.id !== selectedCategories.id
@@ -772,6 +865,15 @@ export function Content({ mainState, setMainState }: ContactProps) {
             <SaveCategoriesPage
               open={openSave}
               setopen={setopenSave}
+              category={selectedCategories}
+              mainState={mainState}
+              setMainState={setMainState}
+            />
+          )}
+          {selectedCategories && (
+            <ListCategoriesProduct
+              open={openListTableProduct}
+              setopen={setOpenListTableProduct}
               category={selectedCategories}
               mainState={mainState}
               setMainState={setMainState}
@@ -1447,10 +1549,10 @@ export function Content({ mainState, setMainState }: ContactProps) {
                             {order.id}
                           </TableCell>
                           <TableCell component="th" scope="row">
-                            {order.orderUser && order.orderUser.email}
+                            {order.orderUser && order.orderUser?.email}
                           </TableCell>
                           <TableCell component="th" scope="row">
-                            {order.orderProduct && order.orderProduct.name}
+                            {order.orderProduct && order.orderProduct?.name}
                           </TableCell>
                           <TableCell component="th" scope="row">
                             {order.quantity}
@@ -1999,7 +2101,7 @@ export function Content({ mainState, setMainState }: ContactProps) {
                             {out.id}
                           </TableCell>
                           <TableCell component="th" scope="row">
-                            {out.checkUser && out.checkUser?.name}
+                            {out.checkUser.name}
                           </TableCell>
                           <TableCell component="th" scope="row">
                             {out.priceOut}

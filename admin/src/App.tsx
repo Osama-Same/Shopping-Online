@@ -4,7 +4,6 @@ import { MainStateType } from "./components/mainState";
 import { updateUserState } from "./components/users";
 import { ToastContainer } from "react-toastify";
 function App() {
-  
   const [mainState, setMainState] = useState<MainStateType>({
     allUsers: [],
     allCategories: [],
@@ -16,17 +15,24 @@ function App() {
     allProducts: [],
     allSave: [],
     allCheckOut: [],
-    render: ""
+    listUserOrder: [],
+    ListUserSave: [],
+    ListCheckOut: [],
+    ListLikeProduct: [],
+    ListCommentProduct: [],
+    ListOrdersProduct: [],
+    ListCategoriesProducts : [],
+    render: "",
   });
-    useEffect(() => {
+  useEffect(() => {
     updateUserState(mainState, setMainState);
-  }, [mainState]); 
- 
+  }, [mainState]);
+
   console.log(mainState);
   return (
     <div className="App">
       <ToastContainer />
-      <Paperbase mainState={mainState} setMainState={setMainState}/>
+      <Paperbase mainState={mainState} setMainState={setMainState} />
     </div>
   );
 }

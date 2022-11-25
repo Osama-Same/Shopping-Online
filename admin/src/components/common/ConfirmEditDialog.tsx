@@ -205,10 +205,28 @@ export function EditUserPage({
             user.email = email;
             user.phone = phone;
             user.image = image;
-            user.userProduct = [];
             await _putUser(user.id, fromData);
-            let getallUsers = await _getAllUser();
-            mainState.allUsers = getallUsers;
+            mainState.allUsers = await _getAllUser();
+            mainState.allUsers.forEach((user: UserType) => {
+              user.userProduct = mainState.allProducts.filter(
+                (p: productType) => p.iduser === user.id
+              );
+              user.userLike = mainState.allLike.filter(
+                (l: LikeType) => l.iduser === user.id
+              );
+              user.userComment = mainState.allComment.filter(
+                (c: commentType) => c.iduser === user.id
+              );
+              user.userOrders = mainState.allOrders.filter(
+                (o: OrderType) => o.iduser === user.id
+              );
+              user.userSave = mainState.allSave.filter(
+                (s: SaveType) => s.iduser === user.id
+              );
+              user.userCheckOut = mainState.allCheckOut.filter(
+                (c: CheckOutType) => c.iduser === user.id
+              );
+            });
             mainState.render = "users";
             setMainState({ ...mainState });
             setLoading(false);
@@ -291,14 +309,28 @@ export function EidtProductPage({
             marginBottom: 2,
           }}
         >
-          <TextField
-            fullWidth
-            disabled
-            label="idcategory"
-            onChange={(e: any) => setIdCategory(e.target.value)}
-            name="idcategory"
-            value={idcategory}
-          />
+          <FormControl fullWidth>
+            <InputLabel id="demo-multiple-chip-label">Category</InputLabel>
+            <Select
+              fullWidth
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={idcategory}
+              label="Category"
+              onChange={(e: any) => setIdCategory(e.target.value)}
+            >
+              {mainState.allCategories.map((category: categoryType) => {
+                return (
+                  <MenuItem value={category.id}>
+                    <Stack direction="row" spacing={2}>
+                      <Avatar src={category.logo} />
+                      <span>{category.name}</span>
+                    </Stack>
+                  </MenuItem>
+                );
+              })}
+            </Select>
+          </FormControl>
         </Box>
         <Box
           sx={{
@@ -460,19 +492,13 @@ export function EditCategoriesPage({
   mainState,
   setMainState,
 }: EditCategoriesPageProps) {
-  const [parentid, setParentid] = useState(category ? category.parentid : 0);
   const [name, setName] = useState(category ? category.name : "");
   const [logo, setLogo] = useState<any>(null);
-  const [categorytype, setcategorytype] = useState(
-    category ? category.categorytype : 0
-  );
   const [loading, setLoading] = useState(false);
   useEffect(() => {
     if (!category) return;
-    setParentid(category.parentid);
     setName(category.name);
     setLogo(category.logo);
-    setcategorytype(category.categorytype);
   }, [category]);
   return (
     <Dialog open={open} onClose={() => setopen(false)}>
@@ -489,40 +515,10 @@ export function EditCategoriesPage({
         >
           <TextField
             fullWidth
-            label="parentid"
-            onChange={(e: any) => setParentid(e.target.value)}
-            name="parentid"
-            value={parentid}
-          />
-        </Box>
-        <Box
-          sx={{
-            width: 500,
-            maxWidth: "100%",
-            marginBottom: "5%",
-          }}
-        >
-          <TextField
-            fullWidth
             label="Name"
             onChange={(e) => setName(e.target.value)}
             name="name"
             value={name}
-          />
-        </Box>
-        <Box
-          sx={{
-            width: 500,
-            maxWidth: "100%",
-            marginBottom: "5%",
-          }}
-        >
-          <TextField
-            fullWidth
-            label="categorytype"
-            onChange={(e: any) => setcategorytype(e.target.value)}
-            name="categorytype"
-            value={categorytype}
           />
         </Box>
         <Box
@@ -550,8 +546,6 @@ export function EditCategoriesPage({
             setLoading(true);
             const fromData: any = new FormData();
             fromData.append("name", name);
-            fromData.append("parentid", parentid);
-            fromData.append("categorytype", categorytype);
             if (logo !== "") {
               category.logo = logo;
               fromData.append("logo", category.logo);
@@ -901,7 +895,7 @@ export function EditNewsPage({
 interface EditOrderPageProps {
   open: boolean;
   setopen: (b: boolean) => void;
-  order: OrderType;
+  order: OrderType | any;
   mainState: MainStateType;
   setMainState: (m: MainStateType) => void;
 }
@@ -926,7 +920,7 @@ export function EditOrderPage({
     <Dialog open={open} onClose={() => setopen(false)}>
       <DialogContent>
         <DialogContentText sx={{ marginBottom: "5%", color: "black" }}>
-          Order Form Save
+          Order Form Edit
         </DialogContentText>
 
         <Box
@@ -993,18 +987,19 @@ export function EditOrderPage({
             order.idproduct = idproduct;
             order.quantity = quantity;
             await _putOrders(order.id, order);
+            order = mainState.allOrders.splice(order, {...order });
             mainState.allOrders = await _getAllOrders();
-            mainState.allOrders.forEach((order: OrderType) => {
+                mainState.allOrders.forEach((order: OrderType) => {
               order.orderUser = mainState.allUsers.find(
                 (u: UserType) => u.id === order.iduser
               );
               order.orderProduct = mainState.allProducts.find(
                 (p: productType) => p.id === order.idproduct
               );
-            });
-            setMainState({ ...mainState });
-            setLoading(false);
+            }); 
             setopen(false);
+            setLoading(false);
+            setMainState({ ...mainState });
           }}
         >
           {loading ? <CircularProgress /> : "Save"}
@@ -1228,7 +1223,7 @@ export function EditSavePage({
 interface EditCheckOutPageProps {
   open: boolean;
   setopen: (b: boolean) => void;
-  checkOut: CheckOutType;
+  checkOut: CheckOutType | any;
   mainState: MainStateType;
   setMainState: (m: MainStateType) => void;
 }
@@ -1369,12 +1364,12 @@ export function EditCheckOutPage({
             checkOut.cvv = cvv;
             await _putCheckOut(checkOut.id, checkOut);
             mainState.allCheckOut = await _getAllCheckOut();
+
             mainState.allCheckOut.forEach((out: CheckOutType) => {
               out.checkUser = mainState.allUsers.find(
                 (u: UserType) => u.id === out.iduser
               );
             });
-            mainState.render = "checkOut";
             setMainState({ ...mainState });
             setLoading(false);
             setopen(false);

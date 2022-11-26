@@ -1,7 +1,7 @@
 import axios from "axios";
 import { toast } from "react-toastify";
-const url = "http://localhost:5000/";
-//const url = "https://shopping1234567.herokuapp.com/";
+//const url = "http://localhost:5000/";
+const url = "https://outstanding-hare-sweater.cyclic.app/";
 
 export async function _deleteUser(id) {
   const res = await axios.delete(url + `users/${id}`);

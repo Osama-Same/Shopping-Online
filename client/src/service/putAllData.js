@@ -1,7 +1,7 @@
 import axios from "axios";
 import { toast } from "react-toastify";
-//const url = "https://shopping1234567.herokuapp.com/";
-const url = "http://localhost:5000/";
+const url = "https://outstanding-hare-sweater.cyclic.app/";
+//const url = "http://localhost:5000/";
 export async function _putUser(id, user) {
   const res = await axios.put(url + `users/${id}`, user);
   if (res.data) {

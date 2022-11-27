@@ -86,7 +86,6 @@ import {
   ListProductComment,
   ListCategoriesProduct,
 } from "./listTable";
-import Category from "@mui/icons-material/Category";
 interface ContactProps {
   mainState: MainStateType;
   setMainState: (m: MainStateType) => void;
@@ -525,105 +524,103 @@ export function Content({ mainState, setMainState }: ContactProps) {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {allProducts &&
-                    allProducts.map((product: productType) => {
-                      return (
-                        <TableRow
-                          key={product.id}
-                          sx={{
-                            "&:last-child td, &:last-child th": { border: 0 },
-                          }}
-                        >
-                          <TableCell component="th" scope="row">
-                            {product.id}
-                          </TableCell>
-                          <TableCell component="th" scope="row">
-                            {product.productUser && product.productUser.name}
-                          </TableCell>
-                          <TableCell component="th" scope="row">
-                            {product.idcategory}
-                          </TableCell>
+                  {allProducts.map((product: productType) => {
+                    return (
+                      <TableRow
+                        key={product.id}
+                        sx={{
+                          "&:last-child td, &:last-child th": { border: 0 },
+                        }}
+                      >
+                        <TableCell component="th" scope="row">
+                          {product.id}
+                        </TableCell>
+                        <TableCell component="th" scope="row">
+                          {product.productUser && product.productUser.name}
+                        </TableCell>
+                        <TableCell component="th" scope="row">
+                          {product.idcategory}
+                        </TableCell>
 
-                          <TableCell component="th" scope="row">
-                            {product.name}
-                          </TableCell>
-                          <TableCell component="th" scope="row">
-                            <Avatar
-                              alt="Remy Sharp"
-                              src={product.images}
-                              sx={{ width: 56, height: 56 }}
-                            />
-                          </TableCell>
-                          <TableCell component="th" scope="row">
-                            {product.price}
-                          </TableCell>
-                          <TableCell component="th" scope="row">
-                            {product.date}
-                          </TableCell>
-                          <TableCell component="th" scope="row">
-                            {product.country}
-                          </TableCell>
-                          <TableCell component="th" scope="row">
-                            {product.description}
-                          </TableCell>
-                          <TableCell component="th" scope="row">
-                            <Button
-                              variant="contained"
-                              onClick={() => {
-                                const FindProductLike = allLike.filter(
-                                  (l: LikeType) => l.idproduct === product.id
-                                );
-                                mainState.ListLikeProduct = FindProductLike;
-                                setOpenListTableLike(true);
-                                setSelectedProduct(product);
-                              }}
-                            >
-                              Like
-                            </Button>
-                          </TableCell>
-                          <TableCell component="th" scope="row">
-                            <Button
-                              variant="contained"
-                              onClick={() => {
-                                const FindProductComment = allComment.filter(
-                                  (c: commentType) => c.idproduct === product.id
-                                );
-                                mainState.ListCommentProduct =
-                                  FindProductComment;
-                                setOpenListTableComment(true);
-                                setSelectedProduct(product);
-                              }}
-                            >
-                              Comment
-                            </Button>
-                          </TableCell>
+                        <TableCell component="th" scope="row">
+                          {product.name}
+                        </TableCell>
+                        <TableCell component="th" scope="row">
+                          <Avatar
+                            alt="Remy Sharp"
+                            src={product.images}
+                            sx={{ width: 56, height: 56 }}
+                          />
+                        </TableCell>
+                        <TableCell component="th" scope="row">
+                          {product.price}
+                        </TableCell>
+                        <TableCell component="th" scope="row">
+                          {product.date}
+                        </TableCell>
+                        <TableCell component="th" scope="row">
+                          {product.country}
+                        </TableCell>
+                        <TableCell component="th" scope="row">
+                          {product.description}
+                        </TableCell>
+                        <TableCell component="th" scope="row">
+                          <Button
+                            variant="contained"
+                            onClick={() => {
+                              const FindProductLike = allLike.filter(
+                                (l: LikeType) => l.idproduct === product.id
+                              );
+                              mainState.ListLikeProduct = FindProductLike;
+                              setOpenListTableLike(true);
+                              setSelectedProduct(product);
+                            }}
+                          >
+                            Like
+                          </Button>
+                        </TableCell>
+                        <TableCell component="th" scope="row">
+                          <Button
+                            variant="contained"
+                            onClick={() => {
+                              const FindProductComment = allComment.filter(
+                                (c: commentType) => c.idproduct === product.id
+                              );
+                              mainState.ListCommentProduct = FindProductComment;
+                              setOpenListTableComment(true);
+                              setSelectedProduct(product);
+                            }}
+                          >
+                            Comment
+                          </Button>
+                        </TableCell>
 
-                          <TableCell component="th" scope="row">
-                            <Button
-                              variant="contained"
-                              onClick={() => {
-                                setopenEdit(true);
-                                setSelectedProduct(product);
-                              }}
-                            >
-                              Edit
-                            </Button>
-                          </TableCell>
-                          <TableCell component="th" scope="row">
-                            <Button
-                              variant="contained"
-                              color="error"
-                              onClick={() => {
-                                setopen(true);
-                                setSelectedProduct(product);
-                              }}
-                            >
-                              Delete
-                            </Button>
-                          </TableCell>
-                        </TableRow>
-                      );
-                    })}
+                        <TableCell component="th" scope="row">
+                          <Button
+                            variant="contained"
+                            onClick={() => {
+                              setopenEdit(true);
+                              setSelectedProduct(product);
+                            }}
+                          >
+                            Edit
+                          </Button>
+                        </TableCell>
+                        <TableCell component="th" scope="row">
+                          <Button
+                            variant="contained"
+                            color="error"
+                            onClick={() => {
+                              setopen(true);
+                              setSelectedProduct(product);
+                            }}
+                          >
+                            Delete
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
                 </TableBody>
               </Table>
             </TableContainer>
@@ -650,6 +647,15 @@ export function Content({ mainState, setMainState }: ContactProps) {
               setopen={setOpenListTableLike}
               product={selectedProduct}
               mainState={mainState}
+            />
+          )}
+          {selectedProduct && (
+            <SaveProductPage
+              open={openSave}
+              setopen={setopenSave}
+              product={selectedProduct}
+              mainState={mainState}
+              setMainState ={setMainState}
             />
           )}
           {selectedProduct && (

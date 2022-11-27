@@ -1,7 +1,6 @@
 import {
   MainStateType,
   OrderType,
-  CheckOutType,
   UserType,
   productType,
 } from "./mainState";
@@ -10,7 +9,7 @@ import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Card from "@mui/material/Card";
 import CardMedia from "@mui/material/CardMedia";
-import { Button, CardActionArea, CardContent, Divider } from "@mui/material";
+import { Button, CardContent, Divider } from "@mui/material";
 import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
@@ -38,14 +37,14 @@ export function OrdersPage({ mainState, setMainState }: OrdersPageProps) {
   const [selectedOrderUser, setSelectedOrderUser] = useState<OrderType | null>(
     null
   );
-  /*   const getTotalPrice = ({ user }: any) => {
+     const getTotalPrice = ({ user }: any) => {
     let totalPrice = 0;
     if (!user) return totalPrice;
-    user.orderUser.forEach((e: any) => {
+    user.userOrders.forEach((e: any) => {
       totalPrice += e.quantity * e.orderProduct.price;
     });
     return totalPrice;
-  }; */
+  }; 
   if (!user) return <>Not User</>;
   return (
     <Container maxWidth="lg" sx={{ mt: 10, mb: 5 }}>
@@ -202,7 +201,7 @@ export function OrdersPage({ mainState, setMainState }: OrdersPageProps) {
                   spacing={12}
                 >
                   <Typography>Total:</Typography>
-                  {/*  <Typography> {getTotalPrice({ user })}</Typography> */}
+                   <Typography> {getTotalPrice({ user })}</Typography> 
                 </Stack>
 
                 <Typography mb={2} mt={5} sx={{ fontSize: "40px" }}>
